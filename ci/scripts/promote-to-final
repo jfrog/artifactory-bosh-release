@@ -7,6 +7,8 @@ if [ -z "$VERSION" ]; then
   exit 20
 fi
 
+cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml artifactory-bosh-release/config/private.yml 
+
 cd artifactory-bosh-release
 
 git config --global user.email "ci@localhost"
@@ -14,5 +16,7 @@ git config --global user.name "CI Bot"
 
 bosh -n create release --final --with-tarball --version $VERSION
 
+git add .
+git ci -m "release v${VERSION}"
 git tag -a "v${VERSION}" -m 'final release'
 

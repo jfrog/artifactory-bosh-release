@@ -1,7 +1,6 @@
 /.blobs
 /.dev_builds
-/.final_builds/jobs/**/*.tgz
-/.final_builds/packages/**/*.tgz
+/.final_builds
 /blobs
 /config/dev.yml
 /config/private.yml

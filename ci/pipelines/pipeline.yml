@@ -5,7 +5,14 @@ resources:
   source:
     uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
     branch: master
-    private_key: {{github-private-key}}
+    private_key: {{artifactory-bosh-release-private-key}}
+
+- name: jfrog-artf-bosh-concourse-credentials
+  type: git
+  source:
+    uri: git@github.com:JFrogDev/jfrog-artf-bosh-concourse-credentials.git 
+    branch: master
+    private_key: {{jfrog-artf-bosh-concourse-credentials-private-key}}
 
 - name: version
   type: semver
@@ -76,11 +83,12 @@ jobs:
     passed: [integration]
   - get: artifactory-bosh-release
     passed: [integration]
+  - get: jfrog-artf-bosh-concourse-credentials
   - get: version
     params: {bump: final}
   - task: promote-to-final
     file: artifactory-bosh-release/ci/promote-to-final.yml
   - put: final_bosh_release 
-    params: {from: artifactory-bosh-release/final_releases/cf-artifactory/cf-artifactory-.*.tgz}
+    params: {from: artifactory-bosh-release/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {from: version/number}

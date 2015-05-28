@@ -4,5 +4,6 @@ image: docker:///concourse/concourse-ci
 inputs:
   - name: artifactory-bosh-release
   - name: version 
+  - name: jfrog-artf-bosh-concourse-credentials
 run:
     path: artifactory-bosh-release/ci/scripts/promote-to-final 
