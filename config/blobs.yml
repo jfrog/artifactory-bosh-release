@@ -3,7 +3,7 @@ artifactory/artifactory-powerpack-standalone-3.7.0.zip:
   object_id: a3c380c3-be17-4e4d-9f05-9cc57cadb793
   sha: 243317fc00154caae19ab644407b5d3ead51fdc2
   size: 83305525
-jdk/jdk1.7.0_79.gz:
-  object_id: d9a46db7-1cb0-4a2a-ae11-44e54740fe2e
+jdk/jdk-1.7.0_79.gz:
+  object_id: 23015303-573d-4c98-9a27-0d68613bda3f
   sha: c4deb058f674ab732b36a101147add089cf7f134
   size: 153512879
