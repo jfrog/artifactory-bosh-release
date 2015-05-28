@@ -1,0 +1,15 @@
+---
+name: standalone
+templates:
+  artifactory-standalone.ctl.erb: bin/artifactory-standalone.ctl
+  artifactory.default.erb: bin/artifactory.default
+  logback.xml.erb: etc/logback.xml
+
+packages:
+- artifactory
+- jdk
+
+properties:
+  artifactory_log_dir: 
+    description: "Directory for all artifactory logs"
+    default: /var/vcap/sys/log/artifactory

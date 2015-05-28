@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+LOG_DIR=/var/vcap/sys/log/artifactory
+JAVA_HOME=/var/vcap/packages/jdk/
+ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
+ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
+
+case $1 in
+
+  start)
+    mkdir -p $LOG_DIR
+    chown vcap:vcap $LOG_DIR 
+    
+    export JAVA_HOME=$JAVA_HOME
+    cd $ARTIFACTORY_PKG_DIR
+
+    cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
+
+    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
+      >>  $LOG_DIR/artifactory.stdout.log \
+      2>> $LOG_DIR/artifactory.stderr.log
+    ;;
+
+  stop)
+    exec $ARTIFACTORY_PKG_DIR/artifactory.sh stop \
+      >>  $LOG_DIR/artifactory.stdout.log \
+      2>> $LOG_DIR/artifactory.stderr.log
+    ;;
+
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac

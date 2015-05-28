@@ -1,0 +1,58 @@
+---
+name: cf-artifactory
+director_uuid: <%= `bundle exec bosh status --uuid` %>
+releases:
+- name: artifactory
+  version: latest
+compilation:
+  cloud_properties:
+    name: random
+  network: services1
+  reuse_compilation_vms: true
+  workers: 1
+update:
+  canaries: 1
+  canary_watch_time: 10000-100000
+  update_watch_time: 10000-100000
+  max_in_flight: 6
+networks:
+- name: services1
+  subnets:
+  - cloud_properties:
+      name: random
+    range: 10.244.23.32/30
+    reserved:
+    - 10.244.23.33
+  - cloud_properties:
+      name: random
+    range: 10.244.23.36/30
+    reserved:
+    - 10.244.23.37
+  - cloud_properties:
+      name: random
+    range: 10.244.23.52/30
+    reserved:
+    - 10.244.23.53
+    static:
+    - 10.244.23.54
+resource_pools:
+- cloud_properties:
+    ram: 1024
+    name: random
+  name: services-small
+  network: services1
+  stemcell:
+    name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+    version: latest
+jobs:
+- name: standalone 
+  templates:
+  - name: standalone
+    release: artifactory
+  instances: 1
+  resource_pool: services-small
+  persistent_disk: 4096
+  networks:
+  - name: services1
+    static_ips:
+    - 10.244.23.54

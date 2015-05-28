@@ -1,0 +1,12 @@
+#!/bin/bash
+# vim: set ft=sh
+
+VERSION=$(cat ./version/number)
+if [ -z "$VERSION" ]; then
+  echo "missing version number"
+  exit 20
+fi
+
+cd artifactory-bosh-release
+
+bosh -n create release --with-tarball --version $VERSION

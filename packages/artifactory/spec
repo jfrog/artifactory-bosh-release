@@ -1,0 +1,7 @@
+---
+name: artifactory
+
+dependencies: []
+
+files:
+- artifactory/artifactory-powerpack-standalone-3.7.0.zip 

@@ -1,0 +1,85 @@
+---
+resources:
+- name: artifactory-bosh-release
+  type: git
+  source:
+    uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
+    branch: master
+    private_key: {{github-private-key}}
+
+- name: version
+  type: semver
+  source:
+    bucket: {{s3-artifacts-bucket}}
+    key: current-version
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: {{s3-region-name}}
+    initial_version: 0.0.0
+
+- name: rc_bosh_release
+  type: s3
+  source:
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: {{s3-region-name}}
+    bucket:  {{s3-rc-release-bucket}}
+    private: true
+    regexp: artifactory-bosh-release-(.*).tgz
+
+- name: final_bosh_release
+  type: s3
+  source:
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: {{s3-region-name}}
+    bucket:  {{s3-final-release-bucket}}
+    private: true
+    regexp: artifactory-bosh-release-(.*).tgz
+
+jobs:
+
+- name: build-rc
+  serial: true
+  plan:
+  - get: artifactory-bosh-release
+    trigger: true
+  - get: version
+    params: {bump: patch, pre: rc}
+  - task: build-artifact
+    file: artifactory-bosh-release/ci/build-artifact.yml
+  - put: rc_bosh_release
+    params: {from: build-artifact/artifactory-bosh-release-.*.tgz}
+  - put: version
+    params: {file: version/number}
+
+- name: integration
+  serial: true
+  plan:
+  - get: rc_bosh_release
+    trigger: true
+    passed: [build-rc]
+  - get: artifactory-bosh-release
+    passed: [build-rc]
+  - task: integration
+    file: integration.yml
+    config:
+      params:
+        API_ENDPOINT: {{integration-api-endpoint}}
+        ACCESS_KEY: {{integration-access-key}}
+
+- name: shipit
+  serial: true
+  plan:
+  - get: rc_bosh_release
+    passed: [integration]
+  - get: artifactory-bosh-release
+    passed: [integration]
+  - get: version
+    params: {bump: final}
+  - task: promote-to-final
+    file: promote-to-final.yml
+  - put: final_bosh_release 
+    params: {from: promote-to-final/artifactory-bosh-release-.*.tgz}
+  - put: version
+    params: {from: version/number}

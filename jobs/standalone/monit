@@ -1,0 +1,5 @@
+check process artifactory
+  with pidfile /var/vcap/sys/run/artifactory.pid
+  start program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl start"
+  stop program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl stop"
+  group vcap

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+#Default values
+export ARTIFACTORY_HOME=/var/vcap/packages/artifactory
+#export ARTIFACTORY_USER=artifactory
+export JAVA_HOME=/var/vcap/packages/jdk/
+
+export TOMCAT_HOME=$ARTIFACTORY_HOME/tomcat
+export ARTIFACTORY_PID=/var/vcap/sys/run/artifactory.pid
+
+export JAVA_OPTIONS="-server -Xms512m -Xmx2g -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC"
+export JAVA_OPTIONS="$JAVA_OPTIONS -Djruby.compile.invokedynamic=false -Dfile.encoding=UTF8"
