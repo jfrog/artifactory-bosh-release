@@ -72,8 +72,7 @@ jobs:
     file: artifactory-bosh-release/ci/integration.yml
     config:
       params:
-        API_ENDPOINT: {{integration-api-endpoint}}
-        ACCESS_KEY: {{integration-access-key}}
+        BOSH_LITE_IP: {{bosh_lite_ip}}
 
 - name: shipit
   serial: true

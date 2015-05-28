@@ -10,7 +10,7 @@ bosh target ${BOSH_LITE_IP}
 
 # create and upload concourse release
 pushd artifactory-bosh-release/
-  bosh -n upload release  
+  bosh -n upload release ../rc_bosh_release/*.tgz 
 popd
 
 #run ruby test
