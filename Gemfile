@@ -3,3 +3,4 @@ source 'https://rubygems.org'
 gem 'bosh_cli'
 
 gem 'rspec'
+gem 'rest-client'
