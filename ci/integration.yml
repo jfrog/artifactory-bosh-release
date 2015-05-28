@@ -1,0 +1,8 @@
+---    
+platform: linux
+image: docker:///concourse/concourse-ci
+inputs:
+  - name: artifactory-bosh-release
+    
+run:
+    path: artifactory-bosh-release/ci/scripts/integration 

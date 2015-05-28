@@ -49,7 +49,7 @@ jobs:
   - task: build-artifact
     file: artifactory-bosh-release/ci/build-artifact.yml
   - put: rc_bosh_release
-    params: {from: build-artifact/artifactory-bosh-release-.*.tgz}
+    params: {from: artifactory-bosh-release/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {file: version/number}
 
