@@ -62,7 +62,7 @@ jobs:
   - get: artifactory-bosh-release
     passed: [build-rc]
   - task: integration
-    file: integration.yml
+    file: artifactory-bosh-release/ci/integration.yml
     config:
       params:
         API_ENDPOINT: {{integration-api-endpoint}}
@@ -72,13 +72,14 @@ jobs:
   serial: true
   plan:
   - get: rc_bosh_release
+    trigger: true
     passed: [integration]
   - get: artifactory-bosh-release
     passed: [integration]
   - get: version
     params: {bump: final}
   - task: promote-to-final
-    file: promote-to-final.yml
+    file: artifactory-bosh-release/ci/promote-to-final.yml
   - put: final_bosh_release 
     params: {from: promote-to-final/artifactory-bosh-release-.*.tgz}
   - put: version

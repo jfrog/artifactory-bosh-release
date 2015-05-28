@@ -1,0 +1,18 @@
+#!/bin/bash
+# vim: set ft=sh
+
+VERSION=$(cat ./version/number)
+if [ -z "$VERSION" ]; then
+  echo "missing version number"
+  exit 20
+fi
+
+cd artifactory-bosh-release
+
+git config --global user.email "ci@localhost"
+git config --global user.name "CI Bot"
+
+bosh -n create release --final --with-tarball --version $VERSION
+
+git tag -a "v${VERSION}" -m 'final release'
+
