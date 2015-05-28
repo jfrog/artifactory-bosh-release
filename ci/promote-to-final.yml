@@ -5,4 +5,4 @@ inputs:
   - name: artifactory-bosh-release
     
 run:
-    path: artifactory-bosh-release/ci/scripts/integration 
+    path: artifactory-bosh-release/ci/scripts/promote-to-final 

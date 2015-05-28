@@ -81,6 +81,6 @@ jobs:
   - task: promote-to-final
     file: artifactory-bosh-release/ci/promote-to-final.yml
   - put: final_bosh_release 
-    params: {from: promote-to-final/artifactory-bosh-release-.*.tgz}
+    params: {from: artifactory-bosh-release/final_releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {from: version/number}
