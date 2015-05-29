@@ -5,6 +5,7 @@
 ### Concourse Installation
 
 For a simple Concourse environment via Vagrant follow the docs [here](http://concourse.ci/deploying-with-vagrant.html).
+Use fly save-target <URL of concourse>
 
 ### Pipeline configuration
 
