@@ -5,10 +5,9 @@ require 'yaml'
 
 describe 'Standalone Artifactory' do
   it 'should verify that deployed artifactory is running and version is correct' do
-    bundle_exec_bosh 'target lite'
+    bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
-    bundle_exec_bosh 'recreate standalone 0'
 
     gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
                                     :password => bosh_director_ssh_password)
