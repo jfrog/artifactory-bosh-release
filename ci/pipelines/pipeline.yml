@@ -90,4 +90,4 @@ jobs:
   - put: final_bosh_release 
     params: {from: artifactory-bosh-release/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
-    params: {from: version/number}
+    params: {file: version/number}
