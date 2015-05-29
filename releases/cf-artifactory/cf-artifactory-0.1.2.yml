@@ -1,0 +1,30 @@
+---
+packages:
+- name: jdk
+  version: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  fingerprint: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  sha1: !binary |-
+    Zjc0MWRiYWFmZjg5MjkyMjY5NzI0Mzg1NDI1ZWY4YmY0YWVjMjgwYg==
+  dependencies: []
+- name: artifactory
+  version: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  fingerprint: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  sha1: !binary |-
+    OWExMDE3ZGY0YmJhYWY3ZDg5MTY4OTljYjRjZjA5ZTA1NjE2NzBjNA==
+  dependencies: []
+jobs:
+- name: standalone
+  version: !binary |-
+    N2FjY2ZkNzFiMWQ4ODgxZjBiOTlhZDI4M2YyZWQ1ODkzZGQwOGJjZA==
+  fingerprint: !binary |-
+    N2FjY2ZkNzFiMWQ4ODgxZjBiOTlhZDI4M2YyZWQ1ODkzZGQwOGJjZA==
+  sha1: !binary |-
+    MjFhYjEyODIzNGFhOGQ1YWE3MDc4MTNhZjEyZTQxNGMzYzQzNjEyZg==
+commit_hash: 55fb070b
+uncommitted_changes: false
+name: cf-artifactory
+version: 0.1.2
