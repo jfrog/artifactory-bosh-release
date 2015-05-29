@@ -1,0 +1,120 @@
+---
+name: concourse
+
+director_uuid: <%= `bosh status --uuid` %>
+
+releases:
+  - name: concourse
+    version: latest
+  - name: garden-linux
+    version: latest
+
+jobs:
+  - name: web
+    instances: 1
+    resource_pool: concourse
+    networks:
+      - name: concourse
+        static_ips: &web-ips [10.244.8.2]
+    persistent_disk: 1024 # for consul
+    templates:
+      - {release: concourse, name: consul-agent}
+      - {release: concourse, name: atc}
+      - {release: concourse, name: tsa}
+    properties:
+      atc:
+        development_mode: true
+        postgresql:
+          database: &atc-db atc
+          role: &atc-role
+            name: atc
+            password: dummy-postgres-password
+
+      consul:
+        agent:
+          mode: server
+
+  - name: db
+    instances: 1
+    resource_pool: concourse
+    networks: [{name: concourse}]
+    persistent_disk: 10240
+    templates:
+      - {release: concourse, name: consul-agent}
+      - {release: concourse, name: postgresql}
+    properties:
+      postgresql:
+        databases: [{name: *atc-db}]
+        roles: [*atc-role]
+
+      consul:
+        agent:
+          servers: {lan: *web-ips}
+
+  - name: worker
+    instances: 1
+    resource_pool: concourse
+    networks: [{name: concourse}]
+    templates:
+      - {release: concourse, name: consul-agent}
+      - {release: garden-linux, name: garden}
+      - {release: concourse, name: groundcrew}
+    properties:
+      garden:
+        # cannot enforce quotas in bosh-lite
+        disk_quota_enabled: false
+
+        listen_network: tcp
+        listen_address: 0.0.0.0:7777
+
+        allow_host_access: true
+
+      consul:
+        agent:
+          servers: {lan: *web-ips}
+
+networks:
+  - name: concourse
+    subnets:
+      # network with static ip used for web
+      - range: 10.244.8.0/30
+        reserved: [10.244.8.1]
+        static: [10.244.8.2]
+        cloud_properties: {}
+
+      # networks for dynamic ips (db, workers, compilation vms)
+      - range: 10.244.8.4/30
+        reserved: [10.244.8.5]
+        cloud_properties: {}
+      - range: 10.244.8.8/30
+        reserved: [10.244.8.9]
+        cloud_properties: {}
+      - range: 10.244.8.12/30
+        reserved: [10.244.8.13]
+        cloud_properties: {}
+      - range: 10.244.8.16/30
+        reserved: [10.244.8.17]
+        cloud_properties: {}
+      - range: 10.244.8.20/30
+        reserved: [10.244.8.21]
+        cloud_properties: {}
+
+resource_pools:
+  - name: concourse
+    network: concourse
+    cloud_properties: {}
+    stemcell:
+      name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+      version: latest
+
+compilation:
+  workers: 3
+  network: concourse
+  cloud_properties: {}
+
+update:
+  canaries: 1
+  max_in_flight: 3
+  serial: false
+  canary_watch_time: 1000-60000
+  update_watch_time: 1000-60000
