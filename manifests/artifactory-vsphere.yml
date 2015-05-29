@@ -1,0 +1,56 @@
+---
+name: cf-artifactory
+director_uuid: <%= `bundle exec bosh status --uuid` %>
+releases:
+- name: artifactory
+  version: latest
+compilation:
+  cloud_properties:
+    name: random
+    cpu: 2
+    ram: 2_048
+    disk: 10_000
+  network: services1
+  reuse_compilation_vms: true
+  workers: 1
+update:
+  canaries: 1
+  canary_watch_time: 10000-100000
+  update_watch_time: 10000-100000
+  max_in_flight: 6
+networks:
+- name: services1
+  type: manual
+  subnets:
+  - range: 10.60.0.0/16
+    gateway: 10.60.0.1
+    dns: [10.60.0.10]
+    cloud_properties: {name: 'VM Network'} 
+    reserved:
+    - 10.60.4.33
+    - 10.60.4.37
+    - 10.60.4.53
+    static:
+    - 10.60.4.54
+resource_pools:
+- name: vms
+  network: services1
+  stemcell:
+    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent 
+    version: latest
+  cloud_properties:
+    cpu: 2
+    ram: 4_096
+    disk: 20_000
+jobs:
+- name: standalone 
+  templates:
+  - name: standalone
+    release: artifactory
+  instances: 1
+  resource_pool: vms
+  persistent_disk: 4096
+  networks:
+  - name: services1
+    static_ips:
+    - 10.60.4.54
