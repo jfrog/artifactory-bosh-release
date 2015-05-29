@@ -49,20 +49,22 @@ jobs:
 - name: build-rc
   serial: true
   plan:
-  - get: artifactory-bosh-release
-    trigger: true
   - get: version
     params: {bump: patch, pre: rc}
+  - put: version
+    params: {file: version/number}
+  - get: artifactory-bosh-release
+    trigger: true
   - task: build-artifact
     file: artifactory-bosh-release/ci/build-artifact.yml
   - put: rc_bosh_release
     params: {from: artifactory-bosh-release/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
-  - put: version
-    params: {file: version/number}
 
 - name: integration
   serial: true
   plan:
+  - get: version
+    passed: [build-rc]
   - get: rc_bosh_release
     trigger: true
     passed: [build-rc]
@@ -84,6 +86,7 @@ jobs:
     passed: [integration]
   - get: jfrog-artf-bosh-concourse-credentials
   - get: version
+    passed: [integration]
     params: {bump: final}
   - task: promote-to-final
     file: artifactory-bosh-release/ci/promote-to-final.yml
@@ -91,3 +94,8 @@ jobs:
     params: {from: artifactory-bosh-release/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {file: version/number}
+  - put: artifactory-bosh-release
+    params:
+      repository: promote-to-final/artifactory-bosh-release
+      tag: version/number
+      tag_prefix: v
