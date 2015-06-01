@@ -22,7 +22,7 @@ describe 'Standalone Artifactory' do
 end
 
 def bundle_exec_bosh command
-  output = `bosh -n #{command}`
+  output = `bundle exec bosh -n #{command}`
   expect($?.to_i).to eq(0), output
 end
 

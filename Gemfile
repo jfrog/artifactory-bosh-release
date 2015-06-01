@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
-group :bosh do
-  gem 'bosh_cli'
-end
+gem 'bosh_cli'
 
 gem 'net-ssh-gateway'
 gem 'rspec'

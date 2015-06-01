@@ -10,5 +10,6 @@
 Vagrantfile
 .vagrant
 /.bundle/
+vendor/
 credentials.yml
 *~
