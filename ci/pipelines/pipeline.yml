@@ -33,16 +33,6 @@ resources:
     region_name: {{s3-region-name}}
     initial_version: 0.0.16
 
-- name: rc_bosh_release
-  type: s3
-  source:
-    access_key_id: {{s3-access-key-id}}
-    secret_access_key: {{s3-secret-access-key}}
-    region_name: {{s3-region-name}}
-    bucket:  {{s3-rc-release-bucket}}
-    private: true
-    regexp: artifactory-bosh-release-(.*).tgz
-
 - name: final_bosh_release
   type: s3
   source:
@@ -67,24 +57,21 @@ jobs:
   - get: artifactory-bosh-release-master
   - task: build-artifact
     file: artifactory-bosh-release-master/ci/build-artifact.yml
+    config:
       params:
         BOSH_TARGET: {{bosh_lite_ip}}
         BOSH_USERNAME: admin
         BOSH_PASSWORD: admin
         BOSH_MANIFEST: manifests/artifactory-lite.yml 
-  - put: rc_bosh_release
-    params: {from: artifactory-bosh-release-master/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
 
 - name: integration
   serial: true
   plan:
   - get: version
     passed: [build-rc]
-  - get: rc_bosh_release
-    trigger: true
-    passed: [build-rc]
   - get: artifactory-bosh-release-master
     passed: [build-rc]
+    trigger: true
   - task: integration
     file: artifactory-bosh-release-master/ci/integration.yml
     config:
@@ -100,11 +87,9 @@ jobs:
 - name: shipit
   serial: true
   plan:
-  - get: rc_bosh_release
-    trigger: true
-    passed: [integration]
   - get: artifactory-bosh-release-master
     passed: [integration]
+    trigger: true
   - get: jfrog-artf-bosh-concourse-credentials
   - get: version
     passed: [integration]
