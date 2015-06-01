@@ -13,3 +13,4 @@ Vagrantfile
 vendor/
 credentials.yml
 *~
+bosh_credentials.yml

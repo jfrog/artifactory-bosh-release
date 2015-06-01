@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source 'https://artifactory-us.jfrog.info/artifactory/api/gems/rubygems/'
 
 gem 'bosh_cli'
 

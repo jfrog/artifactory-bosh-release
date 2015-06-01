@@ -1,5 +1,5 @@
 GEM
-  remote: https://rubygems.org/
+  remote: https://artifactory-us.jfrog.info/artifactory/api/gems/rubygems/
   specs:
     aws-sdk (1.44.0)
       json (~> 1.4)
