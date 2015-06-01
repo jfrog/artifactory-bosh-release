@@ -1,8 +1,8 @@
 ---
 name: cf-artifactory
-director_uuid: <%= `bundle exec bosh status --uuid` %>
+director_uuid: <%= `bosh status --uuid` %>
 releases:
-- name: artifactory
+- name: cf-artifactory
   version: latest
 compilation:
   cloud_properties:
