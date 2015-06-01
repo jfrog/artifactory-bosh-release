@@ -1,6 +1,6 @@
 ---
 name: cf-artifactory
-director_uuid: <%= `bundle exec bosh status --uuid` %>
+director_uuid: <%= `bosh status --uuid` %>
 releases:
 - name: artifactory
   version: latest
