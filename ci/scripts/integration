@@ -6,4 +6,12 @@ set -e -x
 cd artifactory-bosh-release-master
 
 bundle install --path vendor/bundle
+
+export BOSH_TARGET=${BOSH_TARGET}
+export BOSH_USERNAME=${BOSH_USERNAME}
+export BOSH_PASSWORD=${BOSH_PASSWORD}
+export BOSH_DIRECTOR_SSH_USERNAME=${BOSH_DIRECTOR_SSH_USERNAME}
+export BOSH_DIRECTOR_SSH_PASSWORD=${BOSH_DIRECTOR_SSH_PASSWORD}
+export BOSH_MANIFEST=${BOSH_MANIFEST}
+
 bundle exec rspec  
