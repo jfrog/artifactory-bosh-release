@@ -67,6 +67,11 @@ jobs:
   - get: artifactory-bosh-release-master
   - task: build-artifact
     file: artifactory-bosh-release-master/ci/build-artifact.yml
+      params:
+        BOSH_TARGET: {{bosh_lite_ip}}
+        BOSH_USERNAME: admin
+        BOSH_PASSWORD: admin
+        BOSH_MANIFEST: manifests/artifactory-lite.yml 
   - put: rc_bosh_release
     params: {from: artifactory-bosh-release-master/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
 
@@ -84,7 +89,13 @@ jobs:
     file: artifactory-bosh-release-master/ci/integration.yml
     config:
       params:
-        BOSH_LITE_IP: {{bosh_lite_ip}}
+        BOSH_TARGET: {{bosh_lite_ip}}
+        BOSH_USERNAME: admin
+        BOSH_PASSWORD: admin
+        BOSH_MANIFEST: manifests/artifactory-lite.yml 
+        BOSH_DIRECTOR_SSH_USERNAME: vagrant
+        BOSH_DIRECTOR_SSH_PASSWORD: vagrant 
+
 
 - name: shipit
   serial: true
