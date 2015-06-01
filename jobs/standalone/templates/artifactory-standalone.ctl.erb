@@ -17,6 +17,7 @@ case $1 in
     cd $ARTIFACTORY_PKG_DIR
 
     cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/etc/artifactory.lic $ARTIFACTORY_PKG_DIR/etc
     cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
 
     exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
@@ -25,7 +26,7 @@ case $1 in
     ;;
 
   stop)
-    exec $ARTIFACTORY_PKG_DIR/artifactory.sh stop \
+    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log
     ;;

@@ -4,6 +4,7 @@ templates:
   artifactory-standalone.ctl.erb: bin/artifactory-standalone.ctl
   artifactory.default.erb: bin/artifactory.default
   logback.xml.erb: etc/logback.xml
+  artifactory.lic.erb: etc/artifactory.lic
 
 packages:
 - artifactory
@@ -13,3 +14,5 @@ properties:
   artifactory_log_dir: 
     description: "Directory for all artifactory logs"
     default: /var/vcap/sys/log/artifactory
+  artifactory_license_key:
+    description: "Artifactory license key"

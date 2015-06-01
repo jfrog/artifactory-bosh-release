@@ -56,3 +56,5 @@ jobs:
   - name: services1
     static_ips:
     - 10.244.23.54
+  properties:
+    artifactory_license_key: <%= `cat $ARTIFACTORY_LICENSE_PATH` %>
