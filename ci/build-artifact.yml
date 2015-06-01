@@ -2,8 +2,8 @@
 platform: linux
 image: docker:///concourse/concourse-ci
 inputs:
-  - name: artifactory-bosh-release
+  - name: artifactory-bosh-release-master
   - name: version
     
 run:
-    path: artifactory-bosh-release/ci/scripts/build-artifact 
+  path: artifactory-bosh-release-master/ci/scripts/build-artifact 

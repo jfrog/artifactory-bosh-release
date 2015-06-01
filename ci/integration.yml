@@ -2,7 +2,7 @@
 platform: linux
 image: docker:///concourse/testflight
 inputs:
-  - name: artifactory-bosh-release
+  - name: artifactory-bosh-release-master
   - name: rc_bosh_release 
 run:
-    path: artifactory-bosh-release/ci/scripts/integration 
+  path: artifactory-bosh-release-master/ci/scripts/integration 
