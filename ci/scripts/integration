@@ -9,7 +9,7 @@ export BOSH_PASSWORD=admin
 bosh target ${BOSH_LITE_IP}
 
 # create and upload concourse release
-pushd artifactory-bosh-release/
+pushd artifactory-bosh-release-master/
   bosh -n upload release ../rc_bosh_release/*.tgz 
 popd
 

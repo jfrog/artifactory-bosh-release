@@ -1,6 +1,15 @@
 ---
 resources:
-- name: artifactory-bosh-release
+- name: artifactory-bosh-release-develop
+  type: git
+  source:
+    uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
+    branch: master
+    ignore_paths:
+    - releases/cf-artifactory
+    private_key: {{artifactory-bosh-release-private-key}}
+
+- name: artifactory-bosh-release-master
   type: git
   source:
     uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
@@ -53,12 +62,13 @@ jobs:
     params: {bump: patch, pre: rc}
   - put: version
     params: {file: version/number}
-  - get: artifactory-bosh-release
+  - get: artifactory-bosh-release-develop
     trigger: true
+  - get: artifactory-bosh-release-master
   - task: build-artifact
-    file: artifactory-bosh-release/ci/build-artifact.yml
+    file: artifactory-bosh-release-master/ci/build-artifact.yml
   - put: rc_bosh_release
-    params: {from: artifactory-bosh-release/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
+    params: {from: artifactory-bosh-release-master/dev_releases/cf-artifactory/cf-artifactory-.*.tgz}
 
 - name: integration
   serial: true
@@ -68,10 +78,10 @@ jobs:
   - get: rc_bosh_release
     trigger: true
     passed: [build-rc]
-  - get: artifactory-bosh-release
+  - get: artifactory-bosh-release-master
     passed: [build-rc]
   - task: integration
-    file: artifactory-bosh-release/ci/integration.yml
+    file: artifactory-bosh-release-master/ci/integration.yml
     config:
       params:
         BOSH_LITE_IP: {{bosh_lite_ip}}
@@ -82,20 +92,21 @@ jobs:
   - get: rc_bosh_release
     trigger: true
     passed: [integration]
-  - get: artifactory-bosh-release
+  - get: artifactory-bosh-release-master
     passed: [integration]
   - get: jfrog-artf-bosh-concourse-credentials
   - get: version
     passed: [integration]
     params: {bump: final}
   - task: promote-to-final
-    file: artifactory-bosh-release/ci/promote-to-final.yml
+    file: artifactory-bosh-release-master/ci/promote-to-final.yml
   - put: final_bosh_release 
-    params: {from: artifactory-bosh-release/releases/cf-artifactory/cf-artifactory-.*.tgz}
+    params: {from: artifactory-bosh-release-master/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {file: version/number}
-  - put: artifactory-bosh-release
+  - put: artifactory-bosh-release-master
     params:
-      repository: promote-to-final/artifactory-bosh-release
+      repository: promote-to-final/artifactory-bosh-release-master
       tag: version/number
+      rebase: true
       tag_prefix: v

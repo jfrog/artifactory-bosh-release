@@ -9,9 +9,9 @@ if [ -z "$VERSION" ]; then
   exit 20
 fi
 
-cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml artifactory-bosh-release/config/private.yml 
+cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml artifactory-bosh-release-master/config/private.yml 
 
-cd artifactory-bosh-release
+cd artifactory-bosh-release-master
 
 git config --global user.email "ci@localhost"
 git config --global user.name "CI Bot"
