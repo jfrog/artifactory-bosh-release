@@ -46,7 +46,7 @@ jobs:
 - name: standalone 
   templates:
   - name: standalone
-    release: artifactory
+    release: cf-artifactory
   instances: 1
   resource_pool: vms
   persistent_disk: 4096
