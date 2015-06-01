@@ -119,5 +119,6 @@ PLATFORMS
 
 DEPENDENCIES
   bosh_cli
+  net-ssh-gateway
   rest-client
   rspec
