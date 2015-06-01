@@ -11,7 +11,8 @@ fi
 
 cd artifactory-bosh-release-master
 
-bosh target ${BOSH_TARGET}
+bosh -n target ${BOSH_TARGET} 
+bosh -n login ${BOSH_USERNAME} ${BOSH_PASSWORD}
 bosh -n create release --with-tarball --version $VERSION
 bosh -n upload release
 bosh -n --deployment ${BOSH_MANIFEST} deploy
