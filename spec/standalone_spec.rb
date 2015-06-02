@@ -28,6 +28,7 @@ describe 'Standalone Artifactory' do
   describe 'licensing' do
     context 'when a license is not present' do
       after(:all) do
+        puts "resetting license"
         ENV["ARTIFACTORY_LICENSE"] = "TEST_LICENSE_1"
         bosh_deploy_and_wait_for_artifactory
       end
