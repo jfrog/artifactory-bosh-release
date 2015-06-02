@@ -3,7 +3,7 @@ resources:
 - name: artifactory-bosh-release-develop
   type: git
   source:
-    uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
+    uri: git@github.com:JFrogDev/artifactory-bosh-release.git
     branch: master
     ignore_paths:
     - releases/cf-artifactory
@@ -12,14 +12,14 @@ resources:
 - name: artifactory-bosh-release-master
   type: git
   source:
-    uri: git@github.com:JFrogDev/artifactory-bosh-release.git 
+    uri: git@github.com:JFrogDev/artifactory-bosh-release.git
     branch: master
     private_key: {{artifactory-bosh-release-private-key}}
 
 - name: jfrog-artf-bosh-concourse-credentials
   type: git
   source:
-    uri: git@github.com:JFrogDev/jfrog-artf-bosh-concourse-credentials.git 
+    uri: git@github.com:JFrogDev/jfrog-artf-bosh-concourse-credentials.git
     branch: master
     private_key: {{jfrog-artf-bosh-concourse-credentials-private-key}}
 
@@ -82,7 +82,8 @@ jobs:
         BOSH_MANIFEST: {{artifactory_manifest}}
         BOSH_DIRECTOR_SSH_USERNAME: {{bosh_director_ssh_username}}
         BOSH_DIRECTOR_SSH_PASSWORD: {{bosh_director_ssh_password}}
-
+        TEST_LICENSE_1: {{test_license_1}}
+        TEST_LICENSE_2: {{test_license_2}}
 
 - name: shipit
   serial: true
@@ -96,7 +97,7 @@ jobs:
     params: {bump: final}
   - task: promote-to-final
     file: artifactory-bosh-release-master/ci/promote-to-final.yml
-  - put: final_bosh_release 
+  - put: final_bosh_release
     params: {from: artifactory-bosh-release-master/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
     params: {file: version/number}

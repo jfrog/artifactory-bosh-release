@@ -55,4 +55,4 @@ jobs:
     static_ips:
     - 10.60.4.54
   properties:
-    artifactory_license_key: <%= `cat $ARTIFACTORY_LICENSE_PATH` %>
+    artifactory_license_key: <%= `echo $ARTIFACTORY_LICENSE` %>

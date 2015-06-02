@@ -45,7 +45,7 @@ resource_pools:
     name: bosh-warden-boshlite-ubuntu-trusty-go_agent
     version: latest
 jobs:
-- name: standalone 
+- name: standalone
   templates:
   - name: standalone
     release: cf-artifactory
@@ -57,4 +57,4 @@ jobs:
     static_ips:
     - 10.244.23.54
   properties:
-    artifactory_license_key: <%= `cat $ARTIFACTORY_LICENSE_PATH` %>
+    artifactory_license_key: <%= `echo $ARTIFACTORY_LICENSE` %>
