@@ -58,6 +58,7 @@ describe 'Standalone Artifactory' do
           $original_expiry_date = JSON.parse(response)['validThrough']
         end
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
+        puts "Deploying Lic 2"
         bosh_deploy_and_wait_for_artifactory
       end
 
