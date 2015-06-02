@@ -13,7 +13,7 @@ describe 'Standalone Artifactory' do
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
 
-    ENV["ARTIFACTORY_LICENSE_PATH"] = ENV["TEST_LICENSE_1"]
+    ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
     bosh_deploy_and_wait_for_artifactory
   end
 
@@ -40,13 +40,13 @@ describe 'Standalone Artifactory' do
           response = RestClient.get artifactory_license_url port
           $original_expiry_date = JSON.parse(response)['validThrough']
         end
-        ENV["ARTIFACTORY_LICENSE_PATH"] = ENV["TEST_LICENSE_2"]
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
         bosh_deploy_and_wait_for_artifactory
       end
 
       #reset the BOSH deployment to the original
       after(:all) do
-        ENV["ARTIFACTORY_LICENSE_PATH"] = ENV["TEST_LICENSE_1"]
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
         bundle_exec_bosh "-n deploy"
       end
 
