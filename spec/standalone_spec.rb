@@ -71,6 +71,7 @@ describe 'Standalone Artifactory' do
 
   end
 end
+end
 
 
 def bosh_deploy_and_wait_for_artifactory
@@ -85,8 +86,8 @@ end
 
 def get_standalone_node_ip_from bosh_manifest
  YAML.load_file(bosh_manifest)['jobs'].
-   find{|job_hash| job_hash['name'] == 'standalone'}['networks'].
-   first['static_ips'].first
+ find{|job_hash| job_hash['name'] == 'standalone'}['networks'].
+ first['static_ips'].first
 end
 
 def exec_on_gateway
