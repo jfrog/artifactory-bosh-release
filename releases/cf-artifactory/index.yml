@@ -30,4 +30,6 @@ builds:
     version: 0.0.19
   a2fd4769-3deb-4f6a-868c-fcf0c6f44322:
     version: 0.2.1
+  7f420b2d-a6e3-40ca-90dc-3f872e0468a1:
+    version: 0.2.2
 format-version: '2'
