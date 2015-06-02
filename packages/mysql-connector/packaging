@@ -1,0 +1,12 @@
+# abort script on any command that exits with a non zero value
+set -e
+
+MYSQL_CONNECTOR_VERSION="5.1.35"
+
+archive="mysql-connector/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}.tar.gz"
+
+echo "Extracting archive..."
+tar xzf $archive
+
+cp -R mysql-connector-java-${MYSQL_CONNECTOR_VERSION}/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar ${BOSH_INSTALL_TARGET}
+

@@ -1,0 +1,7 @@
+---
+name: mysql-connector
+
+dependencies: []
+
+files:
+- mysql-connector/mysql-connector-java-5.1.35.tar.gz
