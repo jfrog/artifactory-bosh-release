@@ -13,7 +13,7 @@ describe 'Standalone Artifactory' do
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
 
-    ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
+    ENV["ARTIFACTORY_LICENSE"] = ENV[""]
     bosh_deploy_and_wait_for_artifactory
   end
 
@@ -24,17 +24,11 @@ describe 'Standalone Artifactory' do
     end
   end
 
-  describe 'licensing' do
-    it 'should have a license present' do
-      exec_on_gateway do | port |
-        response = RestClient.get artifactory_license_url port
-        expect(JSON.parse(response)['type']).to eq('Trial')
-      end
-    end
 
-    xcontext 'when a license is not present' do
-      before(:all) do
-        ENV["ARTIFACTORY_LICENSE"] = ""
+  describe 'licensing' do
+    context 'when a license is not present' do
+      after(:all) do
+        ENV["ARTIFACTORY_LICENSE"] = "TEST_LICENSE_1"
         bosh_deploy_and_wait_for_artifactory
       end
 
@@ -43,6 +37,13 @@ describe 'Standalone Artifactory' do
           response = RestClient.get artifactory_version_url port
           expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
         end
+      end
+    end
+
+    it 'should have a license present' do
+      exec_on_gateway do | port |
+        response = RestClient.get artifactory_license_url port
+        expect(JSON.parse(response)['type']).to eq('Trial')
       end
     end
 
