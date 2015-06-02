@@ -31,7 +31,7 @@ resources:
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
     region_name: {{s3-region-name}}
-    initial_version: 0.0.16
+    initial_version: 0.2.0
 
 - name: final_bosh_release
   type: s3
