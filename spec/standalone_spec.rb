@@ -12,28 +12,34 @@ describe 'Standalone Artifactory' do
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
-
-    ENV["ARTIFACTORY_LICENSE"] = ENV[""]
+    #TODO: is hardcoding the license here really the right answer?
+    ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
     bosh_deploy_and_wait_for_artifactory
   end
-
-  it 'should verify that deployed artifactory is running and version is correct' do
-    exec_on_gateway do | port |
-      response = RestClient.get artifactory_version_url port
-      expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+  
+  describe 'Initial Checks' do
+    it 'should verify that deployed artifactory is running and version is correct' do
+      exec_on_gateway do | port |
+        response = RestClient.get artifactory_version_url port
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      end
     end
   end
 
 
   describe 'licensing' do
-    context 'when a license is not present' do
-      after(:all) do
-        puts "resetting license"
-        ENV["ARTIFACTORY_LICENSE"] = "TEST_LICENSE_1"
-        bosh_deploy_and_wait_for_artifactory
+    it 'should have a license present' do
+      exec_on_gateway do | port |
+        response = RestClient.get artifactory_license_url port
+        expect(JSON.parse(response)['type']).to eq('Trial')
+        $original_expiry_date = JSON.parse(response)['validThrough']
       end
+    end
 
+    context 'when a license is not present' do  
       it 'is still accessible' do
+        ENV["ARTIFACTORY_LICENSE"] = ""
+        bosh_deploy_and_wait_for_artifactory        
         exec_on_gateway do | port |
           response = RestClient.get artifactory_version_url port
           expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
@@ -41,12 +47,7 @@ describe 'Standalone Artifactory' do
       end
     end
 
-    it 'should have a license present' do
-      exec_on_gateway do | port |
-        response = RestClient.get artifactory_license_url port
-        expect(JSON.parse(response)['type']).to eq('Trial')
-      end
-    end
+
 
     context 'when license is changed' do
 
@@ -62,14 +63,15 @@ describe 'Standalone Artifactory' do
 
       #reset the BOSH deployment to the original
       after(:all) do
+        puts "Resetting to original license from deployment"
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
-        bundle_exec_bosh "-n deploy"
+        bosh_deploy_and_wait_for_artifactory
       end
 
       it 'updates the license' do
         exec_on_gateway do | port |
-            response = RestClient.get artifactory_license_url port
-            expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
+          response = RestClient.get artifactory_license_url port
+          expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
         end
       end
 
