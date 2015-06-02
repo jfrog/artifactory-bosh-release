@@ -9,9 +9,14 @@ if [ -z "$VERSION" ]; then
   exit 20
 fi
 
+if [ -z "$ARTIFACTORY_LICENSE" ]; then
+  echo "missing artifactory license"
+  exit 30
+fi
+
 cd artifactory-bosh-release-master
 
-bosh -n target ${BOSH_TARGET} 
+bosh -n target ${BOSH_TARGET}
 bosh -n login ${BOSH_USERNAME} ${BOSH_PASSWORD}
 bosh -n create release --with-tarball --version $VERSION
 bosh -n upload release

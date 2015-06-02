@@ -63,6 +63,7 @@ jobs:
         BOSH_USERNAME: {{bosh_username}}
         BOSH_PASSWORD: {{bosh_password}}
         BOSH_MANIFEST: {{artifactory_manifest}}
+        ARTIFACTORY_LICENSE: {{artifactory_license}}
 
 - name: integration
   serial: true

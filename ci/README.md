@@ -18,6 +18,7 @@ fly c -c ci/pipelines/pipeline.yml
  --var test_license_1=$(cat assets/artifactory.lic)
  --var test_license_2=$(cat assets/artifactory-expired.lic)
  --var artifactory_manifest=manifests/artifactory-vsphere.yml
+ --var artifactory_license==$(cat assets/artifactory.lic)
 ```
 
 ### Fly CLI Setup
