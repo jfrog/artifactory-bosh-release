@@ -6,4 +6,4 @@ inputs:
   - name: version
     
 run:
-  path: artifactory-bosh-release-master/ci/scripts/build-artifact 
+  path: artifactory-bosh-release-master/ci/scripts/build-deploy-rc-artifact 

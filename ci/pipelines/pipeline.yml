@@ -45,7 +45,7 @@ resources:
 
 jobs:
 
-- name: build-rc
+- name: build-deploy-rc
   serial: true
   plan:
   - get: version
@@ -56,7 +56,7 @@ jobs:
     trigger: true
   - get: artifactory-bosh-release-master
   - task: build-artifact
-    file: artifactory-bosh-release-master/ci/build-artifact.yml
+    file: artifactory-bosh-release-master/ci/build-deploy-rc-artifact.yml
     config:
       params:
         BOSH_TARGET: {{bosh_ip}}
@@ -69,9 +69,9 @@ jobs:
   serial: true
   plan:
   - get: version
-    passed: [build-rc]
+    passed: [build-deploy-rc]
   - get: artifactory-bosh-release-master
-    passed: [build-rc]
+    passed: [build-deploy-rc]
     trigger: true
   - task: integration
     file: artifactory-bosh-release-master/ci/integration.yml
