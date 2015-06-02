@@ -7,7 +7,7 @@ describe 'Standalone Artifactory' do
 
   before(:all) do
     @gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
-                                      :password => bosh_director_ssh_password)
+      :password => bosh_director_ssh_password)
     @standalone_node_ip = get_standalone_node_ip_from bosh_manifest
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
@@ -51,16 +51,6 @@ describe 'Standalone Artifactory' do
 
     context 'when license is changed' do
 
-      #update and deploy the new manifest
-      before(:all) do
-        exec_on_gateway do | port |
-          response = RestClient.get artifactory_license_url port
-          $original_expiry_date = JSON.parse(response)['validThrough']
-        end
-        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
-        puts "Deploying Lic 2"
-        bosh_deploy_and_wait_for_artifactory
-      end
 
       #reset the BOSH deployment to the original
       after(:all) do
@@ -70,15 +60,18 @@ describe 'Standalone Artifactory' do
       end
 
       it 'updates the license' do
-        exec_on_gateway do | port |
-          response = RestClient.get artifactory_license_url port
-          expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
-        end
+       ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
+       puts "Deploying Lic 2"
+       bosh_deploy_and_wait_for_artifactory 
+       exec_on_gateway do | port |
+        response = RestClient.get artifactory_license_url port
+        expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
       end
-
     end
+
   end
 end
+
 
 def bosh_deploy_and_wait_for_artifactory
   bundle_exec_bosh "deploy"
