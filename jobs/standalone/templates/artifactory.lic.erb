@@ -1,1 +1,3 @@
-<%= p("artifactory_license_key") %>
+<% if_p("artifactory_license_key") do |key| %>
+<%= key %>
+<% end %>

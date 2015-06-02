@@ -32,6 +32,20 @@ describe 'Standalone Artifactory' do
       end
     end
 
+    xcontext 'when a license is not present' do
+      before(:all) do
+        ENV["ARTIFACTORY_LICENSE"] = ""
+        bosh_deploy_and_wait_for_artifactory
+      end
+
+      it 'is still accessible' do
+        exec_on_gateway do | port |
+          response = RestClient.get artifactory_version_url port
+          expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+        end
+      end
+    end
+
     context 'when license is changed' do
 
       #update and deploy the new manifest
