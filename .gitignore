@@ -10,7 +10,7 @@
 Vagrantfile
 .vagrant
 /.bundle/
-vendor/
+vendor/bundle/
 credentials.yml
 bosh_credentials.yml
 *~
