@@ -5,7 +5,7 @@ inputs:
   - name: artifactory-bosh-release-master
   - name: artifactory-pivotal
   - name: version
-  - name: product-version
+  - name: product_version
   - name: final_bosh_release
     
 run:
