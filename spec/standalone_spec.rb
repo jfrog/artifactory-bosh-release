@@ -24,8 +24,34 @@ describe 'Standalone Artifactory' do
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
     end
-  end
 
+    describe 'artifactory logs dir' do
+      it 'should have artifactory log' do
+        log_path = artifactory_package_logs+'artifactory.log'
+        result = exec_on_node(@standalone_node_ip, "ls #{log_path}")
+        expect(result).to eq("#{log_path}\n")
+      end
+
+      it 'should have access log' do
+        log_path = artifactory_package_logs+'access.log'
+        result = exec_on_node(@standalone_node_ip, "ls #{log_path}")
+        expect(result).to eq("#{log_path}\n")
+      end
+
+      it 'should have request log' do
+        log_path = artifactory_package_logs+'request.log'
+        result = exec_on_node(@standalone_node_ip, "ls #{log_path}")
+        expect(result).to eq("#{log_path}\n")
+      end
+
+      it 'should have import.export log' do
+        log_path = artifactory_package_logs+'import.export.log'
+        result = exec_on_node(@standalone_node_ip, "ls #{log_path}")
+        expect(result).to eq("#{log_path}\n")
+      end
+    end
+
+  end
 
   describe 'licensing' do
     it 'should have a license present' do
@@ -47,10 +73,7 @@ describe 'Standalone Artifactory' do
       end
     end
 
-
-
     context 'when license is changed' do
-
 
       #reset the BOSH deployment to the original
       after(:all) do
@@ -93,6 +116,25 @@ end
 def exec_on_gateway
   @gateway.open(@standalone_node_ip, artifactory_port) do |port|
     yield port
+  end
+end
+
+def exec_on_node(node, cmd, options = {})
+  user           = options.fetch(:user, 'vcap')
+  password       = options.fetch(:password, 'c1oudc0w')
+  run_as_root    = options.fetch(:root, false)
+  discard_stderr = options.fetch(:discard_stderr, false)
+
+  cmd = "echo -e \"#{password}\\n\" | sudo -S #{cmd}" if run_as_root
+  cmd << ' 2>/dev/null' if discard_stderr
+
+  @gateway.ssh(
+    node,
+    user,
+    password: password,
+    paranoid: false
+  ) do |ssh|
+    ssh.exec!(cmd)
   end
 end
 
@@ -169,4 +211,12 @@ end
 
 def bosh_director_ssh_password
   ENV['BOSH_DIRECTOR_SSH_PASSWORD'] || 'vagrant'
+end
+
+def artifactory_package_path
+  "/var/vcap/packages/artifactory"
+end
+
+def artifactory_package_logs
+  artifactory_package_path+"/logs/"
 end
