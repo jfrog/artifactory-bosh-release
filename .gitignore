@@ -13,5 +13,6 @@ Vagrantfile
 vendor/bundle/
 credentials.yml
 bosh_credentials.yml
+database_credentials.yml
 *~
 *.lic

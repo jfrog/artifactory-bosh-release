@@ -80,6 +80,11 @@ jobs:
         BOSH_USERNAME: {{bosh_username}}
         BOSH_PASSWORD: {{bosh_password}}
         BOSH_MANIFEST: {{artifactory_manifest}}
+        ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
+        ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
+        ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
+        ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
+        ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
         ARTIFACTORY_LICENSE: {{artifactory_license}}
 
 - name: integration
@@ -100,6 +105,11 @@ jobs:
         BOSH_MANIFEST: {{artifactory_manifest}}
         BOSH_DIRECTOR_SSH_USERNAME: {{bosh_director_ssh_username}}
         BOSH_DIRECTOR_SSH_PASSWORD: {{bosh_director_ssh_password}}
+        ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
+        ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
+        ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
+        ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
+        ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
         TEST_LICENSE_1: {{test_license_1}}
         TEST_LICENSE_2: {{test_license_2}}
 

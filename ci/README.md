@@ -15,6 +15,7 @@ To configure the concourse pipeline run the following command from the root proj
 fly c -c ci/pipelines/pipeline.yml
  --vars-from ci/credentials.yml
  --vars-from ci/bosh_credentials.yml
+ --vars-from ci/database_credentials.yml
  --var test_license_1=$(cat assets/artifactory.lic)
  --var test_license_2=$(cat assets/artifactory-expired.lic)
  --var artifactory_manifest=manifests/artifactory-vsphere.yml

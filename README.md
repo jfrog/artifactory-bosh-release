@@ -36,12 +36,17 @@ to use during testing (provide the full license string without whitespace or lin
 ### Via Vagrant
 
 ```
-export 	BOSH_TARGET=192.168.50.4
-        BOSH_DIRECTOR_SSH_USERNAME=vagrant
-        BOSH_DIRECTOR_SSH_PASSWORD=vagrant
-        BOSH_MANIFEST=manifests/artifactory-lite.yml
-        TEST_LICENSE_1=$(cat file1.lic)
-        TEST_LICENSE_2=$(cat file1.lic)
+export  BOSH_TARGET=192.168.50.4
+export  BOSH_DIRECTOR_SSH_USERNAME=vagrant
+export  BOSH_DIRECTOR_SSH_PASSWORD=vagrant
+export  BOSH_MANIFEST=manifests/artifactory-lite.yml
+export  TEST_LICENSE_1=$(cat assets/artifactory.lic)
+export  TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)
+export  ARTIFACTORY_DB_HOST=10.60.3.47
+export  ARTIFACTORY_DB_PORT=3306
+export  ARTIFACTORY_DB_NAME=artdb_cf
+export  ARTIFACTORY_DB_USERNAME=artifactory
+export  ARTIFACTORY_DB_PASSWORD=password
 bundle exec rspec --format d
 
 ```
@@ -50,13 +55,16 @@ bundle exec rspec --format d
 
 ```
 export BOSH_TARGET=*vshpere bosh director IP*
-	   BOSH_USERNAME=*vshpere bosh admin username*
-	   BOSH_PASSWORD=*vshpere bosh admin password*
-       BOSH_DIRECTOR_SSH_USERNAME=*vshpere bosh director ssh username*
-       BOSH_DIRECTOR_SSH_PASSWORD=*vshpere bosh director ssh password*
-       BOSH_MANIFEST=manifests/artifactory-vsphere.yml
-       TEST_LICENSE_1=$(cat file1.lic)
-       TEST_LICENSE_2=$(cat file1.lic)
+export  BOSH_DIRECTOR_SSH_USERNAME=vagrant
+export  BOSH_DIRECTOR_SSH_PASSWORD=vagrant
+export  BOSH_MANIFEST=manifests/artifactory-vsphere.yml
+export  TEST_LICENSE_1=$(cat assets/artifactory.lic)
+export  TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)
+export  ARTIFACTORY_DB_HOST=10.60.3.47
+export  ARTIFACTORY_DB_PORT=3306
+export  ARTIFACTORY_DB_NAME=artdb_cf
+export  ARTIFACTORY_DB_USERNAME=artifactory
+export  ARTIFACTORY_DB_PASSWORD=password
 bundle exec rspec --format d
 
 ```
