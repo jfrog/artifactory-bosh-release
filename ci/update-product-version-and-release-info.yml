@@ -1,0 +1,12 @@
+---    
+platform: linux
+image: docker:///cflondonservices/london-services-ci-base#b8465c3adc3f2b32fe9be41a42df167161e29fc2
+inputs:
+  - name: artifactory-bosh-release-master
+  - name: artifactory-pivotal
+  - name: version
+  - name: product-version
+  - name: final_bosh_release
+    
+run:
+  path: artifactory-bosh-release-master/ci/scripts/update-product-version-and-release-info

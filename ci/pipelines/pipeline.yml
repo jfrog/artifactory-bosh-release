@@ -33,6 +33,16 @@ resources:
     region_name: {{s3-region-name}}
     initial_version: 0.2.0
 
+- name: product_version
+  type: semver
+  source:
+    bucket: {{s3-artifacts-bucket}}
+    key: current-product-version
+    access_key_id: {{s3-access-key-id}}
+    secret_access_key: {{s3-secret-access-key}}
+    region_name: {{s3-region-name}}
+    initial_version: 0.0.0
+
 - name: final_bosh_release
   type: s3
   source:
@@ -42,6 +52,13 @@ resources:
     bucket:  {{s3-final-release-bucket}}
     private: true
     regexp: artifactory-bosh-release-(.*).tgz
+
+- name: artifactory-pivotal
+  type: git
+  source:
+    uri: git@github.com:JFrogDev/artifactory-pivotal.git 
+    branch: master
+    private_key: {{artifactory-pivotal-private-key}}
 
 jobs:
 
@@ -108,3 +125,28 @@ jobs:
       tag: version/number
       rebase: true
       tag_prefix: v
+
+- name: update-release-info-in-product
+  serial: true
+  plan:
+    - get: artifactory-bosh-release-master
+      passed: [shipit]
+    - get: version
+      passed: [shipit]
+      trigger: true
+    - get: product_version
+      params: {bump: patch, pre: alpha}
+    - put: product_version
+      params: {file: product_version/number}
+    - get: artifactory-pivotal
+    - get: final_bosh_release
+      passed: [shipit] 
+    - task: update-product-version-and-release-info
+      file: artifactory-pivotal/ci/update-product-version-and-release-info.yml
+      config:
+        params:
+          BOSH_RELEASE_BUCKET: {{s3-final-release-bucket}}
+    - put: artifactory-pivotal
+      params:
+        repository: update-release-info-in-product/artifactory-pivotal
+        rebase: true
