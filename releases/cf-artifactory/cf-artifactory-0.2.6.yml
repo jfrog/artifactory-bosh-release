@@ -1,0 +1,38 @@
+---
+packages:
+- name: jdk
+  version: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  fingerprint: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  sha1: !binary |-
+    M2ZkZGFlYTUzNmRiNmFlMDJiMmU3OTY1MzhiNmU1YzY2ODRlOWEzMg==
+  dependencies: []
+- name: mysql-connector
+  version: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  fingerprint: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  sha1: !binary |-
+    MTVlZTIyMTI0OTMwYjZiNjU2MzU1ZWY2Yjg5NjE0M2VjOWZmZDdlOA==
+  dependencies: []
+- name: artifactory
+  version: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  fingerprint: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  sha1: !binary |-
+    MzcyYWY0ZWU3OWE3OGY2MjVhYmMwY2FmMjA3ZDc1MWZhMTgyMTdjYQ==
+  dependencies: []
+jobs:
+- name: standalone
+  version: !binary |-
+    ZWQ1OGM1OGJhNzQwY2EzNDQ0YmFiMTlkMmI0ZDMxNGQ4NTI1NDk5MQ==
+  fingerprint: !binary |-
+    ZWQ1OGM1OGJhNzQwY2EzNDQ0YmFiMTlkMmI0ZDMxNGQ4NTI1NDk5MQ==
+  sha1: !binary |-
+    ZWI3YWIxNGJkNTI5NmUxZjVlYWRiNzliODVhNGU2ZmVkY2M1ZWFjZQ==
+commit_hash: 9474e290
+uncommitted_changes: false
+name: cf-artifactory
+version: 0.2.6
