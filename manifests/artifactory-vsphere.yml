@@ -25,7 +25,7 @@ networks:
   - range: 10.60.0.0/16
     gateway: 10.60.0.1
     dns: [10.60.0.10]
-    cloud_properties: {name: 'VM Network'} 
+    cloud_properties: {name: 'VM Network'}
     reserved:
     - 10.60.4.33
     - 10.60.4.37
@@ -36,14 +36,14 @@ resource_pools:
 - name: vms
   network: services1
   stemcell:
-    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent 
+    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
     version: latest
   cloud_properties:
     cpu: 2
     ram: 4_096
     disk: 20_000
 jobs:
-- name: standalone 
+- name: standalone
   templates:
   - name: standalone
     release: cf-artifactory
@@ -56,3 +56,10 @@ jobs:
     - 10.60.4.54
   properties:
     artifactory_license_key: <%= `echo $ARTIFACTORY_LICENSE` %>
+    database:
+      host: <%= `echo $ARTIFACTORY_DB_HOST` %>
+      port: <%= `echo $ARTIFACTORY_DB_PORT` %>
+      name: <%= `echo $ARTIFACTORY_DB_NAME` %>
+      username: <%= `echo $ARTIFACTORY_DB_USERNAME` %>
+      password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
+

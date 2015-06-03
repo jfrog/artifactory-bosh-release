@@ -58,3 +58,9 @@ jobs:
     - 10.244.23.54
   properties:
     artifactory_license_key: <%= `echo $ARTIFACTORY_LICENSE` %>
+    database:
+      host: <%= `echo $ARTIFACTORY_DB_HOST` %>
+      port: <%= `echo $ARTIFACTORY_DB_PORT` %>
+      name: <%= `echo $ARTIFACTORY_DB_NAME` %>
+      username: <%= `echo $ARTIFACTORY_DB_USERNAME` %>
+      password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>

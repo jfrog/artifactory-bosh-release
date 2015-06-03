@@ -5,14 +5,26 @@ templates:
   artifactory.default.erb: bin/artifactory.default
   logback.xml.erb: etc/logback.xml
   artifactory.lic.erb: etc/artifactory.lic
+  storage.properties.erb: etc/storage.properties
 
 packages:
 - artifactory
 - jdk
+- mysql-connector
 
 properties:
-  artifactory_log_dir: 
+  artifactory_log_dir:
     description: "Directory for all artifactory logs"
     default: /var/vcap/sys/log/artifactory
   artifactory_license_key:
     description: "Artifactory license key"
+  database.host:
+    description: "The Artifactory database host. Example: 10.6.3.47"
+  database.port:
+    description: "The Artifactory database port. Example: 3306"
+  database.name:
+    description: "The Artifactory database name. Example: artdb"
+  database.username:
+    description: "The Artifactory database username. Example: artifactory"
+  database.password:
+    description: "The Artifactory database password. Example: password"

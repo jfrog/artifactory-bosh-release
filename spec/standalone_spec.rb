@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'net/ssh/gateway'
 require 'rest-client'
 require 'yaml'
+require 'json'
+require 'securerandom'
+require 'mysql'
 
 describe 'Standalone Artifactory' do
 
@@ -16,7 +19,7 @@ describe 'Standalone Artifactory' do
     ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
     bosh_deploy_and_wait_for_artifactory
   end
-  
+
   describe 'Initial Checks' do
     it 'should verify that deployed artifactory is running and version is correct' do
       exec_on_gateway do | port |
@@ -51,6 +54,39 @@ describe 'Standalone Artifactory' do
       end
     end
 
+    describe "database connection" do
+      context "adding a new user" do
+        let(:random_user) { SecureRandom.hex }
+
+        before do
+          exec_on_gateway do | port |
+            response = RestClient.get artifactory_users_url(port: port)
+            user = JSON.parse(response).find do | user |
+              user.fetch("name") == random_user
+            end
+            expect(user).to be_nil
+
+            new_user = JSON.generate(:name => random_user, :password => "pass", :email => "#{random_user}@test.com")
+            RestClient.put artifactory_users_url(user: random_user, port: port), new_user,:content_type => 'application/json'
+          end
+        end
+
+        after do
+          exec_on_gateway do | port |
+            RestClient.delete artifactory_users_url(user: random_user, port: port)
+          end
+        end
+
+        it 'should be present in the mysql database' do
+          con = Mysql.connect(ENV["ARTIFACTORY_DB_HOST"], ENV["ARTIFACTORY_DB_USERNAME"],
+                              ENV["ARTIFACTORY_DB_PASSWORD"], ENV["ARTIFACTORY_DB_NAME"],
+                              ENV["ARTIFACTORY_DB_PORT"].to_i)
+          rs = con.query "SELECT count(*) FROM artdb_cf.users WHERE username = '#{random_user}'"
+          con.close
+          expect(rs.fetch_hash['count(*)'].to_i).to eq(1)
+        end
+      end
+    end
   end
 
   describe 'licensing' do
@@ -62,10 +98,10 @@ describe 'Standalone Artifactory' do
       end
     end
 
-    context 'when a license is not present' do  
+    context 'when a license is not present' do
       it 'is still accessible' do
         ENV["ARTIFACTORY_LICENSE"] = ""
-        bosh_deploy_and_wait_for_artifactory        
+        bosh_deploy_and_wait_for_artifactory
         exec_on_gateway do | port |
           response = RestClient.get artifactory_version_url port
           expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
@@ -83,17 +119,16 @@ describe 'Standalone Artifactory' do
       end
 
       it 'updates the license' do
-       ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
-       puts "Deploying Lic 2"
-       bosh_deploy_and_wait_for_artifactory 
-       exec_on_gateway do | port |
-        response = RestClient.get artifactory_license_url port
-        expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
+        puts "Deploying Lic 2"
+        bosh_deploy_and_wait_for_artifactory
+        exec_on_gateway do | port |
+          response = RestClient.get artifactory_license_url port
+          expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
+        end
       end
     end
-
   end
-end
 end
 
 
@@ -197,6 +232,14 @@ def artifactory_status_api port
  "#{artifactory_authenticated_api(port)}/system/ping"
 end
 
+def artifactory_users_url(user: "", port:)
+  if user == ""
+    "#{artifactory_authenticated_api(port)}/security/users"
+  else
+    "#{artifactory_authenticated_api(port)}/security/users/#{user}"
+  end
+end
+
 def artifactory_version_url port
  "#{artifactory_api(port)}/system/version"
 end
@@ -219,4 +262,8 @@ end
 
 def artifactory_package_logs
   artifactory_package_path+"/logs/"
+end
+
+def artifactory_sys_logs
+  "/var/vcap/sys/log/artifactory/"
 end

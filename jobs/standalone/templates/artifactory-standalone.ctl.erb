@@ -4,6 +4,7 @@ set -e
 
 LOG_DIR=/var/vcap/sys/log/artifactory
 JAVA_HOME=/var/vcap/packages/jdk/
+MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
 ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
 case $1 in
@@ -17,8 +18,10 @@ case $1 in
 
     cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
     cp $ARTIFACTORY_JOB_DIR/etc/artifactory.lic $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/etc/storage.properties $ARTIFACTORY_PKG_DIR/etc
     cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
 
+    cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
 
     #setup logs to be visible in UI
     cd logs
