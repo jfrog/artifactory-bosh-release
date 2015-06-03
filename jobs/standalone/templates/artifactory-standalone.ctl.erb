@@ -22,7 +22,7 @@ case $1 in
 
     #setup logs to be visible in UI
     cd logs
-    rm *.log
+    rm -f *.log
     ln -s $LOG_DIR/artifactory.log
     ln -s $LOG_DIR/access.log
     ln -s $LOG_DIR/request.log
