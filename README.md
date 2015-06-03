@@ -23,6 +23,12 @@ in an environment variable called ARTIFACTORY_LICENSE (provide the full license 
 To deploy into a development environment:
 
 ```
+export  ARTIFACTORY_DB_HOST=10.60.3.47
+export  ARTIFACTORY_DB_PORT=3306
+export  ARTIFACTORY_DB_NAME=artdb_cf
+export  ARTIFACTORY_DB_USERNAME=artifactory
+export  ARTIFACTORY_DB_PASSWORD=password
+export  ARTIFACTORY_LICENSE=$(cat artifactory.lic) 
 bosh -n create release --force && bosh upload release
 ARTIFACTORY_LICENSE=$(cat artifactory.lic) bosh deploy
 ```
