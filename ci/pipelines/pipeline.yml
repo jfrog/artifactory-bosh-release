@@ -31,17 +31,7 @@ resources:
     access_key_id: {{s3-access-key-id}}
     secret_access_key: {{s3-secret-access-key}}
     region_name: {{s3-region-name}}
-    initial_version: 0.2.0
-
-- name: product_version
-  type: semver
-  source:
-    bucket: {{s3-artifacts-bucket}}
-    key: current-product-version
-    access_key_id: {{s3-access-key-id}}
-    secret_access_key: {{s3-secret-access-key}}
-    region_name: {{s3-region-name}}
-    initial_version: 0.0.0
+    initial_version: 0.3.0
 
 - name: final_bosh_release
   type: s3
