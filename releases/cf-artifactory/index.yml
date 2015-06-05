@@ -44,4 +44,6 @@ builds:
     version: 0.2.7
   277c6757-bedf-45b8-add6-ed6527961f2d:
     version: 0.2.8
+  fdd4b756-62d4-45b0-a9dc-f7b19ec52b2d:
+    version: 0.3.2
 format-version: '2'
