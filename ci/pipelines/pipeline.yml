@@ -136,27 +136,3 @@ jobs:
       rebase: true
       tag_prefix: v
 
-- name: update-release-info-in-product
-  serial: true
-  plan:
-    - get: artifactory-bosh-release-master
-      passed: [shipit]
-    - get: version
-      passed: [shipit]
-      trigger: true
-    - get: product_version
-      params: {bump: patch, pre: alpha}
-    - put: product_version
-      params: {file: product_version/number}
-    - get: artifactory-pivotal
-    - get: final_bosh_release
-      passed: [shipit] 
-    - task: update-product-version-and-release-info
-      file: artifactory-bosh-release-master/ci/update-product-version-and-release-info.yml
-      config:
-        params:
-          BOSH_RELEASE_BUCKET: {{s3-final-release-bucket}}
-    - put: artifactory-pivotal
-      params:
-        repository: update-release-info-in-product/artifactory-pivotal
-        rebase: true
