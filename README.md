@@ -4,6 +4,8 @@
 
 ###Prerequisites
 Ruby  (pre-loaded on mac).  Suggest you configure it to point to your artifactory server, if you have one.
+mysql (for testing).  A prerequisite of the ruby mysql gem
+
 ###Setting up ruby and bosh
 Depending on your configuration, the following command may require sudo.
 
