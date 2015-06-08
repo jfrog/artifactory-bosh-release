@@ -1,5 +1,10 @@
 #CI Pipeline for Concourse
 
+Note: Current pipeline implementation means you SHOULD NOT push while the pipleline
+is running.
+
+TODO: Branch strategy to eliminate this issue.
+
 ## Concourse Setup
 
 ### Concourse Installation
@@ -25,7 +30,7 @@ fly c -c ci/pipelines/pipeline.yml
 
 ### Fly CLI Setup
 
-Goto [Concourse](http://192.168.100.4:8080/pipelines/main) and download the 
+Goto [Concourse](http://192.168.100.4:8080/pipelines/main) and download the
 CLI for your system from the bottom right hand corner.
 
 ## Docker Images
