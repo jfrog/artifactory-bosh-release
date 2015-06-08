@@ -29,7 +29,7 @@ FLUSH PRIVILEGES;
 ```
 
 - To use this release you must provide the Artifactory license string
-in an environment variable called ARTIFACTORY_LICENSE (provide the full license string without whitespace or line breaks in the environment variable)
+in an environment variable called ARTIFACTORY_LICENSE.
 
 To deploy into a development environment:
 
@@ -47,7 +47,7 @@ bosh -n create release --force && bosh upload release && bosh deploy
 
 Note that the tests expect artifactory to have been deployed to your BOSH
 environment. You must specify two license keys with different valid through dates
-to use during testing (provide the full license string without whitespace or line breaks in the environment variable)
+to use during testing.
 
 ### Via Vagrant
 
