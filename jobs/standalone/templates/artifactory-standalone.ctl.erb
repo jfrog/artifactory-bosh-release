@@ -1,6 +1,11 @@
 #!/bin/bash
 
 set -e
+set -x
+
+exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
+exec 2> >(tee -a >(logger -p user.error -t vcap.$(basename $0).stderr) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).err.log)
+
 
 LOG_DIR=/var/vcap/sys/log/artifactory
 JAVA_HOME=/var/vcap/packages/jdk/
@@ -10,6 +15,13 @@ ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
 case $1 in
 
   start)
+    mkdir -p $ARTIFACTORY_PKG_DIR/data/filestore
+    #unmount our nfs if it is already mounted for some reason
+    if grep -qs '/var/vcap/store/artifactory_file_store' /proc/mounts; then
+        umount $ARTIFACTORY_PKG_DIR/data/filestore -f
+    fi
+
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_point')%> $ARTIFACTORY_PKG_DIR/data/filestore
     mkdir -p $LOG_DIR
     chown vcap:vcap $LOG_DIR
 
@@ -40,9 +52,11 @@ case $1 in
   stop)
     exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
-      2>> $LOG_DIR/artifactory.stderr.log
-    ;;
+      2>> $LOG_DIR/artifactory.stderr.log || true
 
+    #always try to unmount
+    umount $ARTIFACTORY_PKG_DIR/data/filestore -f || true
+    ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
 

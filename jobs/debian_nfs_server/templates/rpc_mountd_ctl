@@ -1,0 +1,34 @@
+#!/bin/bash
+
+RUN_DIR=/var/vcap/sys/run
+PIDFILE=$RUN_DIR/rpc_mountd.pid
+
+mkdir -p /var/vcap/sys/log
+
+exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
+exec 2> >(tee -a >(logger -p user.error -t vcap.$(basename $0).stderr) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).err.log)
+
+source /var/vcap/jobs/debian_nfs_server/bin/utils.sh
+
+case $1 in
+
+  start)
+    pid_guard $PIDFILE "rpc.mountd"
+
+    /usr/sbin/rpc.mountd
+    pidof rpc.mountd > $PIDFILE
+
+    ;;
+
+  stop)
+    kill_and_wait $PIDFILE
+
+    ;;
+
+  *)
+    echo "Usage: rpc_mountd_ctl {start|stop}"
+
+    ;;
+
+esac
+exit 0

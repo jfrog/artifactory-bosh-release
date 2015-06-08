@@ -19,6 +19,15 @@ bundle install
 
 ## Configuration
 
+- Setup a mysql database for use by Artifactory
+
+```
+CREATE USER artifactory IDENTIFIED BY 'password';
+CREATE DATABASE artdb CHARACTER SET utf8;
+GRANT ALL on artdb.* TO 'artifactory'@'%' IDENTIFIED BY 'password';
+FLUSH PRIVILEGES;
+```
+
 - To use this release you must provide the Artifactory license string
 in an environment variable called ARTIFACTORY_LICENSE (provide the full license string without whitespace or line breaks in the environment variable)
 
@@ -30,9 +39,8 @@ export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
-export  ARTIFACTORY_LICENSE=$(cat artifactory.lic) 
-bosh -n create release --force && bosh upload release
-ARTIFACTORY_LICENSE=$(cat artifactory.lic) bosh deploy
+export  ARTIFACTORY_LICENSE=$(cat artifactory.lic)
+bosh -n create release --force && bosh upload release && bosh deploy
 ```
 
 ## Running the tests
@@ -62,9 +70,9 @@ bundle exec rspec --format d
 ### Via vSphere
 
 ```
-export BOSH_TARGET=*vshpere bosh director IP*
-export  BOSH_DIRECTOR_SSH_USERNAME=vagrant
-export  BOSH_DIRECTOR_SSH_PASSWORD=vagrant
+export BOSH_TARGET=10.60.4.6
+export  BOSH_DIRECTOR_SSH_USERNAME=vcap
+export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
 export  BOSH_MANIFEST=manifests/artifactory-vsphere.yml
 export  TEST_LICENSE_1=$(cat assets/artifactory.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)

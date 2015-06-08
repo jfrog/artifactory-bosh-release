@@ -28,3 +28,7 @@ properties:
     description: "The Artifactory database username. Example: artifactory"
   database.password:
     description: "The Artifactory database password. Example: password"
+  nfs.server_ip:
+    description: "The NFS server ip addresss"
+  nfs.mount_point:
+    description: "The NFS server mount point"

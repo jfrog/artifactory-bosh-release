@@ -11,3 +11,7 @@ mysql-connector/mysql-connector-java-5.1.35.tar.gz:
   object_id: c7d1f320-8b85-410a-aa05-0f8b38fead24
   sha: a3861e599a8f72527f630ce298a38204922f45d4
   size: 3848304
+debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb:
+  object_id: 3b1db8d2-3cf5-4e59-82ed-8ac5a68f9302
+  sha: 2ec33a5319657a881b7b1cd8a9e1adf6a8312318
+  size: 170310

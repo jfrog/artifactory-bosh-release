@@ -1,0 +1,4 @@
+---
+name: debian_nfs_server
+files:
+- debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb

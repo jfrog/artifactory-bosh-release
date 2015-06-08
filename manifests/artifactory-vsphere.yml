@@ -32,6 +32,7 @@ networks:
     - 10.60.4.53
     static:
     - 10.60.4.54
+    - 10.60.4.56
 resource_pools:
 - name: vms
   network: services1
@@ -43,13 +44,28 @@ resource_pools:
     ram: 4_096
     disk: 20_000
 jobs:
+- name: nfs_server
+  templates:
+  - name: debian_nfs_server
+    release: cf-artifactory
+  instances: 1
+  resource_pool: vms
+  persistent_disk: 8096
+  networks:
+  - name: services1
+    static_ips:
+    - 10.60.4.56
+  properties:
+    nfs_server:
+      allow_from_entries:
+      - 10.60.4.54
+
 - name: standalone
   templates:
   - name: standalone
     release: cf-artifactory
   instances: 1
   resource_pool: vms
-  persistent_disk: 4096
   networks:
   - name: services1
     static_ips:
@@ -62,4 +78,7 @@ jobs:
       name: <%= `echo $ARTIFACTORY_DB_NAME` %>
       username: <%= `echo $ARTIFACTORY_DB_USERNAME` %>
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
+    nfs:
+      server_ip: 10.60.4.56
+      mount_point: /var/vcap/store/artifactory_file_store
 

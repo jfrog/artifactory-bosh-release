@@ -1,0 +1,3 @@
+set -e -x
+
+cp -v debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb ${BOSH_INSTALL_TARGET}/

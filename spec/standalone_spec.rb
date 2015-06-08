@@ -5,9 +5,9 @@ require 'yaml'
 require 'json'
 require 'securerandom'
 require 'mysql'
+require 'digest'
 
 describe 'Standalone Artifactory' do
-
   before(:all) do
     @gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
       :password => bosh_director_ssh_password)
@@ -53,7 +53,9 @@ describe 'Standalone Artifactory' do
         expect(result).to eq("#{log_path}\n")
       end
     end
+  end
 
+  describe 'peristence' do
     describe "database connection" do
       context "adding a new user" do
         let(:random_user) { SecureRandom.hex }
@@ -87,6 +89,41 @@ describe 'Standalone Artifactory' do
         end
       end
     end
+
+    context 'when both the standalone & nfs_server are recreated by an operator' do
+      let(:filename) { SecureRandom.hex }
+
+      after do
+        exec_on_gateway do | port |
+          RestClient.delete artifactory_artifact_url(filename: filename, port: port)
+        end
+      end
+
+      it 'still has the artifacts' do
+        file_sha1 = ""
+
+        #upload an artifact
+        exec_on_gateway do | port |
+          response = RestClient.put artifactory_artifact_url(filename: filename, port: port), File.read('README.md'), :content_type => 'text'
+          file_sha1 = JSON.parse(response)["checksums"]["sha1"]
+          puts "uploaded file #{filename} to artifactory with sha1 #{file_sha1}"
+        end
+        #delete and recreate vms but not disks
+        puts "stopping artifactory"
+        bundle_exec_bosh "stop standalone --soft"
+        puts "recreating nfs_server"
+        bundle_exec_bosh "recreate nfs_server"
+        puts "recreating standalone"
+        bundle_exec_bosh "recreate standalone"
+
+        wait_for_artifactory_available
+        #verfiy the artifact can be downloaded again
+        exec_on_gateway do | port |
+          response = RestClient.get artifactory_artifact_url(filename: filename, port: port)
+          expect(Digest::SHA1.hexdigest(response)).to eq(file_sha1)
+        end
+      end
+    end
   end
 
   describe 'licensing' do
@@ -110,8 +147,6 @@ describe 'Standalone Artifactory' do
     end
 
     context 'when license is changed' do
-
-      #reset the BOSH deployment to the original
       after(:all) do
         puts "Resetting to original license from deployment"
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
@@ -130,7 +165,6 @@ describe 'Standalone Artifactory' do
     end
   end
 end
-
 
 def bosh_deploy_and_wait_for_artifactory
   bundle_exec_bosh "deploy"
@@ -238,6 +272,10 @@ def artifactory_users_url(user: "", port:)
   else
     "#{artifactory_authenticated_api(port)}/security/users/#{user}"
   end
+end
+
+def artifactory_artifact_url(filename:,  port:)
+  "http://#{artifactory_admin_user}:#{artifactory_admin_password}@localhost:#{port}/artifactory/libs-release-local/#{filename}"
 end
 
 def artifactory_version_url port
