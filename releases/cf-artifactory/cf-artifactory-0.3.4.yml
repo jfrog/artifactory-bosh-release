@@ -1,0 +1,53 @@
+---
+packages:
+- name: mysql-connector
+  version: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  fingerprint: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  sha1: !binary |-
+    ODk0MTIxODI2NzhlYTVkMjFlMzZmNjA1MjRkNzNlNTYzM2VmYjhjZA==
+  dependencies: []
+- name: artifactory
+  version: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  fingerprint: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  sha1: !binary |-
+    ZjE2ZDk1ZjE0YjFiNzhlNTJhMjJiNWJiMjU2MDQ1MzhiNjY1OGRmNA==
+  dependencies: []
+- name: jdk
+  version: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  fingerprint: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  sha1: !binary |-
+    MDZkY2FlYjkyMjk3ZTkyYTM2ZGY4OGQ0NGRlZTVjZWQwZDA2YjNiZA==
+  dependencies: []
+- name: debian_nfs_server
+  version: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  fingerprint: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  sha1: !binary |-
+    N2UwODQ2MDg4MmI2ZGFjYjc3ZTc5MWJiZTBiOGRjYTdlNjJmZDk1ZQ==
+  dependencies: []
+jobs:
+- name: standalone
+  version: !binary |-
+    MDUxOWM0YTNjODU1OWJiNjBjMzY2NDEyOGE4MjJjNDNiZTc1OGUzZA==
+  fingerprint: !binary |-
+    MDUxOWM0YTNjODU1OWJiNjBjMzY2NDEyOGE4MjJjNDNiZTc1OGUzZA==
+  sha1: !binary |-
+    NmIxZjBiNzIzN2NhODRiMWE4YjdlNjZlYjg4YWYxYTc5MzgyMmEyYw==
+- name: debian_nfs_server
+  version: !binary |-
+    MDk4ODY3MzI4OWM0OGEzY2JiYjlhZmRlODcxZWQ2YTJhZWI0Y2E1Ng==
+  fingerprint: !binary |-
+    MDk4ODY3MzI4OWM0OGEzY2JiYjlhZmRlODcxZWQ2YTJhZWI0Y2E1Ng==
+  sha1: !binary |-
+    MGVjZjcyOWRjN2UyZDYwYzY3YjMxOTYyNDRjZjJkNTU4YjVlMGE3ZA==
+commit_hash: 73d3cbfa
+uncommitted_changes: false
+name: cf-artifactory
+version: 0.3.4
