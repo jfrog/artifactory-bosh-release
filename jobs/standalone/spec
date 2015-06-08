@@ -32,3 +32,4 @@ properties:
     description: "The NFS server ip addresss"
   nfs.mount_point:
     description: "The NFS server mount point"
+    default: /var/vcap/store/artifactory_file_store

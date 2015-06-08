@@ -17,7 +17,7 @@ case $1 in
   start)
     mkdir -p $ARTIFACTORY_PKG_DIR/data/filestore
     #unmount our nfs if it is already mounted for some reason
-    if grep -qs '/var/vcap/store/artifactory_file_store' /proc/mounts; then
+    if grep -qs data/filestore /proc/mounts; then
         umount $ARTIFACTORY_PKG_DIR/data/filestore -f
     fi
 
