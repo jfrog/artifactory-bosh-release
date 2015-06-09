@@ -23,8 +23,8 @@ bundle install
 
 ```
 CREATE USER artifactory IDENTIFIED BY 'password';
-CREATE DATABASE artdb CHARACTER SET utf8;
-GRANT ALL on artdb.* TO 'artifactory'@'%' IDENTIFIED BY 'password';
+CREATE DATABASE artdb_cf CHARACTER SET utf8;
+GRANT ALL on artdb_cf.* TO 'artifactory'@'%' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 ```
 
