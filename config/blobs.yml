@@ -15,3 +15,7 @@ debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb:
   object_id: 3b1db8d2-3cf5-4e59-82ed-8ac5a68f9302
   sha: 2ec33a5319657a881b7b1cd8a9e1adf6a8312318
   size: 170310
+go/go1.4.1.linux-amd64.tar.gz:
+  object_id: 2006eeb4-7992-4db9-880d-bfa80b3c2e6f
+  sha: 3e871200e13c0b059b14866d428910de0a4c51ed
+  size: 62402109
