@@ -20,12 +20,23 @@ describe 'Standalone Artifactory' do
     bosh_deploy_and_wait_for_artifactory
   end
 
+  after(:all) do
+    puts 'verify that route is still available after the tests have ran'
+    response = RestClient.get artifactory_route_version_url
+    expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+  end
+
   describe 'Initial Checks' do
     it 'should verify that deployed artifactory is running and version is correct' do
       exec_on_gateway do | port |
         response = RestClient.get artifactory_version_url port
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
+    end
+
+    it 'should verify that artifactory is accessible via the route' do
+      response = RestClient.get artifactory_route_version_url
+      expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
     end
 
     describe 'artifactory logs dir' do
@@ -226,6 +237,10 @@ def bosh_target
   ENV['BOSH_TARGET'] || '192.168.50.4'
 end
 
+def cf_domain
+  ENV['CF_DOMAIN']
+end
+
 def bosh_username
   ENV['BOSH_USERNAME'] || 'admin'
 end
@@ -276,6 +291,10 @@ end
 
 def artifactory_artifact_url(filename:,  port:)
   "http://#{artifactory_admin_user}:#{artifactory_admin_password}@localhost:#{port}/artifactory/libs-release-local/#{filename}"
+end
+
+def artifactory_route_version_url
+  "http://bosh-artifactory.#{cf_domain}/artifactory/api/system/version"
 end
 
 def artifactory_version_url port

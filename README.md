@@ -40,6 +40,12 @@ export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
 export  ARTIFACTORY_LICENSE=$(cat artifactory.lic)
+export  NATS_USERNAME=nats
+export  NATS_PASSWORD=password
+export  NATS_HOST=10.60.3.2
+export  NATS_PORT=4222
+export  CF_DOMAIN=cf.jfrog.local
+
 bosh -n create release --force && bosh upload release && bosh deploy
 ```
 
@@ -63,6 +69,10 @@ export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
+export  NATS_USERNAME=nats
+export  NATS_PASSWORD=password
+export  NATS_HOST=10.60.3.2
+export  NATS_PORT=4222
 bundle exec rspec --format d
 
 ```
@@ -81,6 +91,11 @@ export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
+export  NATS_USERNAME=nats
+export  NATS_PASSWORD=password
+export  NATS_HOST=10.60.3.2
+export  NATS_PORT=4222
+export  CF_DOMAIN=cf.jfrog.local
 bundle exec rspec --format d
 
 ```

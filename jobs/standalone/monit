@@ -3,3 +3,9 @@ check process artifactory
   start program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl start"
   stop program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl stop"
   group vcap
+
+check process route-registrar
+  with pidfile /var/vcap/sys/run/route-registrar.pid
+  start program "/var/vcap/jobs/standalone/bin/route-registrar_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/standalone/bin/route-registrar_ctl stop" with timeout 10 seconds
+  group vcap

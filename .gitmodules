@@ -1,0 +1,3 @@
+[submodule "src/route-registrar"]
+	path = src/route-registrar
+	url = git@github.com:cloudfoundry-incubator/route-registrar.git
