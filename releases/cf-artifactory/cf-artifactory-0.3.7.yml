@@ -1,0 +1,78 @@
+---
+packages:
+- name: common
+  version: !binary |-
+    YjUxM2U3NDhiOGY2OWUyMTc0ZjdhOGI0YjI0ZTIwMDc0NWI5OTJhMw==
+  fingerprint: !binary |-
+    YjUxM2U3NDhiOGY2OWUyMTc0ZjdhOGI0YjI0ZTIwMDc0NWI5OTJhMw==
+  sha1: !binary |-
+    NGM1MWE0ZDk4ZDZmNDBkNjcyYmJkMjUzYjYzMDMyOGRlNWExZjI4OA==
+  dependencies: []
+- name: mysql-connector
+  version: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  fingerprint: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  sha1: !binary |-
+    YzdkYjhkY2FhNTI5N2IzNzUxZGJiYzI3NWUxYWIwODI4NDhiOGU3Yg==
+  dependencies: []
+- name: artifactory
+  version: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  fingerprint: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  sha1: !binary |-
+    ZDVmNWI2YWJjM2EzNWQxZDljZTU2MzJmNGMxOWYwODQ4NDhiNDQwNA==
+  dependencies: []
+- name: route-registrar
+  version: !binary |-
+    ZDQyNmJmNDg0ZTZjNGQ0ZmJlNmU4NzA4OTNkZjMyMTMwMjI4MzY1MQ==
+  fingerprint: !binary |-
+    ZDQyNmJmNDg0ZTZjNGQ0ZmJlNmU4NzA4OTNkZjMyMTMwMjI4MzY1MQ==
+  sha1: !binary |-
+    Y2MwMDY2ZTI5YzI0NGVhMGMzMGM4N2QyNzc2ZDVjZmIzYmU1ZTc2ZA==
+  dependencies:
+  - go
+- name: jdk
+  version: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  fingerprint: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  sha1: !binary |-
+    ZTA3NmIwYjBlMzEyNzcyNTkxYzQ0NDI2YzFjMjQ0M2MwMTMzOTQ5MQ==
+  dependencies: []
+- name: debian_nfs_server
+  version: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  fingerprint: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  sha1: !binary |-
+    NWIwYmMwNzY1MWVlMDkyMWQ3NjdjODA0MjM1Nzc5MzhlYzVmZmI4OA==
+  dependencies: []
+- name: go
+  version: !binary |-
+    MWM5MWZlYjU1YjcyZTkzNDBhNTJkYjk3NGY2ZDI5MjdiMmJlMjI1Yw==
+  fingerprint: !binary |-
+    MWM5MWZlYjU1YjcyZTkzNDBhNTJkYjk3NGY2ZDI5MjdiMmJlMjI1Yw==
+  sha1: !binary |-
+    OWE1MjQyNDkwYTJkZjgzMjliMGE2NDExNjQwOWIwMDhjZjdkYzhkNw==
+  dependencies: []
+jobs:
+- name: standalone
+  version: !binary |-
+    YmUxY2IyYTA1YjZiNzUwZGU1YmY0MTZmZDM4ZjE2MTIyNzZhMTg5YQ==
+  fingerprint: !binary |-
+    YmUxY2IyYTA1YjZiNzUwZGU1YmY0MTZmZDM4ZjE2MTIyNzZhMTg5YQ==
+  sha1: !binary |-
+    ZTg5NjgyZmE3YzRmMmZkYjBlNGM4OTgxNGZiMjEyZGEzZGI4YTc1OQ==
+- name: debian_nfs_server
+  version: !binary |-
+    NWFlMDIyMmVmNGI5NmI2YzFjYzczMjJmNjEyMWZiMjVkZjUxMDFmOA==
+  fingerprint: !binary |-
+    NWFlMDIyMmVmNGI5NmI2YzFjYzczMjJmNjEyMWZiMjVkZjUxMDFmOA==
+  sha1: !binary |-
+    YTU5ZGFjYzY3Y2JhZmNkZmEyMzU4ZDQ4Y2VmMDJkYTE2YWEyNTEwMA==
+commit_hash: 8c237e48
+uncommitted_changes: false
+name: cf-artifactory
+version: 0.3.7
