@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -ex
-
-docker logout
-docker run \
-  -v $PWD:$PWD \
-  -w $PWD \
-  cflondonservices/london-services-ci-base:stable scripts/test

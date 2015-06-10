@@ -1,4 +1,0 @@
-*.gem
-/Gemfile.lock
-/vendor/cache
-/.bundler
