@@ -101,24 +101,25 @@ describe 'Standalone Artifactory' do
       end
     end
 
-    context 'when both the standalone & nfs_server are recreated by an operator' do
-      let(:filename) { SecureRandom.hex }
+    describe 'recreating vms' do
 
-      after do
-        exec_on_gateway do | port |
-          RestClient.delete artifactory_artifact_url(filename: filename, port: port)
-        end
-      end
-
-      it 'still has the artifacts' do
-        file_sha1 = ""
+      before(:all) do
+        @filename_artifact = SecureRandom.hex
+        @filepath_backup = "#{artifactory_package_path}/backup/#{SecureRandom.hex}"
+        @filepath_data =  "#{artifactory_package_path}/data/#{SecureRandom.hex}"
+        @filepath_etc = "#{artifactory_package_path}/etc/#{SecureRandom.hex}"
+        @file_sha1 = ""
 
         #upload an artifact
         exec_on_gateway do | port |
-          response = RestClient.put artifactory_artifact_url(filename: filename, port: port), File.read('README.md'), :content_type => 'text'
-          file_sha1 = JSON.parse(response)["checksums"]["sha1"]
-          puts "uploaded file #{filename} to artifactory with sha1 #{file_sha1}"
+          response = RestClient.put artifactory_artifact_url(filename: @filename_artifact, port: port), File.read('README.md'), :content_type => 'text'
+          @file_sha1 = JSON.parse(response)["checksums"]["sha1"]
+          puts "uploaded file #{@filename_artifact} to artifactory with sha1 #{@file_sha1}"
         end
+        #create a file in backup / data / etc
+        exec_on_node(@standalone_node_ip, "touch #{@filepath_backup}", :root => true )
+        exec_on_node(@standalone_node_ip, "touch #{@filepath_data}", :root => true )
+        exec_on_node(@standalone_node_ip, "touch #{@filepath_etc}", :root => true )
         #delete and recreate vms but not disks
         puts "stopping artifactory"
         bundle_exec_bosh "stop standalone --soft"
@@ -128,10 +129,41 @@ describe 'Standalone Artifactory' do
         bundle_exec_bosh "recreate standalone"
 
         wait_for_artifactory_available
-        #verfiy the artifact can be downloaded again
+      end
+
+      after(:all) do
+        #delete the artifact
         exec_on_gateway do | port |
-          response = RestClient.get artifactory_artifact_url(filename: filename, port: port)
-          expect(Digest::SHA1.hexdigest(response)).to eq(file_sha1)
+          RestClient.delete artifactory_artifact_url(filename: @filename_artifact, port: port)
+        end
+        #delte the file in backup / data / etc
+        exec_on_node(@standalone_node_ip, "rm #{@filepath_backup}", :root => true )
+        exec_on_node(@standalone_node_ip, "rm #{@filepath_data}", :root => true )
+        exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
+      end
+
+      context 'when both the standalone & nfs_server are recreated by an operator' do
+        it 'still has backup data' do
+          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_backup}")
+          expect(result).to eq("#{@filepath_backup}\n")
+        end
+
+        it 'still has etc data' do
+          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_etc}")
+          expect(result).to eq("#{@filepath_etc}\n")
+        end
+
+        it 'still has data dir data' do
+          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_data}")
+          expect(result).to eq("#{@filepath_data}\n")
+        end
+
+        it 'still has the artifacts' do
+          #verfiy the artifact can be downloaded again
+          exec_on_gateway do | port |
+            response = RestClient.get artifactory_artifact_url(filename: @filename_artifact, port: port)
+            expect(Digest::SHA1.hexdigest(response)).to eq(@file_sha1)
+          end
         end
       end
     end
