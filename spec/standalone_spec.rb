@@ -122,7 +122,8 @@ describe 'Standalone Artifactory' do
         #upload a plugin
         myplugin = `cat assets/dummyPlugin.groovy`
         command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}\nEOL\n"
-        exec_on_node(@standalone_node_ip, command)
+        puts command
+        exec_on_node(@standalone_node_ip, command, :root => true)
         #delete and recreate vms but not disks
         puts 'stopping artifactory'
         bundle_exec_bosh 'stop standalone --soft'
