@@ -35,11 +35,13 @@ function mount_nfs {
     #ENDBLOCK: Mounting backup directory
 
     #BLOCK: Make etc directory, unmount it if mounted, then mount it
-    mkdir -p $ARTIFACTORY_PKG_DIR/data
+    mkdir -p $ARTIFACTORY_PKG_DIR/etc
     if grep -qsE "artifactory/.*/etc " /proc/mounts; then
         umount $ARTIFACTORY_PKG_DIR/etc -f
     fi
     mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_etc_dir $ARTIFACTORY_PKG_DIR/etc
+    #create a plugins directory if it doesn't already exist
+    mkdir -p $ARTIFACTORY_PKG_DIR/etc/plugins
     #ENDBLOCK: Mounting etc directory
 
     #BLOCK: Mounting file store

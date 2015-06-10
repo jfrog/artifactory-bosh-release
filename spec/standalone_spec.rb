@@ -107,8 +107,8 @@ describe 'Standalone Artifactory' do
         @filename_artifact = SecureRandom.hex
         @filepath_backup = "#{artifactory_package_path}/backup/#{SecureRandom.hex}"
         @filepath_data =  "#{artifactory_package_path}/data/#{SecureRandom.hex}"
-        @filepath_etc = "#{artifactory_package_path}/etc/#{SecureRandom.hex}"
-        @file_sha1 = ""
+        @filepath_etc = "#{artifactory_package_path}/etc/plugins/dummyPlugin.groovy"
+        @file_sha1 = ''
 
         #upload an artifact
         exec_on_gateway do | port |
@@ -119,14 +119,17 @@ describe 'Standalone Artifactory' do
         #create a file in backup / data / etc
         exec_on_node(@standalone_node_ip, "touch #{@filepath_backup}", :root => true )
         exec_on_node(@standalone_node_ip, "touch #{@filepath_data}", :root => true )
-        exec_on_node(@standalone_node_ip, "touch #{@filepath_etc}", :root => true )
+        #upload a plugin
+        myplugin = `cat assets/dummyPlugin.groovy`
+        command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}\nEOL\n"
+        exec_on_node(@standalone_node_ip, command)
         #delete and recreate vms but not disks
-        puts "stopping artifactory"
-        bundle_exec_bosh "stop standalone --soft"
-        puts "recreating nfs_server"
-        bundle_exec_bosh "recreate nfs_server"
-        puts "recreating standalone"
-        bundle_exec_bosh "recreate standalone"
+        puts 'stopping artifactory'
+        bundle_exec_bosh 'stop standalone --soft'
+        puts 'recreating nfs_server'
+        bundle_exec_bosh 'recreate nfs_server'
+        puts 'recreating standalone'
+        bundle_exec_bosh 'recreate standalone'
 
         wait_for_artifactory_available
       end
@@ -136,7 +139,7 @@ describe 'Standalone Artifactory' do
         exec_on_gateway do | port |
           RestClient.delete artifactory_artifact_url(filename: @filename_artifact, port: port)
         end
-        #delte the file in backup / data / etc
+        #delete the file in backup / data / etc
         exec_on_node(@standalone_node_ip, "rm #{@filepath_backup}", :root => true )
         exec_on_node(@standalone_node_ip, "rm #{@filepath_data}", :root => true )
         exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
@@ -148,9 +151,11 @@ describe 'Standalone Artifactory' do
           expect(result).to eq("#{@filepath_backup}\n")
         end
 
-        it 'still has etc data' do
-          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_etc}")
-          expect(result).to eq("#{@filepath_etc}\n")
+        it 'still has plugins' do
+          exec_on_gateway do | port |
+            response = RestClient.get artifactory_dummy_plugin port
+            expect(JSON.parse(response)['status']).to eq('okay')
+          end
         end
 
         it 'still has data dir data' do
@@ -314,7 +319,7 @@ def artifactory_status_api port
 end
 
 def artifactory_users_url(user: "", port:)
-  if user == ""
+  if user == ''
     "#{artifactory_authenticated_api(port)}/security/users"
   else
     "#{artifactory_authenticated_api(port)}/security/users/#{user}"
@@ -331,6 +336,10 @@ end
 
 def artifactory_version_url port
  "#{artifactory_api(port)}/system/version"
+end
+
+def artifactory_dummy_plugin port
+  "#{artifactory_api(port)}/plugins/execute/dummyPlugin"
 end
 
 def artifactory_license_url port
