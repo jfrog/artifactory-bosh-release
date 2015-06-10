@@ -142,7 +142,7 @@ describe 'Standalone Artifactory' do
         #delete the file in backup / data / etc
         exec_on_node(@standalone_node_ip, "rm #{@filepath_backup}", :root => true )
         exec_on_node(@standalone_node_ip, "rm #{@filepath_data}", :root => true )
-        exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
+        #exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
       end
 
       context 'when both the standalone & nfs_server are recreated by an operator' do
