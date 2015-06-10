@@ -80,7 +80,6 @@ jobs:
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
     nfs:
       server_ip: 10.60.4.56
-      mount_point: /var/vcap/store/artifactory_file_store
     artifactory_route_name: bosh-artifactory
     cf:
       domain: <%= `echo $CF_DOMAIN` %>

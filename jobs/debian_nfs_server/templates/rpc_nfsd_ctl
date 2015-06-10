@@ -11,9 +11,24 @@ case $1 in
   start)
     dpkg --unpack -E /var/vcap/packages/debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb
     rm -rf /etc/init.d/nfs-kernel-server
+    #BLOCK:  Make Mount points
+    #File store
     mkdir -p /var/vcap/store/artifactory_file_store
     chown vcap:vcap /var/vcap/store/artifactory_file_store
     chmod ugo+rw /var/vcap/store/artifactory_file_store
+    #data directory
+    mkdir -p /var/vcap/store/artifactory_data_dir
+    chown vcap:vcap /var/vcap/store/artifactory_data_dir
+    chmod ugo+rw /var/vcap/store/artifactory_data_dir
+    #etc directory
+    mkdir -p /var/vcap/store/artifactory_etc_dir
+    chown vcap:vcap /var/vcap/store/artifactory_etc_dir
+    chmod ugo+rw /var/vcap/store/artifactory_etc_dir
+    #backup directory
+    mkdir -p /var/vcap/store/artifactory_backup_dir
+    chown vcap:vcap /var/vcap/store/artifactory_backup_dir
+    chmod ugo+rw /var/vcap/store/artifactory_backup_dir
+    #ENDBLOCK: Make Mount Points
 
     cp -f /var/vcap/jobs/debian_nfs_server/config/exports /etc/exports
 

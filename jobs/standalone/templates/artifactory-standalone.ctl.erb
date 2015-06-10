@@ -3,25 +3,59 @@
 set -e
 set -x
 
+mkdir -p /var/vcap/sys/log
+
 exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
 exec 2> >(tee -a >(logger -p user.error -t vcap.$(basename $0).stderr) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).err.log)
-
 
 LOG_DIR=/var/vcap/sys/log/artifactory
 JAVA_HOME=/var/vcap/packages/jdk/
 MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
 ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
+
+function mount_nfs {
+    #BLOCK: Make data directory, unmount it if mounted, then mount it
+    mkdir -p $ARTIFACTORY_PKG_DIR/data
+    if grep -qsE "artifactory/.*/data " /proc/mounts; then
+        if grep -qsE "artifactory/.*/data/filestore" /proc/mounts; then
+            umount $ARTIFACTORY_PKG_DIR/data/filestore -f
+        fi
+        umount $ARTIFACTORY_PKG_DIR/data -f
+    fi
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_data_dir $ARTIFACTORY_PKG_DIR/data
+    #ENDBLOCK: Mounting data directory
+
+    #BLOCK: Make backup directory, unmount it if mounted, then mount it
+    mkdir -p $ARTIFACTORY_PKG_DIR/backup
+    if grep -qsE "artifactory/.*/backup " /proc/mounts; then
+        umount $ARTIFACTORY_PKG_DIR/backup -f
+    fi
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_backup_dir $ARTIFACTORY_PKG_DIR/backup
+    #ENDBLOCK: Mounting backup directory
+
+    #BLOCK: Make etc directory, unmount it if mounted, then mount it
+    mkdir -p $ARTIFACTORY_PKG_DIR/data
+    if grep -qsE "artifactory/.*/etc " /proc/mounts; then
+        umount $ARTIFACTORY_PKG_DIR/etc -f
+    fi
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_etc_dir $ARTIFACTORY_PKG_DIR/etc
+    #ENDBLOCK: Mounting etc directory
+
+    #BLOCK: Mounting file store
+    mkdir -p $ARTIFACTORY_PKG_DIR/data/filestore
+    if grep -qsE "artifactory/.*/data/filestore" /proc/mounts; then
+        umount $ARTIFACTORY_PKG_DIR/data/filestore -f
+    fi
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_PKG_DIR/data/filestore
+    #ENDBLOCK: Mounting Filestore
+}
+
 case $1 in
 
   start)
-    mkdir -p $ARTIFACTORY_PKG_DIR/data/filestore
-    #unmount our nfs if it is already mounted for some reason
-    if grep -qs data/filestore /proc/mounts; then
-        umount $ARTIFACTORY_PKG_DIR/data/filestore -f
-    fi
+    mount_nfs
 
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_point')%> $ARTIFACTORY_PKG_DIR/data/filestore
     mkdir -p $LOG_DIR
     chown vcap:vcap $LOG_DIR
 
@@ -53,9 +87,13 @@ case $1 in
     exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log || true
-
+    #wait for 10 seconds for files to be released by system
+    sleep 10
     #always try to unmount
     umount $ARTIFACTORY_PKG_DIR/data/filestore -f || true
+    umount $ARTIFACTORY_PKG_DIR/backup -f || true
+    umount $ARTIFACTORY_PKG_DIR/etc -f || true
+    umount $ARTIFACTORY_PKG_DIR/data -f || true
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
