@@ -49,6 +49,7 @@ properties:
     description: Hostname/IP of NATS
   cf.nats.port:
     description: Port that NATS listens on
+    default: 4222
   cf.nats.username:
     description: The user to use when authenticating with NATS
   cf.nats.password:
