@@ -1,4 +1,4 @@
-source 'https://artifactory-us.jfrog.info/artifactory/api/gems/rubygems/'
+source 'https://artifactory-us.jfrog.info/artifactory/api/gems/pivotal-gems/'
 
 gem 'bosh_cli'
 
