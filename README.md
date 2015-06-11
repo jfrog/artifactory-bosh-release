@@ -3,8 +3,9 @@
 -To start this project from 0:
 
 ###Prerequisites
-Ruby  (pre-loaded on mac).  Suggest you configure it to point to your artifactory server, if you have one.
-mysql (for testing).  A prerequisite of the ruby mysql gem
+Ruby  (Need version 2.1.2).  Suggest you configure it to point to your artifactory server, if you have one.
+Macs come with a different version of ruby.  May want to consider chruby to solve this problem.
+mysql (for testing): this is a prerequisite of the ruby mysql gem.
 
 ###Setting up ruby and bosh
 Depending on your configuration, the following command may require sudo.
