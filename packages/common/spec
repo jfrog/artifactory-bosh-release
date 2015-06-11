@@ -2,3 +2,4 @@
 name: common
 files:
 - common/utils.sh
+- common/calculate_jvm_heap_sizes.sh
