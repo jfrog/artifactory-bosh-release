@@ -1,5 +1,5 @@
 GEM
-  remote: https://artifactory-us.jfrog.info/artifactory/api/gems/rubygems/
+  remote: https://artifactory-us.jfrog.info/artifactory/api/gems/pivotal-gems/
   specs:
     aws-sdk (1.44.0)
       json (~> 1.4)
