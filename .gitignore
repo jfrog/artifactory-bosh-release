@@ -14,6 +14,7 @@ vendor/bundle/
 credentials.yml
 bosh_credentials.yml
 database_credentials.yml
+ci/release_database_credentials.yml
 cf_credentials.yml
 *~
 *.lic

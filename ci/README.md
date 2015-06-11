@@ -18,15 +18,18 @@ To configure the concourse pipeline run the following command from the root proj
 You must specify two license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable)
 
 ```
+export ARTIFACTORY_LICENSE=$(cat assets/artifactory.lic)
+export TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)
 fly c -c ci/pipelines/pipeline.yml
  --vars-from ci/credentials.yml
  --vars-from ci/bosh_credentials.yml
  --vars-from ci/database_credentials.yml
  --vars-from ci/cf_credentials.yml
- --var test_license_1=$(cat assets/artifactory.lic)
- --var test_license_2=$(cat assets/artifactory-expired.lic)
+ --var test_license_1="$(echo $ARTIFACTORY_LICENSE)"
+ --var test_license_2="$(echo $TEST_LICENSE_2)"
  --var artifactory_manifest=manifests/artifactory-vsphere.yml
- --var artifactory_license==$(cat assets/artifactory.lic)
+ --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)"
+ bosh-release
 ```
 
 ### Fly CLI Setup
