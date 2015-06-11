@@ -13,50 +13,49 @@ JAVA_HOME=/var/vcap/packages/jdk/
 MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
 ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
+CLUSTER_HOME=/var/vcap/sys/cluster_home
+ARTIFACTORY_FILE_STORE="$CLUSTER_HOME/ha-data/filestore"
 
 function mount_nfs {
-    #BLOCK: Make data directory, unmount it if mounted, then mount it
-    mkdir -p $ARTIFACTORY_PKG_DIR/data
-    if grep -qsE "artifactory/.*/data " /proc/mounts; then
-        if grep -qsE "artifactory/.*/data/filestore" /proc/mounts; then
-            umount $ARTIFACTORY_PKG_DIR/data/filestore -f
+    #BLOCK: Mount home directory, unmount it if mounted, then mount it
+    mkdir -p $CLUSTER_HOME
+    if grep -qs 'cluster_home' /proc/mounts; then
+        if grep -qs 'filestore' /proc/mounts; then
+            umount $ARTIFACTORY_FILE_STORE -f
         fi
-        umount $ARTIFACTORY_PKG_DIR/data -f
+        umount $CLUSTER_HOME -f
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_data_dir $ARTIFACTORY_PKG_DIR/data
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME
     #ENDBLOCK: Mounting data directory
 
-    #BLOCK: Make backup directory, unmount it if mounted, then mount it
-    mkdir -p $ARTIFACTORY_PKG_DIR/backup
-    if grep -qsE "artifactory/.*/backup " /proc/mounts; then
-        umount $ARTIFACTORY_PKG_DIR/backup -f
-    fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_backup_dir $ARTIFACTORY_PKG_DIR/backup
-    #ENDBLOCK: Mounting backup directory
-
-    #BLOCK: Make etc directory, unmount it if mounted, then mount it
-    mkdir -p $ARTIFACTORY_PKG_DIR/etc
-    if grep -qsE "artifactory/.*/etc " /proc/mounts; then
-        umount $ARTIFACTORY_PKG_DIR/etc -f
-    fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%>/artifactory_etc_dir $ARTIFACTORY_PKG_DIR/etc
-    #create a plugins directory if it doesn't already exist
-    mkdir -p $ARTIFACTORY_PKG_DIR/etc/plugins
-    #ENDBLOCK: Mounting etc directory
-
     #BLOCK: Mounting file store
-    mkdir -p $ARTIFACTORY_PKG_DIR/data/filestore
-    if grep -qsE "artifactory/.*/data/filestore" /proc/mounts; then
-        umount $ARTIFACTORY_PKG_DIR/data/filestore -f
+    mkdir -p $ARTIFACTORY_FILE_STORE
+    if grep -qsE "filestore" /proc/mounts; then
+        umount $ARTIFACTORY_FILE_STORE -f
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_PKG_DIR/data/filestore
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE
     #ENDBLOCK: Mounting Filestore
+}
+
+function create_links {
+    #NOTE:  This DESTROYS any data that existed before the mounts.
+    #be very careful on adding things to this during a migration
+    cd $ARTIFACTORY_PKG_DIR
+    rm -rf data
+    ln -s $CLUSTER_HOME/ha-data data
+    rm -rf etc
+    ln -s $CLUSTER_HOME/ha-etc etc
+    mkdir -p etc/plugins
+    rm -rf backup
+    ln -s $CLUSTER_HOME/ha-backup backup
+    cd -
 }
 
 case $1 in
 
   start)
     mount_nfs
+    create_links
 
     mkdir -p $LOG_DIR
     chown vcap:vcap $LOG_DIR
@@ -92,10 +91,10 @@ case $1 in
     #wait for 10 seconds for files to be released by system
     sleep 10
     #always try to unmount
-    umount $ARTIFACTORY_PKG_DIR/data/filestore -f || true
-    umount $ARTIFACTORY_PKG_DIR/backup -f || true
-    umount $ARTIFACTORY_PKG_DIR/etc -f || true
-    umount $ARTIFACTORY_PKG_DIR/data -f || true
+    echo 'Attempting to unmount directories'
+    umount $ARTIFACTORY_FILE_STORE -f || true
+    sleep 5
+    umount $CLUSTER_HOME -f || true
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;

@@ -3,6 +3,13 @@ set -x
 
 mkdir -p /var/vcap/sys/log
 
+NFS_STORE='/var/vcap/store'
+ARTIFACTORY_FILE_STORE="$NFS_STORE/artifactory_file_store"
+ARTIFACTORY_SHARED_HOME="$NFS_STORE/artifactory_shared_home"
+ARTIFACTORY_ETC="$ARTIFACTORY_SHARED_HOME/ha-etc"
+ARTIFACTORY_DATA="$ARTIFACTORY_SHARED_HOME/ha-data"
+ARTIFACTORY_BACKUP="$ARTIFACTORY_SHARED_HOME/ha-backup"
+
 exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
 exec 2> >(tee -a >(logger -p user.error -t vcap.$(basename $0).stderr) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).err.log)
 
@@ -12,22 +19,27 @@ case $1 in
     dpkg --unpack -E /var/vcap/packages/debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb
     rm -rf /etc/init.d/nfs-kernel-server
     #BLOCK:  Make Mount points
+    #TODO: Fix the permissions model on this
     #File store
-    mkdir -p /var/vcap/store/artifactory_file_store
-    chown vcap:vcap /var/vcap/store/artifactory_file_store
-    chmod ugo+rw /var/vcap/store/artifactory_file_store
-    #data directory
-    mkdir -p /var/vcap/store/artifactory_data_dir
-    chown vcap:vcap /var/vcap/store/artifactory_data_dir
-    chmod ugo+rw /var/vcap/store/artifactory_data_dir
-    #etc directory
-    mkdir -p /var/vcap/store/artifactory_etc_dir
-    chown vcap:vcap /var/vcap/store/artifactory_etc_dir
-    chmod ugo+rw /var/vcap/store/artifactory_etc_dir
-    #backup directory
-    mkdir -p /var/vcap/store/artifactory_backup_dir
-    chown vcap:vcap /var/vcap/store/artifactory_backup_dir
-    chmod ugo+rw /var/vcap/store/artifactory_backup_dir
+    mkdir -p $ARTIFACTORY_FILE_STORE
+    chown vcap:vcap $ARTIFACTORY_FILE_STORE
+    chmod ugo+rw $ARTIFACTORY_FILE_STORE
+    #shared (CLUSTER_HOME) directory
+    mkdir -p $ARTIFACTORY_SHARED_HOME
+    chown vcap:vcap $ARTIFACTORY_SHARED_HOME
+    chmod ugo+rw $ARTIFACTORY_SHARED_HOME
+    #make the subdirectories.  Making them here so they can be more easily shared later
+    mkdir -p $ARTIFACTORY_ETC
+    chown vcap:vcap $ARTIFACTORY_ETC
+    chmod ugo+rw $ARTIFACTORY_ETC
+
+    mkdir -p $ARTIFACTORY_DATA
+    chown vcap:vcap $ARTIFACTORY_DATA
+    chmod ugo+rw $ARTIFACTORY_DATA
+
+    mkdir -p $ARTIFACTORY_BACKUP
+    chown vcap:vcap $ARTIFACTORY_BACKUP
+    chmod ugo+rw $ARTIFACTORY_BACKUP
     #ENDBLOCK: Make Mount Points
 
     cp -f /var/vcap/jobs/debian_nfs_server/config/exports /etc/exports

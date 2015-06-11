@@ -41,7 +41,7 @@ properties:
     default: /var/vcap/store/artifactory_file_store
   nfs.mount_points.home_dirs:
     description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
-    default: /var/vcap/store
+    default: /var/vcap/store/artifactory_shared_home
 
   artifactory_route_name:
     description: "Name of the artifactory endpoint (domain is added)"
