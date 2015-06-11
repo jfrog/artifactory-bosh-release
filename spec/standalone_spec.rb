@@ -121,10 +121,11 @@ describe 'Standalone Artifactory' do
         exec_on_node(@standalone_node_ip, "touch #{@filepath_data}", :root => true )
         #upload a plugin
         myplugin = `cat assets/dummyPlugin.groovy`
-        command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}\nEOL\n"
-        puts command
-        response = exec_on_node(@standalone_node_ip, command, :root => true)
-        puts response
+        command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}EOL\n\n"
+        exec_on_node(@standalone_node_ip, "touch #{@filepath_etc}", :root => true)
+        exec_on_node(@standalone_node_ip, "chmod ugo+w #{@filepath_etc}", :root => true)
+        exec_on_node(@standalone_node_ip, command)
+        exec_on_node(@standalone_node_ip, "chmod o-w #{@filepath_etc}", :root => true)
         #delete and recreate vms but not disks
         puts 'stopping artifactory'
         bundle_exec_bosh 'stop standalone --soft'
@@ -144,7 +145,7 @@ describe 'Standalone Artifactory' do
         #delete the file in backup / data / etc
         exec_on_node(@standalone_node_ip, "rm #{@filepath_backup}", :root => true )
         exec_on_node(@standalone_node_ip, "rm #{@filepath_data}", :root => true )
-        #exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
+        exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
       end
 
       context 'when both the standalone & nfs_server are recreated by an operator' do
@@ -153,7 +154,7 @@ describe 'Standalone Artifactory' do
           expect(result).to eq("#{@filepath_backup}\n")
         end
 
-        xit 'still has plugins' do
+        it 'still has plugins' do
           exec_on_gateway do | port |
             response = RestClient.get artifactory_dummy_plugin port
             expect(JSON.parse(response)['status']).to eq('okay')
