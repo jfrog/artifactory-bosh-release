@@ -46,12 +46,12 @@ in an environment variable called ARTIFACTORY_LICENSE.
 To deploy into a development environment:
 
 ```
-export  ARTIFACTORY_DB_HOST=10.60.3.47
+export  ARTIFACTORY_DB_HOST=10.60.3.55
 export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
-export  ARTIFACTORY_LICENSE=$(cat artifactory.lic)
+export  ARTIFACTORY_LICENSE=$(cat assets/artifactory.lic)
 export  NATS_USERNAME=nats
 export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
