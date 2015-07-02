@@ -21,19 +21,19 @@ function mount_nfs {
     mkdir -p $CLUSTER_HOME
     if grep -qs 'cluster_home' /proc/mounts; then
         if grep -qs 'filestore' /proc/mounts; then
-            umount $ARTIFACTORY_FILE_STORE -f
+            umount $ARTIFACTORY_FILE_STORE -lf
         fi
-        umount $CLUSTER_HOME -f
+        umount $CLUSTER_HOME -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o intr
     #ENDBLOCK: Mounting data directory
 
     #BLOCK: Mounting file store
     mkdir -p $ARTIFACTORY_FILE_STORE
     if grep -qsE "filestore" /proc/mounts; then
-        umount $ARTIFACTORY_FILE_STORE -f
+        umount $ARTIFACTORY_FILE_STORE -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o intr
     #ENDBLOCK: Mounting Filestore
 }
 
@@ -92,9 +92,9 @@ case $1 in
     sleep 10
     #always try to unmount
     echo 'Attempting to unmount directories'
-    umount $ARTIFACTORY_FILE_STORE -f || true
+    umount $ARTIFACTORY_FILE_STORE -lf || true
     sleep 5
-    umount $CLUSTER_HOME -f || true
+    umount $CLUSTER_HOME -lf || true
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
