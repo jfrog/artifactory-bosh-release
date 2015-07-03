@@ -25,7 +25,7 @@ function mount_nfs {
         fi
         umount $CLUSTER_HOME -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o intr
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o soft,intr
     #ENDBLOCK: Mounting data directory
 
     #BLOCK: Mounting file store
@@ -33,7 +33,7 @@ function mount_nfs {
     if grep -qsE "filestore" /proc/mounts; then
         umount $ARTIFACTORY_FILE_STORE -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o intr
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o soft,intr
     #ENDBLOCK: Mounting Filestore
 }
 
