@@ -18,3 +18,5 @@ ci/release_database_credentials.yml
 cf_credentials.yml
 *~
 *.lic
+*.iml
+.idea/
