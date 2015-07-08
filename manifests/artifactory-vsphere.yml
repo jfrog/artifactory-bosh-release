@@ -59,6 +59,7 @@ jobs:
     nfs_server:
       allow_from_entries:
       - 10.60.4.54
+      no_root_squash: true
 
 - name: standalone
   templates:
