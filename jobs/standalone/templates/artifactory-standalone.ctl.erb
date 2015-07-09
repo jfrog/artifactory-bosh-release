@@ -13,26 +13,26 @@ JAVA_HOME=/var/vcap/packages/jdk/
 MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
 ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
-CLUSTER_HOME=/var/vcap/sys/cluster_home
-ARTIFACTORY_FILE_STORE=/var/vcap/sys/artifactory_data
+CLUSTER_HOME=/var/vcap/data/sys/cluster_home
+ARTIFACTORY_FILE_STORE=/var/vcap/data/sys/artifactory_data
 
 function mount_nfs {
     #BLOCK: Mount home directory, unmount it if mounted, then mount it
-    mkdir -p $CLUSTER_HOME
     if grep -qs 'cluster_home' /proc/mounts; then
         if grep -qs 'filestore' /proc/mounts; then
             umount $ARTIFACTORY_FILE_STORE -lf
         fi
         umount $CLUSTER_HOME -lf
     fi
+    mkdir -p $CLUSTER_HOME
     mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o intr
     #ENDBLOCK: Mounting data directory
 
     #BLOCK: Mounting file store
-    mkdir -p $ARTIFACTORY_FILE_STORE
     if grep -qsE "artifactory_data" /proc/mounts; then
         umount $ARTIFACTORY_FILE_STORE -lf
     fi
+    mkdir -p $ARTIFACTORY_FILE_STORE
     mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o intr
     #ENDBLOCK: Mounting Filestore
 }
