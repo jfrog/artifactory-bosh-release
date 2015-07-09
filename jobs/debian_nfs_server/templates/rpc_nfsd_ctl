@@ -96,6 +96,19 @@ case $1 in
       /usr/sbin/exportfs -f
     fi
 
+   if grep -qsE "artifactory_file_store" /proc/mounts; then
+       umount /export/artifactory_file_store -lf
+   fi
+   sleep 5
+   if grep -qsE "artifactory_shared_home" /proc/mounts; then
+       umount /export/artifactory_shared_home -lf
+   fi
+   sleep 5
+   if mountpoint -q /proc/fs/nfsd; then
+      umount /proc/fs/nfsd -lf
+   fi
+   sleep 5
+   modprobe -r nfsd
     ;;
 
   *)
