@@ -14,7 +14,7 @@ MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
 ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
 CLUSTER_HOME=/var/vcap/sys/cluster_home
-ARTIFACTORY_FILE_STORE="$CLUSTER_HOME/ha-data/filestore"
+ARTIFACTORY_FILE_STORE=/var/vcap/sys/artifactory_data
 
 function mount_nfs {
     #BLOCK: Mount home directory, unmount it if mounted, then mount it
@@ -25,15 +25,15 @@ function mount_nfs {
         fi
         umount $CLUSTER_HOME -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o intr
     #ENDBLOCK: Mounting data directory
 
     #BLOCK: Mounting file store
     mkdir -p $ARTIFACTORY_FILE_STORE
-    if grep -qsE "filestore" /proc/mounts; then
+    if grep -qsE "artifactory_data" /proc/mounts; then
         umount $ARTIFACTORY_FILE_STORE -lf
     fi
-    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o intr
     #ENDBLOCK: Mounting Filestore
 }
 
@@ -42,7 +42,7 @@ function create_links {
     #be very careful on adding things to this during a migration
     cd $ARTIFACTORY_PKG_DIR
     rm -rf data
-    ln -s $CLUSTER_HOME/ha-data data
+    ln -s $ARTIFACTORY_FILE_STORE data
     rm -rf etc
     ln -s $CLUSTER_HOME/ha-etc etc
     mkdir -p etc/plugins
