@@ -70,4 +70,6 @@ builds:
     version: 0.3.13
   bdcab550-71a3-4ddf-91c3-b0cb6de402c1:
     version: 0.3.14
+  7bc55d70-a518-4753-a878-4258880b7b9f:
+    version: 0.3.15
 format-version: '2'
