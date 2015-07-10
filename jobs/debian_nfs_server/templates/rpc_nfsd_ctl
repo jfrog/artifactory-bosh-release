@@ -12,7 +12,6 @@ ARTIFACTORY_SHARED_HOME="$NFS_STORE/$SHARED_HOME"
 EXPORT_FILE_STORE="$EXPORTS/$FILE_STORE"
 EXPORT_SHARED_HOME="$EXPORTS/$SHARED_HOME"
 ARTIFACTORY_ETC="$ARTIFACTORY_SHARED_HOME/ha-etc"
-ARTIFACTORY_DATA="$ARTIFACTORY_SHARED_HOME/ha-data"
 ARTIFACTORY_BACKUP="$ARTIFACTORY_SHARED_HOME/ha-backup"
 
 exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
@@ -37,10 +36,6 @@ case $1 in
     mkdir -p $ARTIFACTORY_ETC
     chown vcap:vcap $ARTIFACTORY_ETC
     chmod ugo+rw $ARTIFACTORY_ETC
-
-    mkdir -p $ARTIFACTORY_DATA
-    chown vcap:vcap $ARTIFACTORY_DATA
-    chmod ugo+rw $ARTIFACTORY_DATA
 
     mkdir -p $ARTIFACTORY_BACKUP
     chown vcap:vcap $ARTIFACTORY_BACKUP

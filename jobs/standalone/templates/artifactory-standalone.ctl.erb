@@ -25,9 +25,6 @@ function exitError() {
 function mount_nfs {
     #BLOCK: Mount home directory, unmount it if mounted, then mount it
     if grep -qs 'cluster_home' /proc/mounts; then
-        if grep -qs 'filestore' /proc/mounts; then
-            umount $ARTIFACTORY_FILE_STORE -lf
-        fi
         umount $CLUSTER_HOME -lf
     fi
     mkdir -p $CLUSTER_HOME
