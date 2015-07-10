@@ -148,20 +148,11 @@ case $1 in
     ;;
 
   stop)
-    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
+    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log || true
-    #wait for 10 seconds for files to be released by system
-    sleep 10
-    #always try to unmount
-    echo 'Attempting to unmount directories'
-    if grep -qsE "artifactory_data" /proc/mounts; then
-        umount $ARTIFACTORY_FILE_STORE -lf
-    fi
-    if grep -qs 'cluster_home' /proc/mounts; then
-        umount $CLUSTER_HOME -lf
-    fi
-    rm -f $ARTIFACTORY_MONIT_PID
+    #unfortunately attempts to clean up this (by unmounting drives and deleting PID) cause issues with
+    #monit restart, now that the health check is being used.  Accordingly, we will use this method.
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
