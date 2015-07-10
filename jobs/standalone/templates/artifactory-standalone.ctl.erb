@@ -16,6 +16,8 @@ ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
 CLUSTER_HOME=/var/vcap/data/sys/cluster_home
 ARTIFACTORY_FILE_STORE=/var/vcap/data/sys/artifactory_data
 ARTIFACTORY_LOG="$LOG_DIR/artifactory.log"
+ARTIFACTORY_PID=/var/vcap/packages/artifactory/artifactory.pid
+ARTIFACTORY_MONIT_PID=/var/vcap/sys/run/artifactory.pid
 
 function exitError() {
     echo "$1"
@@ -82,7 +84,6 @@ function waitServerStarts() {
             echo "INFO: Waiting 2 seconds for jersey to finish"
             sleep 2
             echo "done"
-   #         cp $TMP_PID_FILE $PERM_PID_FILE
             return 0
           fi
         fi
@@ -134,15 +135,15 @@ case $1 in
     ln -s $LOG_DIR/request.log
     ln -s $LOG_DIR/import.export.log
     cd ..
-  #  export ARTIFACTORY_PID=$TMP_PID_FILE
+
     $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log
-#    set -e
- #   set -x
- #   export ARTIFACTORY_PID=$PERM_PID_FILE
+
     waitServerStarts 90
     curl -v http://localhost:8081/artifactory/api/system/ping
+    echo 'copying PID'
+    cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
     echo 'StartupScriptComplete'
     ;;
 
@@ -160,6 +161,7 @@ case $1 in
     if grep -qs 'cluster_home' /proc/mounts; then
         umount $CLUSTER_HOME -lf
     fi
+    rm -f $ARTIFACTORY_MONIT_PID
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;

@@ -8,7 +8,7 @@ export ARTIFACTORY_HOME=/var/vcap/packages/artifactory
 export JAVA_HOME=/var/vcap/packages/jdk/
 
 export TOMCAT_HOME=$ARTIFACTORY_HOME/tomcat
-export ARTIFACTORY_PID=/var/vcap/sys/run/artifactory.pid
+export ARTIFACTORY_PID=/var/vcap/packages/artifactory/artifactory.pid
 
 export JAVA_OPTIONS="-server -Xms1g -Xmx$MAX_HEAP_SIZE -Xss256k -XX:PermSize=128m -XX:MaxPermSize=256m -XX:+UseG1GC"
 export JAVA_OPTIONS="$JAVA_OPTIONS -Djruby.compile.invokedynamic=false -Dfile.encoding=UTF8"
