@@ -15,6 +15,7 @@ ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
 ARTIFACTORY_JOB_DIR=/var/vcap/jobs/standalone
 CLUSTER_HOME=/var/vcap/data/sys/cluster_home
 ARTIFACTORY_FILE_STORE=/var/vcap/data/sys/artifactory_data
+ARTIFACTORY_LOG="$LOG_DIR/artifactory.log"
 
 function mount_nfs {
     #BLOCK: Mount home directory, unmount it if mounted, then mount it
@@ -35,6 +36,57 @@ function mount_nfs {
     mkdir -p $ARTIFACTORY_FILE_STORE
     mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.filestore')%> $ARTIFACTORY_FILE_STORE -o intr
     #ENDBLOCK: Mounting Filestore
+}
+
+function waitServerStarts() {
+    [ -z "$1" ] && exitError "Wait for server starts needs number of seconds to wait"
+    local secsToWait=$1
+    echo "INFO: Waiting for $ARTIFACTORY_PKG_DIR to initialize in less than $secsToWait seconds"
+    local nbSeconds=0
+    local printLog=true
+    local doTouchLogback=true
+    while [ $nbSeconds -lt $secsToWait ]; do
+        sleep 2
+        let "nbSeconds = $nbSeconds + 2"
+        if [ ! -f "$ARTIFACTORY_LOG" ]; then
+            echo "INFO: File $ARTIFACTORY_LOG still not created after $nbSeconds!"
+            if [ $nbSeconds -gt 28 ] && $doTouchLogback; then
+                local logbackFile="$ARTIFACTORY_PKG_DIR/etc/logback.xml"
+                echo "INFO: Touching $logbackFile to refresh log"
+                [ ! -f "$logbackFile" ] && exitError "File $ARTIFACTORY_LOG not created after $nbSeconds and $logbackFile doe not exists"
+                touch $logbackFile
+                doTouchLogback=false
+            fi
+            [ $nbSeconds -gt $secsToWait ] && exitError "File $ARTIFACTORY_LOG was not created after $nbSeconds!"
+            continue;
+        else
+            $printLog && echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+            printLog=false
+        fi
+        if [ "$doTouchLogback" == "false" ]; then
+          local logbackMessage="`grep "Reloaded logback config from" $ARTIFACTORY_LOG`"
+          if [ -n "$logbackMessage" ]; then
+            echo "INFO: Found re log message in $ARTIFACTORY_LOG after $nbSeconds!"
+            echo "INFO: $logbackMessage"
+            echo "INFO: Waiting 2 seconds for jersey to finish"
+            sleep 2
+            return 0
+          fi
+        else
+          local startMessage="`grep "Artifactory successfully started" $ARTIFACTORY_LOG`"
+          if [ -n "$startMessage" ]; then
+            echo "INFO: Found start message in $ARTIFACTORY_LOG after $nbSeconds!"
+            echo "INFO: $startMessage"
+            echo "INFO: Waiting 2 seconds for jersey to finish"
+            sleep 2
+            echo "done"
+   #         cp $TMP_PID_FILE $PERM_PID_FILE
+            return 0
+          fi
+        fi
+        echo -n "."
+    done
+    exitError "$ARTIFACTORY_PKG_DIR did not initialize after $nbSeconds!"
 }
 
 function create_links {
@@ -71,7 +123,7 @@ case $1 in
     cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
 
     cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
-
+    rm -f $ARTIFACTORY_LOG
     #setup logs to be visible in UI
     cd logs
     rm -f *.log
@@ -80,14 +132,20 @@ case $1 in
     ln -s $LOG_DIR/request.log
     ln -s $LOG_DIR/import.export.log
     cd ..
-
-    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
+  #  export ARTIFACTORY_PID=$TMP_PID_FILE
+    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log
+#    set -e
+ #   set -x
+ #   export ARTIFACTORY_PID=$PERM_PID_FILE
+    waitServerStarts 90
+    curl -v http://localhost:8081/artifactory/api/system/ping
+    echo 'StartupScriptComplete'
     ;;
 
   stop)
-    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
+    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log || true
     #wait for 10 seconds for files to be released by system
