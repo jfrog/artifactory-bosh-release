@@ -20,12 +20,6 @@ describe 'Standalone Artifactory' do
     bosh_deploy_and_wait_for_artifactory
   end
 
-  after(:all) do
-    puts 'verify that route is still available after the tests have ran'
-    response = RestClient.get artifactory_route_version_url
-    expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
-  end
-
   describe 'Initial Checks' do
     it 'should verify that deployed artifactory is running and version is correct' do
       exec_on_gateway do | port |
@@ -182,11 +176,14 @@ describe 'Standalone Artifactory' do
       exec_on_gateway do | port |
         response = RestClient.get artifactory_license_url port
         expect(JSON.parse(response)['type']).to eq('Trial')
-        $original_expiry_date = JSON.parse(response)['validThrough']
+        parsed_response = JSON.parse(response)['validThrough']
+        $original_expiry_date = parsed_response
+        puts "Original Expiry date: #{$original_expiry_date}"
       end
     end
 
-    context 'when a license is not present' do
+    #with the new health checks, bad licenses will not work
+    xcontext 'when a license is not present' do
       it 'is still accessible' do
         ENV["ARTIFACTORY_LICENSE"] = ""
         bosh_deploy_and_wait_for_artifactory
@@ -198,20 +195,38 @@ describe 'Standalone Artifactory' do
     end
 
     context 'when license is changed' do
-      after(:all) do
-        puts "Resetting to original license from deployment"
-        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
-        bosh_deploy_and_wait_for_artifactory
-      end
-
+   
       it 'updates the license' do
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
-        puts "Deploying Lic 2"
+        puts "Deploying Lic 2:  If this test fails, check expiration date of license 2"
         bosh_deploy_and_wait_for_artifactory
         exec_on_gateway do | port |
           response = RestClient.get artifactory_license_url port
-          expect(JSON.parse(response)['validThrough']).to_not eq(@original_expiry_date)
+          parsed_response = JSON.parse(response)['validThrough']
+          puts "Expiry Date: #{parsed_response}"
+          expect(parsed_response).to_not eq($original_expiry_date)
         end
+      end
+
+      it 'resets to the original license' do
+        puts 'Resetting to original license from deployment'
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
+        bosh_deploy_and_wait_for_artifactory
+        exec_on_gateway do | port |
+          response = RestClient.get artifactory_license_url port
+          parsed_response = JSON.parse(response)['validThrough']
+          puts "Expiry Date: #{parsed_response}"
+          expect(parsed_response).to eq($original_expiry_date)
+        end
+      end
+    end
+  end
+
+  describe 'final routing check' do
+    context 'everything should be done now' do
+      it 'verify that route is still available after the tests have ran' do
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
     end
   end

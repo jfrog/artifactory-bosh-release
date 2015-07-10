@@ -23,7 +23,7 @@ export TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)
 fly c -c ci/pipelines/pipeline.yml
  --vars-from ci/credentials.yml
  --vars-from ci/bosh_credentials.yml
- --vars-from ci/database_credentials.yml
+ --vars-from ci/release_database_credentials.yml
  --vars-from ci/cf_credentials.yml
  --var test_license_1="$(echo $ARTIFACTORY_LICENSE)"
  --var test_license_2="$(echo $TEST_LICENSE_2)"
