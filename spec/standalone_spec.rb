@@ -113,7 +113,8 @@ describe 'Standalone Artifactory' do
         #create a file in backup / data / etc
         exec_on_node(@standalone_node_ip, "touch #{@filepath_backup}", :root => true )
         exec_on_node(@standalone_node_ip, "touch #{@filepath_data}", :root => true )
-        #upload a plugin
+        #upload a plugin:  
+        #TODO: Replace this with appropriate REST API call when available.
         myplugin = `cat assets/dummyPlugin.groovy`
         command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}EOL\n\n"
         exec_on_node(@standalone_node_ip, "touch #{@filepath_etc}", :root => true)
@@ -179,18 +180,6 @@ describe 'Standalone Artifactory' do
         parsed_response = JSON.parse(response)['validThrough']
         $original_expiry_date = parsed_response
         puts "Original Expiry date: #{$original_expiry_date}"
-      end
-    end
-
-    #with the new health checks, bad licenses will not work
-    xcontext 'when a license is not present' do
-      it 'is still accessible' do
-        ENV["ARTIFACTORY_LICENSE"] = ""
-        bosh_deploy_and_wait_for_artifactory
-        exec_on_gateway do | port |
-          response = RestClient.get artifactory_version_url port
-          expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
-        end
       end
     end
 
