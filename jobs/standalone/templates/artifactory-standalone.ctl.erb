@@ -154,9 +154,12 @@ case $1 in
     sleep 10
     #always try to unmount
     echo 'Attempting to unmount directories'
-    umount $ARTIFACTORY_FILE_STORE -lf || true
-    sleep 5
-    umount $CLUSTER_HOME -lf || true
+    if grep -qsE "artifactory_data" /proc/mounts; then
+        umount $ARTIFACTORY_FILE_STORE -lf
+    fi
+    if grep -qs 'cluster_home' /proc/mounts; then
+        umount $CLUSTER_HOME -lf
+    fi
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
