@@ -1,7 +1,7 @@
 check process artifactory
   with pidfile /var/vcap/sys/run/artifactory.pid
   start program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl start" with timeout 120 seconds
-  stop program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl stop"
+  stop program "/var/vcap/jobs/standalone/bin/artifactory-standalone.ctl stop" with timeout 60 seconds
   group vcap
 
 

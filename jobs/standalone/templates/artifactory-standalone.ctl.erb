@@ -17,6 +17,11 @@ CLUSTER_HOME=/var/vcap/data/sys/cluster_home
 ARTIFACTORY_FILE_STORE=/var/vcap/data/sys/artifactory_data
 ARTIFACTORY_LOG="$LOG_DIR/artifactory.log"
 
+function exitError() {
+    echo "$1"
+    exit 1
+}
+
 function mount_nfs {
     #BLOCK: Mount home directory, unmount it if mounted, then mount it
     if grep -qs 'cluster_home' /proc/mounts; then
