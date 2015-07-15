@@ -77,10 +77,10 @@ case $1 in
     /usr/sbin/rpc.nfsd 8
 
     cp -f /var/vcap/jobs/debian_nfs_server/config/idmapd.conf /etc/idmapd.conf
-    /etc/init.d/idmapd restart
-
+#    /etc/init.d/idmapd restart
+#TODO:  Fix the idmapd restart
     pidof nfsd | cut -f 1 -d \ > /var/vcap/sys/run/rpc_nfsd.pid
-
+    echo 'end start'
     ;;
 
   stop)
@@ -94,16 +94,15 @@ case $1 in
    if grep -qsE "artifactory_file_store" /proc/mounts; then
        umount /export/artifactory_file_store -lf
    fi
-   sleep 5
    if grep -qsE "artifactory_shared_home" /proc/mounts; then
        umount /export/artifactory_shared_home -lf
    fi
-   sleep 5
    if mountpoint -q /proc/fs/nfsd; then
       umount /proc/fs/nfsd -lf
    fi
    sleep 5
-   modprobe -r nfsd
+ #  modprobe -r nfsd
+   echo 'end stop'
     ;;
 
   *)
