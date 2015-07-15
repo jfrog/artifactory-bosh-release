@@ -1,0 +1,33 @@
+---
+name: nginx 
+
+templates:
+  nginx.conf.erb: config/nginx.conf
+  nginx_ctl.erb: bin/nginx_ctl
+
+  route-registrar_ctl.erb: bin/route-registrar_ctl
+  registrar_settings.yml.erb: config/registrar_settings.yml
+
+packages: 
+- nginx
+- common
+- route-registrar
+
+properties: 
+  artifactory_host:
+    description: "Artifactory host ip"
+ 
+  artifactory_route_name:
+    description: "Name of the artifactory endpoint (domain is added)"
+    default: artifactory
+  cf.domain:
+    description: Domain shared by the UAA and CF API eg 'cf.jfrog.local'
+  cf.nats.host:
+    description: Hostname/IP of NATS
+  cf.nats.port:
+    description: Port that NATS listens on
+    default: 4222
+  cf.nats.username:
+    description: The user to use when authenticating with NATS
+  cf.nats.password:
+    description: The password to use when authenticating with NATS

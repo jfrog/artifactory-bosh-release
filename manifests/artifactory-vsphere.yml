@@ -33,6 +33,7 @@ networks:
     static:
     - 10.60.4.54
     - 10.60.4.56
+    - 10.60.4.58
 resource_pools:
 - name: vms
   network: services1
@@ -44,6 +45,29 @@ resource_pools:
     ram: 4_096
     disk: 20_000
 jobs:
+- name: nginx
+  templates:
+  - name: nginx 
+    release: cf-artifactory
+  instances: 1
+  resource_pool: vms
+  persistent_disk: 2048
+  networks:
+  - name: services1
+    static_ips:
+    - 10.60.4.58
+  properties:
+    artifactory_host: 10.60.4.54
+    artifactory_route_name: bosh-artifactory
+    cf:
+      domain: <%= `echo $CF_DOMAIN` %>
+      nats:
+        host: <%= `echo $NATS_HOST` %>
+        port: <%= `echo $NATS_PORT` %>
+        username: <%= `echo $NATS_USERNAME` %>
+        password: <%= `echo $NATS_PASSWORD` %>
+
+
 - name: nfs_server
   templates:
   - name: debian_nfs_server
@@ -81,13 +105,4 @@ jobs:
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
     nfs:
       server_ip: 10.60.4.56
-    artifactory_route_name: bosh-artifactory
-    cf:
-      domain: <%= `echo $CF_DOMAIN` %>
-      nats:
-        host: <%= `echo $NATS_HOST` %>
-        port: <%= `echo $NATS_PORT` %>
-        username: <%= `echo $NATS_USERNAME` %>
-        password: <%= `echo $NATS_PASSWORD` %>
-
 

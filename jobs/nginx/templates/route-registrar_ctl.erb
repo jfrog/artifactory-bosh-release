@@ -21,7 +21,7 @@ start)
   echo $$ > $PIDFILE
 
   # Copy the config file to right folder
-  cp /var/vcap/jobs/standalone/config/registrar_settings.yml /var/vcap/packages/route-registrar/registrar_settings.yml
+  cp /var/vcap/jobs/nginx/config/registrar_settings.yml /var/vcap/packages/route-registrar/registrar_settings.yml
 
   # registrar_settings.yml must be in pwd
   cd /var/vcap/packages/route-registrar

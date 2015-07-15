@@ -6,14 +6,11 @@ templates:
   logback.xml.erb: etc/logback.xml
   artifactory.lic.erb: etc/artifactory.lic
   storage.properties.erb: etc/storage.properties
-  route-registrar_ctl.erb: bin/route-registrar_ctl
-  registrar_settings.yml.erb: config/registrar_settings.yml
 
 packages:
 - artifactory
 - jdk
 - mysql-connector
-- route-registrar
 - common
 
 properties:
@@ -43,17 +40,3 @@ properties:
     description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
     default: artifactory_shared_home
 
-  artifactory_route_name:
-    description: "Name of the artifactory endpoint (domain is added)"
-    default: artifactory
-  cf.domain:
-    description: Domain shared by the UAA and CF API eg 'cf.jfrog.local'
-  cf.nats.host:
-    description: Hostname/IP of NATS
-  cf.nats.port:
-    description: Port that NATS listens on
-    default: 4222
-  cf.nats.username:
-    description: The user to use when authenticating with NATS
-  cf.nats.password:
-    description: The password to use when authenticating with NATS

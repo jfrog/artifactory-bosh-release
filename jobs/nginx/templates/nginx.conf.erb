@@ -1,0 +1,83 @@
+user vcap;
+worker_processes 1;
+daemon off;
+
+error_log  /var/vcap/sys/log/nginx/error.log;
+
+pid        /var/vcap/sys/run/nginx/nginx.pid;
+
+events {
+worker_connections  1024;
+}
+
+http {
+server_tokens off;
+
+
+server {
+  listen 8081;
+  server_name _;
+
+  client_max_body_size 0; # disable any limits to avoid HTTP 413
+  chunked_transfer_encoding on; # to avoid HTTP 411
+
+  location /artifactory {
+    proxy_pass          http://10.60.4.54:8081/artifactory;
+    proxy_set_header    Host  $http_host;
+    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header  X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+server {
+  listen 5001;
+  server_name _;
+
+  client_max_body_size 0; # disable any limits to avoid HTTP 413
+  chunked_transfer_encoding on; # to avoid HTTP 411
+
+  proxy_set_header    Host  $http_host;
+  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+  proxy_set_header X-Forwarded-Ssl on;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  location /v1/ {
+    proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-prod-local/v1/;
+  }
+
+  location /v2/ {
+    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+      return 404;
+    }
+    proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-prod-local2/v2/;
+  }
+}
+
+server {
+  listen 5002;
+  server_name _;
+
+  client_max_body_size 0; # disable any limits to avoid HTTP 413
+  chunked_transfer_encoding on; # to avoid HTTP 411
+
+  proxy_set_header    Host  $http_host;
+  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+  proxy_set_header X-Forwarded-Ssl on;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  location /v1/ {
+  proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-dev-local/v1/;
+  }
+
+  location /v2/ {
+    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+      return 404;
+    }
+    proxy_pass          http://bosh-artifactory.cf.jfrog.local:8081/artifactory/api/docker/docker-dev-local2/v2/;
+  }
+}
+access_log           /var/vcap/sys/log/nginx/access.log;
+}
