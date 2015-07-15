@@ -51,7 +51,6 @@ jobs:
     release: cf-artifactory
   instances: 1
   resource_pool: vms
-  persistent_disk: 2048
   networks:
   - name: services1
     static_ips:
@@ -59,6 +58,8 @@ jobs:
   properties:
     artifactory_host: 10.60.4.54
     artifactory_route_name: bosh-artifactory
+    artifactory_docker_dev_route_name: bosh-artifactory-docker-dev
+    artifactory_docker_prod_route_name: bosh-artifactory-docker-prod
     cf:
       domain: <%= `echo $CF_DOMAIN` %>
       nats:

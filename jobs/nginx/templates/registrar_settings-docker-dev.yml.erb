@@ -1,0 +1,11 @@
+---
+message_bus_servers:
+  - host: <%= p('cf.nats.host') %>:<%= p('cf.nats.port') %>
+    user: <%= p('cf.nats.username') %>
+    password: <%= p('cf.nats.password') %>
+external_host: <%= p('artifactory_docker_dev_route_name') %>.<%= p('cf.domain') %>
+external_ip: <%= spec.networks.send(spec.networks.methods(false).first).ip %>
+port: 5002
+health_checker:
+  name: artifactory-nginx-docker-dev
+  interval_in_seconds: 10

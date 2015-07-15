@@ -4,8 +4,20 @@ check process nginx
   stop program "/var/vcap/jobs/nginx/bin/nginx_ctl stop"
   group vcap
 
-check process route-registrar
-  with pidfile /var/vcap/sys/run/route-registrar.pid
-  start program "/var/vcap/jobs/nginx/bin/route-registrar_ctl start" with timeout 10 seconds
-  stop program "/var/vcap/jobs/nginx/bin/route-registrar_ctl stop" with timeout 10 seconds
+check process route-registrar-artifactory
+  with pidfile /var/vcap/sys/run/route-registrar-artifactory.pid
+  start program "/var/vcap/jobs/nginx/bin/route-registrar-artifactory_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/nginx/bin/route-registrar-artifactory_ctl stop" with timeout 10 seconds
+  group vcap
+
+check process route-registrar-docker-dev
+  with pidfile /var/vcap/sys/run/route-registrar-docker-dev.pid
+  start program "/var/vcap/jobs/nginx/bin/route-registrar-docker-dev_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/nginx/bin/route-registrar-docker-dev_ctl stop" with timeout 10 seconds
+  group vcap
+
+check process route-registrar-docker-prod
+  with pidfile /var/vcap/sys/run/route-registrar-docker-prod.pid
+  start program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod_ctl stop" with timeout 10 seconds
   group vcap

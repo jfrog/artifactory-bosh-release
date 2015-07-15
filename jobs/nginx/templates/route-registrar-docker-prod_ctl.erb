@@ -2,11 +2,12 @@
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
 
-JOB_NAME=route-registrar
+JOB_NAME=route-registrar-docker-prod
 
 RUN_DIR=/var/vcap/sys/run
 LOG_DIR=/var/vcap/sys/log/route-registrar
-PIDFILE=$RUN_DIR/route-registrar.pid
+PIDFILE=$RUN_DIR/route-registrar-docker-prod.pid
+REGISTRAR_SETTINGS=/var/vcap/jobs/nginx/config/registrar_settings-docker-prod.yml
 source /var/vcap/packages/common/utils.sh
 
 export HOME=/var/vcap
@@ -20,13 +21,7 @@ start)
   pid_guard $PIDFILE $JOB_NAME
   echo $$ > $PIDFILE
 
-  # Copy the config file to right folder
-  cp /var/vcap/jobs/nginx/config/registrar_settings.yml /var/vcap/packages/route-registrar/registrar_settings.yml
-
-  # registrar_settings.yml must be in pwd
-  cd /var/vcap/packages/route-registrar
-
-  exec chpst -u vcap:vcap /var/vcap/packages/route-registrar/bin/route-registrar \
+  exec chpst -u vcap:vcap /var/vcap/packages/route-registrar/bin/route-registrar --configPath=$REGISTRAR_SETTINGS \
     >>$LOG_DIR/route-registrar.stdout.log \
     2>>$LOG_DIR/route-registrar.stderr.log
 ;;

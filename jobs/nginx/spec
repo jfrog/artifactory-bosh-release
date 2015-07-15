@@ -5,8 +5,14 @@ templates:
   nginx.conf.erb: config/nginx.conf
   nginx_ctl.erb: bin/nginx_ctl
 
-  route-registrar_ctl.erb: bin/route-registrar_ctl
-  registrar_settings.yml.erb: config/registrar_settings.yml
+  route-registrar-artifactory_ctl.erb: bin/route-registrar-artifactory_ctl
+  registrar_settings-artifactory.yml.erb: config/registrar_settings-artifactory.yml
+
+  route-registrar-docker-dev_ctl.erb: bin/route-registrar-docker-dev_ctl
+  registrar_settings-docker-dev.yml.erb: config/registrar_settings-docker-dev.yml
+
+  route-registrar-docker-prod_ctl.erb: bin/route-registrar-docker-prod_ctl
+  registrar_settings-docker-prod.yml.erb: config/registrar_settings-docker-prod.yml
 
 packages: 
 - nginx
@@ -20,6 +26,15 @@ properties:
   artifactory_route_name:
     description: "Name of the artifactory endpoint (domain is added)"
     default: artifactory
+
+  artifactory_docker_dev_route_name:
+    description: "Name of the artifactory docker dev respository endpoint (domain is added)"
+    default: artifactory-docker-dev
+
+  artifactory_docker_prod_route_name:
+    description: "Name of the artifactory docker prod respository endpoint (domain is added)"
+    default: artifactory-docker-prod
+          
   cf.domain:
     description: Domain shared by the UAA and CF API eg 'cf.jfrog.local'
   cf.nats.host:

@@ -19,3 +19,11 @@ go/go1.4.1.linux-amd64.tar.gz:
   object_id: 2006eeb4-7992-4db9-880d-bfa80b3c2e6f
   sha: 3e871200e13c0b059b14866d428910de0a4c51ed
   size: 62402109
+nginx/nginx-1.8.0.tar.gz:
+  object_id: 52ae028c-edc7-474e-8a27-52d2b7ccf59a
+  sha: 12bad312764feae50246685ab2e74512d1aa9b2f
+  size: 832104
+nginx/pcre-8.37-patch-CVE2015-3210.tar.gz:
+  object_id: 76dafd0e-f23c-4459-85d5-750a21a3aac9
+  sha: 46e2839ab51af83e73c246e62d9abc3095ff5dd6
+  size: 4524683
