@@ -22,7 +22,7 @@ networks:
       gateway: 10.60.0.1
       dns: [10.60.0.10]
       cloud_properties: {name: 'VM Network'}
-      reserved: [10.60.4.0 - 10.60.4.100, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255]
+      reserved: [10.60.4.0 - 10.60.4.100, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255, 10.60.5.1 - 10.60.254.254]
       static:
           - 10.60.4.110
 
@@ -69,7 +69,7 @@ jobs:
   - name: db
     instances: 1
     resource_pool: databases
-    persistent_disk_pool: database
+    persistent_disk: 10240
     templates:
       - {release: concourse, name: consul-agent}
       - {release: concourse, name: postgresql}
@@ -95,14 +95,11 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
+        btrfs_store_size_mv: 20480
 
       consul:
         agent:
           servers: {lan: [10.60.4.110]}
-
-disk_pools:
-  - name: database
-    disk_size: 10240
 
 resource_pools:
   - name: web
