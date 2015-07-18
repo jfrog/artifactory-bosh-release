@@ -26,14 +26,10 @@ networks:
     gateway: 10.60.0.1
     dns: [10.60.0.10]
     cloud_properties: {name: 'VM Network'}
-    reserved:
-    - 10.60.4.33
-    - 10.60.4.37
-    - 10.60.4.53
+    reserved: [10.60.7.0 - 10.60.7.50, 10.60.6.0/24, 10.60.5.0/24, 10.60.4.0/24, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255, 10.60.7.100 - 10.60.255.254]
     static:
-    - 10.60.4.54
-    - 10.60.4.56
-    - 10.60.4.58
+    - 10.60.7.54
+    - 10.60.7.56
 resource_pools:
 - name: vms
   network: services1
@@ -56,7 +52,7 @@ jobs:
     static_ips:
     - 10.60.4.58
   properties:
-    artifactory_host: 10.60.4.54
+    artifactory_host: 10.60.7.54
     artifactory_route_name: bosh-artifactory
     artifactory_docker_dev_route_name: bosh-artifactory-docker-dev
     artifactory_docker_prod_route_name: bosh-artifactory-docker-prod
@@ -79,11 +75,11 @@ jobs:
   networks:
   - name: services1
     static_ips:
-    - 10.60.4.56
+    - 10.60.7.56
   properties:
     nfs_server:
       allow_from_entries:
-      - 10.60.4.54
+      - 10.60.7.54
       no_root_squash: true
 
 - name: standalone
@@ -95,7 +91,7 @@ jobs:
   networks:
   - name: services1
     static_ips:
-    - 10.60.4.54
+    - 10.60.7.54
   properties:
     artifactory_license_key: <%= `echo $ARTIFACTORY_LICENSE` %>
     database:
@@ -105,5 +101,5 @@ jobs:
       username: <%= `echo $ARTIFACTORY_DB_USERNAME` %>
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
     nfs:
-      server_ip: 10.60.4.56
+      server_ip: 10.60.7.56
 

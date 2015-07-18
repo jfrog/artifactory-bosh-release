@@ -92,7 +92,7 @@ bundle exec rspec --format d
 ### Via vSphere
 
 ```
-export BOSH_TARGET=10.60.4.6
+export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
 export  BOSH_MANIFEST=manifests/artifactory-vsphere.yml
