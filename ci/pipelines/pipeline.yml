@@ -51,6 +51,13 @@ resources:
     private_key: {{artifactory-pivotal-private-key}}
 
 jobs:
+- name: bump-minor
+  serial: true
+  plan:
+  - get: version
+    params: {bump: minor}
+  - put: version
+    params: {file: version/number}
 
 - name: build-deploy-rc
   serial: true
