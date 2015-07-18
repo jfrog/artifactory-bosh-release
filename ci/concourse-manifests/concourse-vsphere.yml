@@ -13,7 +13,6 @@ atc_db_role: &atc-db-role
 # replace all addresses with your VPC range
 #
 # e.g. X.X.0.2 -> 10.0.0.2
-# TODO fix issue with allocating network addresses outside of 10.60.4.* range
 networks:
   - name: concourse
     type: manual
@@ -22,9 +21,9 @@ networks:
       gateway: 10.60.0.1
       dns: [10.60.0.10]
       cloud_properties: {name: 'VM Network'}
-      reserved: [10.60.4.0 - 10.60.4.100, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255, 10.60.5.1 - 10.60.254.254]
+      reserved: [10.60.7.0 - 10.60.7.100, 10.60.6.0/24, 10.60.5.0/24, 10.60.4.0/24, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255, 10.60.8.1 - 10.60.255.254]
       static:
-          - 10.60.4.110
+          - 10.60.7.110
 
 releases:
   - name: concourse
@@ -41,7 +40,7 @@ jobs:
       - {release: concourse, name: consul-agent}
     networks:
       - name: concourse
-        static_ips: [10.60.4.110]
+        static_ips: [10.60.7.110]
     properties:
       consul:
         agent:
@@ -64,7 +63,7 @@ jobs:
 
       consul:
         agent:
-          servers: {lan: [10.60.4.110]}
+          servers: {lan: [10.60.7.110]}
 
   - name: db
     instances: 1
@@ -81,7 +80,7 @@ jobs:
 
       consul:
         agent:
-          servers: {lan: [10.60.4.110]}
+          servers: {lan: [10.60.7.110]}
 
   - name: worker
     instances: 1
@@ -95,11 +94,11 @@ jobs:
       garden:
         listen_network: tcp
         listen_address: 0.0.0.0:7777
-        btrfs_store_size_mv: 20480
+        btrfs_store_size_mv: 102400
 
       consul:
         agent:
-          servers: {lan: [10.60.4.110]}
+          servers: {lan: [10.60.7.110]}
 
 resource_pools:
   - name: web

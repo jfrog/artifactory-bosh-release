@@ -4,6 +4,5 @@ image: docker:///concourse/concourse-ci
 inputs:
   - name: artifactory-bosh-release-master
   - name: version
-    
 run:
   path: artifactory-bosh-release-master/ci/scripts/build-deploy-rc-artifact 
