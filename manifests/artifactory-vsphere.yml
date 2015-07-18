@@ -49,8 +49,6 @@ jobs:
   resource_pool: vms
   networks:
   - name: services1
-    static_ips:
-    - 10.60.4.58
   properties:
     artifactory_host: 10.60.7.54
     artifactory_route_name: bosh-artifactory
