@@ -11,7 +11,10 @@ TODO: Branch strategy to eliminate this issue.
 
 For a simple Concourse environment via Vagrant follow the docs [here](http://concourse.ci/deploying-with-vagrant.html).
 Use `fly save-target <URL of concourse>`
-
+for example:
+```
+fly save-target http://10.60.7.101:8080 vsphere7
+```
 ### Pipeline configuration
 
 To configure the concourse pipeline run the following command from the root project directory.
