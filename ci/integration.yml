@@ -1,6 +1,6 @@
 ---    
 platform: linux
-image: docker:///cloudfoundry/cf-artifactory-ci
+image: docker://artifactory-us.jfrog.info/pcfpartner/cf-artifactory-concourse
 inputs:
   - name: artifactory-bosh-release-master
 run:

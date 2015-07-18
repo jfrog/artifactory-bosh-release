@@ -1,6 +1,6 @@
 ---    
 platform: linux
-image: docker:///concourse/concourse-ci
+image: docker://artifactory-us.jfrog.info/pcfpartner/concourse-ci
 inputs:
   - name: artifactory-bosh-release-master
   - name: version 
