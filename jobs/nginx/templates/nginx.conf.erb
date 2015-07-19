@@ -48,7 +48,7 @@ server {
   }
 
   location /v2/ {
-    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))).*$" ) {
       return 404;
     }
     proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-prod-local2/v2/;
@@ -73,7 +73,7 @@ server {
   }
 
   location /v2/ {
-    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go ).*$" ) {
+    if ($http_user_agent ~ "^(docker\/1\.(3|4|5(?!\.[0-9]-dev))).*$" ) {
       return 404;
     }
     proxy_pass          http://bosh-artifactory.cf.jfrog.local:8081/artifactory/api/docker/docker-dev-local2/v2/;
