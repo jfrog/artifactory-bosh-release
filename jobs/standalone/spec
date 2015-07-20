@@ -6,6 +6,10 @@ templates:
   logback.xml.erb: etc/logback.xml
   artifactory.lic.erb: etc/artifactory.lic
   storage.properties.erb: etc/storage.properties
+  docker-prod-local.json.erb: config/docker-prod-local.json
+  docker-prod-local2.json.erb: config/docker-prod-local2.json
+  docker-dev-local.json.erb: config/docker-dev-local.json
+  docker-dev-local2.json.erb: config/docker-dev-local2.json
 
 packages:
 - artifactory
