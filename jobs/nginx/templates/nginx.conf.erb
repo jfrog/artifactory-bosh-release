@@ -20,7 +20,7 @@ server {
 
   client_max_body_size 0; # disable any limits to avoid HTTP 413
   chunked_transfer_encoding on; # to avoid HTTP 411
-
+  rewrite ^/$ http://<%= p('artifactory_host') %>:8081/artifactory;
   location /artifactory {
     proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory;
     proxy_set_header    Host  $http_host;
