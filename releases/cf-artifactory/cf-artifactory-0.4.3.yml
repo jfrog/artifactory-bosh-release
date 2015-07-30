@@ -1,0 +1,93 @@
+---
+packages:
+- name: artifactory
+  version: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  fingerprint: !binary |-
+    YjhmNzg3NTQzOTgxNWUxMDY0MGUzZjFiMGIzN2Q2NzViNzZiNDM3MA==
+  sha1: !binary |-
+    MDA0YTBjOGQwNDZlMjUyM2E5ZjFjOTZjNDRlNWNiNzBjYjJkNTJkYw==
+  dependencies: []
+- name: common
+  version: !binary |-
+    ODBhMTMxM2E3OTAxMjEyNzMwMjBhM2Y3ZTQ1YzVkODQxNWM2ZDZhNQ==
+  fingerprint: !binary |-
+    ODBhMTMxM2E3OTAxMjEyNzMwMjBhM2Y3ZTQ1YzVkODQxNWM2ZDZhNQ==
+  sha1: !binary |-
+    OGUxODUwZjBhOWM2NmVjYmFlNjUzNTNlNDljOTc2M2I3ZTBlODczZg==
+  dependencies: []
+- name: debian_nfs_server
+  version: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  fingerprint: !binary |-
+    Yjk2MzVjZWFmNDUyYjE2MjM5YjliNmEzNTZjZGM5ZDFjNmZhODBmNQ==
+  sha1: !binary |-
+    ZmZhMGE4OWJmYzhlYzljNmZiYjRlMTI3OTEwNmY4YjEwMjRmMzFkYw==
+  dependencies: []
+- name: go
+  version: !binary |-
+    MWM5MWZlYjU1YjcyZTkzNDBhNTJkYjk3NGY2ZDI5MjdiMmJlMjI1Yw==
+  fingerprint: !binary |-
+    MWM5MWZlYjU1YjcyZTkzNDBhNTJkYjk3NGY2ZDI5MjdiMmJlMjI1Yw==
+  sha1: !binary |-
+    NTRkOWVlZTMzZjRkODY2ZmEzZDgyODBkYTI0MWQyMjE1ZDgxMzFhNA==
+  dependencies: []
+- name: jdk
+  version: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  fingerprint: !binary |-
+    ZmNlZTA3MzQ1NWZjMDY5ZmExMjVmNDhhZWIwYWMxZTc1YmQzZjBjOQ==
+  sha1: !binary |-
+    ZjY4NTllMWYxYjkxZTVkNmFlNzBkOTRiMjE0MzA1MTg4ZmY5ZWEyNA==
+  dependencies: []
+- name: mysql-connector
+  version: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  fingerprint: !binary |-
+    YTUxMzU2NmNhMTE3ZTU1OWZmM2Q1ZWFhMzFkZmQ3MTc4MjkzNGFmMg==
+  sha1: !binary |-
+    NGU1YTlkMDVhOGIxNzNlZWNkZGRkYTFhZGQ0NjUzNDZmOGQxYWE1Yw==
+  dependencies: []
+- name: nginx
+  version: !binary |-
+    ZGQxNWM4MjAyNzY3MWM3NGIxMDhjNTJiY2VjYjY0ZmNhZjljMGQzOA==
+  fingerprint: !binary |-
+    ZGQxNWM4MjAyNzY3MWM3NGIxMDhjNTJiY2VjYjY0ZmNhZjljMGQzOA==
+  sha1: !binary |-
+    Nzg3ZmJlNmQ0MjlhZmJiNGQxOTE3MTc0NDUyMWU4Y2MzZTFlNDFlMQ==
+  dependencies: []
+- name: route-registrar
+  version: !binary |-
+    NDFmMzBkYzRkODhhZDkyZTVlYWYwOGQwMjEwZjBmZTgxMTAxMjFlMg==
+  fingerprint: !binary |-
+    NDFmMzBkYzRkODhhZDkyZTVlYWYwOGQwMjEwZjBmZTgxMTAxMjFlMg==
+  sha1: !binary |-
+    NDA2Zjk3ZjZhNDdlYmRkMjdjYzUxMTIzNGE2MzkxMTE0ODZlNDc3YQ==
+  dependencies:
+  - go
+jobs:
+- name: debian_nfs_server
+  version: !binary |-
+    NDM2ODFjZGFjOTFmOTYyN2RhNzA4NGFjZTA5ZmYzZTFkMDIzY2VlMQ==
+  fingerprint: !binary |-
+    NDM2ODFjZGFjOTFmOTYyN2RhNzA4NGFjZTA5ZmYzZTFkMDIzY2VlMQ==
+  sha1: !binary |-
+    ZTdhOWJiZGEzZmFlZTg4ZjM4YzBmYzdmOWVkYTJlNWMzY2Y1ZWRjMw==
+- name: nginx
+  version: !binary |-
+    OTdhODlmMjg5ZTY1NWE1YTA3OWZjNjdjMzg3MDM2YzJjODc4ODA5MA==
+  fingerprint: !binary |-
+    OTdhODlmMjg5ZTY1NWE1YTA3OWZjNjdjMzg3MDM2YzJjODc4ODA5MA==
+  sha1: !binary |-
+    MDNhMmQzMjNmYzk4MWQwMDgwM2Y3ZmZhMGU0N2E0MTg0NWRmNTJkOQ==
+- name: standalone
+  version: !binary |-
+    NmU4YWRhNGVhNDY1OWM5NGZmMzZhZTZlZmUxZjZmODU5ZGZhMzgwNA==
+  fingerprint: !binary |-
+    NmU4YWRhNGVhNDY1OWM5NGZmMzZhZTZlZmUxZjZmODU5ZGZhMzgwNA==
+  sha1: !binary |-
+    OTMxNjNlZjU1NmNmODc5NTRmMGM1NGMzZmFmMWU2ZmFlNTQzMzQyZA==
+commit_hash: e9a92544
+uncommitted_changes: false
+name: cf-artifactory
+version: 0.4.3
