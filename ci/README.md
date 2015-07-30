@@ -23,15 +23,15 @@ You must specify two license keys with different valid through dates to use duri
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory.lic)
 export TEST_LICENSE_2=$(cat assets/artifactory2.lic)
-fly -t vsphere7 c -c ci/pipelines/pipeline.yml
- --vars-from ci/credentials.yml
- --vars-from ci/bosh_credentials.yml
- --vars-from ci/release_database_credentials.yml
- --vars-from ci/cf_credentials.yml
- --var test_license_1="$(echo $ARTIFACTORY_LICENSE)"
- --var test_license_2="$(echo $TEST_LICENSE_2)"
- --var artifactory_manifest=manifests/artifactory-vsphere.yml
- --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)"
+fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
+ --vars-from ci/credentials.yml \
+ --vars-from ci/bosh_credentials.yml \
+ --vars-from ci/release_database_credentials.yml \
+ --vars-from ci/cf_credentials.yml \
+ --var test_license_1="$(echo $ARTIFACTORY_LICENSE)" \
+ --var test_license_2="$(echo $TEST_LICENSE_2)" \
+ --var artifactory_manifest=manifests/artifactory-vsphere.yml \
+ --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)" \
  bosh-release
 ```
 
