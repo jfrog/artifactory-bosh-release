@@ -298,7 +298,7 @@ def bosh_manifest
 end
 
 def expected_artifactory_version
-  ENV['EXPECTED_ARTIFACTORY_VERSION'] || '3.7.0'
+  ENV['EXPECTED_ARTIFACTORY_VERSION'] || '4.0.2'
 end
 
 def artifactory_admin_user
