@@ -178,6 +178,7 @@ case $1 in
     ;;
 
   stop)
+    cp $ARTIFACTORY_MONIT_PID $ARTIFACTORY_PID || true
     exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log || true
