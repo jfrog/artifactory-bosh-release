@@ -92,6 +92,7 @@ bundle exec rspec --format d
 ### Via vSphere
 
 ```
+export  EXPECTED_ARTIFACTORY_VERSION=4.0.2
 export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w

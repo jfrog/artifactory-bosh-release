@@ -1,11 +1,11 @@
 # abort script on any command that exits with a non zero value
 set -e
 
-ARTIFACTORY_VERSION=3.7.0
+ARTIFACTORY_VERSION=4.0.2
 
-archive="artifactory/artifactory-powerpack-standalone-${ARTIFACTORY_VERSION}.zip"
+archive="artifactory/jfrog-artifactory-pro-${ARTIFACTORY_VERSION}.zip"
 
 echo "Extracting archive..."
 unzip $archive
 
-cp -R artifactory-powerpack-${ARTIFACTORY_VERSION}/* ${BOSH_INSTALL_TARGET}
+cp -R artifactory-pro-${ARTIFACTORY_VERSION}/* ${BOSH_INSTALL_TARGET}

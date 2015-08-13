@@ -4,4 +4,4 @@ name: artifactory
 dependencies: []
 
 files:
-- artifactory/artifactory-powerpack-standalone-3.7.0.zip 
+- artifactory/jfrog-artifactory-pro-4.0.2.zip 
