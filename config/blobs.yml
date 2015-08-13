@@ -1,12 +1,4 @@
 ---
-artifactory/artifactory-powerpack-standalone-3.7.0.zip:
-  object_id: 975a60ab-990f-44bb-8647-fd4cfc9b5023
-  sha: 243317fc00154caae19ab644407b5d3ead51fdc2
-  size: 83305525
-jdk/jdk-1.7.0_79.gz:
-  object_id: 39cd4807-395c-4cf6-9ed4-a47ed4f484d9
-  sha: c4deb058f674ab732b36a101147add089cf7f134
-  size: 153512879
 mysql-connector/mysql-connector-java-5.1.35.tar.gz:
   object_id: c7d1f320-8b85-410a-aa05-0f8b38fead24
   sha: a3861e599a8f72527f630ce298a38204922f45d4
