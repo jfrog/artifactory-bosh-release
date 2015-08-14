@@ -1,5 +1,11 @@
-<% if_p("artifactory_license_key") do |key|
+<% 
+node_ip_address = spec.networks.send(spec.networks.methods(false).first).ip 
+node_ip_idx = p('artifactory_ha_nodes').index(node_ip_address)
+if_p("artifactory_license_keys") do |keys|
+  key = keys[node_ip_idx]
   clean_key = key.gsub(/\s+/,"")
 %>
 <%= clean_key %>
-<% end %>
+<%
+end
+%>

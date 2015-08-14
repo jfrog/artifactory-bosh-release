@@ -26,8 +26,8 @@ properties:
   artifactory_cluster_home:
     description: "Directory HA cluster home"
     default: /var/vcap/data/sys/cluster_home
-  artifactory_license_key:
-    description: "Artifactory license key"
+  artifactory_license_keys:
+    description: "Artifactory license keys to use for the nodes"
   artifactory_cluster_security_token:
     description: "Security token for cluster communications. Example: 76b07383dcda344979681e01efa5ac50"
   artifactory_ha_nodes:
