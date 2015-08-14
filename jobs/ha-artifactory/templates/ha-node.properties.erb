@@ -1,0 +1,11 @@
+<% 
+node_ip_address = spec.networks.send(spec.networks.methods(false).first).ip 
+node_ip_idx = p('artifactory_ha_nodes').index(node_ip_address)
+primary_node = p('artifactory_primary_node') == node_ip_address 
+%>
+node.id=art<%= node_ip_idx %>
+cluster.home=<%= p('artifactory_cluster_home') %>
+context.url=http://<%= node_ip_address %>:8081/artifactory
+membership.port=10001
+primary=<%= primary_node %>
+

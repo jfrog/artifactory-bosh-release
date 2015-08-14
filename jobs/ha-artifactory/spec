@@ -1,0 +1,57 @@
+---
+name: ha-artifactory
+templates:
+  artifactory-ha.ctl.erb: bin/artifactory-ha.ctl
+  artifactory.default.erb: bin/artifactory.default
+  logback.xml.erb: etc/logback.xml
+  artifactory.lic.erb: etc/artifactory.lic
+  ha-node.properties.erb: etc/ha-node.properties
+  cluster.properties.erb: ha-etc/cluster.properties
+  storage.properties.erb: ha-etc/storage.properties
+  docker-prod-local.json.erb: config/docker-prod-local.json
+  docker-prod-local2.json.erb: config/docker-prod-local2.json
+  docker-dev-local.json.erb: config/docker-dev-local.json
+  docker-dev-local2.json.erb: config/docker-dev-local2.json
+
+packages:
+- artifactory
+- jdk
+- mysql-connector
+- common
+
+properties:
+  artifactory_log_dir:
+    description: "Directory for all artifactory logs"
+    default: /var/vcap/sys/log/artifactory
+  artifactory_cluster_home:
+    description: "Directory HA cluster home"
+    default: /var/vcap/data/sys/cluster_home
+  artifactory_license_key:
+    description: "Artifactory license key"
+  artifactory_cluster_security_token:
+    description: "Security token for cluster communications. Example: 76b07383dcda344979681e01efa5ac50"
+  artifactory_ha_nodes:
+    description: "List of Artifactory node IP addresses that form the HA cluster"
+  artifactory_primary_node:
+    description: "The IP address of the HA node that will act as the primary node"
+
+  database.host:
+    description: "The Artifactory database host. Example: 10.6.3.47"
+  database.port:
+    description: "The Artifactory database port. Example: 3306"
+  database.name:
+    description: "The Artifactory database name. Example: artdb"
+  database.username:
+    description: "The Artifactory database username. Example: artifactory"
+  database.password:
+    description: "The Artifactory database password. Example: password"
+
+  nfs.server_ip:
+    description: "The NFS server ip addresss"
+  nfs.mount_points.filestore:
+    description: "The NFS server mount point"
+    default: artifactory_file_store
+  nfs.mount_points.home_dirs:
+    description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
+    default: artifactory_shared_home
+

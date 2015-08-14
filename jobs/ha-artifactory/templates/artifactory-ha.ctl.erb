@@ -1,0 +1,195 @@
+#!/bin/bash
+
+set -e
+set -x
+
+mkdir -p /var/vcap/sys/log
+
+exec > >(tee -a >(logger -p user.info -t vcap.$(basename $0).stdout) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).log)
+exec 2> >(tee -a >(logger -p user.error -t vcap.$(basename $0).stderr) | awk -W interactive '{lineWithDate="echo [`date +\"%Y-%m-%d %H:%M:%S%z\"`] \"" $0 "\""; system(lineWithDate)  }' >>/var/vcap/sys/log/$(basename $0).err.log)
+
+LOG_DIR=/var/vcap/sys/log/artifactory
+JAVA_HOME=/var/vcap/packages/jdk/
+MYSQL_CONNECTOR=/var/vcap/packages/mysql-connector
+ARTIFACTORY_PKG_DIR=/var/vcap/packages/artifactory
+ARTIFACTORY_JOB_DIR=/var/vcap/jobs/ha-artifactory
+CLUSTER_HOME=<%= p('artifactory_cluster_home') %>
+ARTIFACTORY_FILE_STORE=/var/vcap/store/artifactory_data
+ARTIFACTORY_LOG="$LOG_DIR/artifactory.log"
+ARTIFACTORY_PID=/var/vcap/packages/artifactory/artifactory.pid
+ARTIFACTORY_MONIT_PID=/var/vcap/sys/run/artifactory.pid
+
+function exitError() {
+    echo "$1"
+    exit 1
+}
+
+function mount_nfs {
+    #BLOCK: Mount home directory, unmount it if mounted, then mount it
+    if grep -qs 'cluster_home' /proc/mounts; then
+        umount $CLUSTER_HOME -lf
+    fi
+    mkdir -p $CLUSTER_HOME
+    mount <%= p('nfs.server_ip')%>:<%= p('nfs.mount_points.home_dirs')%> $CLUSTER_HOME -o intr
+    #ENDBLOCK: Mounting data directory
+
+}
+
+function waitServerStarts() {
+    [ -z "$1" ] && exitError "Wait for server starts needs number of seconds to wait"
+    local secsToWait=$1
+    echo "INFO: Waiting for $ARTIFACTORY_PKG_DIR to initialize in less than $secsToWait seconds"
+    local nbSeconds=0
+    local printLog=true
+    local doTouchLogback=true
+    while [ $nbSeconds -lt $secsToWait ]; do
+        sleep 2
+        let "nbSeconds = $nbSeconds + 2"
+        if [ ! -f "$ARTIFACTORY_LOG" ]; then
+            echo "INFO: File $ARTIFACTORY_LOG still not created after $nbSeconds!"
+            if [ $nbSeconds -gt 28 ] && $doTouchLogback; then
+                local logbackFile="$ARTIFACTORY_PKG_DIR/etc/logback.xml"
+                echo "INFO: Touching $logbackFile to refresh log"
+                [ ! -f "$logbackFile" ] && exitError "File $ARTIFACTORY_LOG not created after $nbSeconds and $logbackFile doe not exists"
+                touch $logbackFile
+                doTouchLogback=false
+            fi
+            [ $nbSeconds -gt $secsToWait ] && exitError "File $ARTIFACTORY_LOG was not created after $nbSeconds!"
+            continue;
+        else
+            $printLog && echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+            printLog=false
+        fi
+        if [ "$doTouchLogback" == "false" ]; then
+          local logbackMessage="`grep "Reloaded logback config from" $ARTIFACTORY_LOG`"
+          if [ -n "$logbackMessage" ]; then
+            echo "INFO: Found re log message in $ARTIFACTORY_LOG after $nbSeconds!"
+            echo "INFO: $logbackMessage"
+            echo "INFO: Waiting 2 seconds for jersey to finish"
+            sleep 2
+            return 0
+          fi
+        else
+          local startMessage="`grep "Artifactory successfully started" $ARTIFACTORY_LOG`"
+          if [ -n "$startMessage" ]; then
+            echo "INFO: Found start message in $ARTIFACTORY_LOG after $nbSeconds!"
+            echo "INFO: $startMessage"
+            echo "INFO: Waiting 2 seconds for jersey to finish"
+            sleep 2
+            echo "done"
+            return 0
+          fi
+        fi
+        echo -n "."
+    done
+    exitError "$ARTIFACTORY_PKG_DIR did not initialize after $nbSeconds!"
+}
+
+function setup_docker_repos {
+    #TODO:  At some point we should consider ways to customize the repos.  But this is across-jobs
+    curl -uadmin:password localhost:8081/artifactory/api/repositories > repos.txt
+    if grep -qs 'docker-prod-local' repos.txt; then
+        echo 'Docker prod v1 found, not touching it'
+    else
+        echo 'No Docker Prod v1'
+        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local.json
+    fi
+    if grep -qs 'docker-prod-local2' repos.txt; then
+        echo 'Docker prod v2 found, not touching it'
+    else
+        echo 'No Docker Prod v2'
+        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local2.json
+    fi
+    if grep -qs 'docker-dev-local' repos.txt; then
+        echo 'Docker dev v1 found, not touching it'
+    else
+        echo 'No Docker Dev v1'
+        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local.json
+    fi
+    if grep -qs 'docker-dev-local2' repos.txt; then
+        echo 'Docker dev v2 found, not touching it'
+    else
+        echo 'No Docker Dev v2'
+        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local2.json
+    fi
+}
+
+function create_links {
+    #NOTE:  This DESTROYS any data that existed before the mounts.
+    #be very careful on adding things to this during a migration
+    cd $ARTIFACTORY_PKG_DIR
+    rm -rf data
+    ln -s $ARTIFACTORY_FILE_STORE data
+    rm -rf etc
+    ln -s $CLUSTER_HOME/ha-etc etc
+    mkdir -p etc/plugins
+    rm -rf backup
+    ln -s $CLUSTER_HOME/ha-backup backup
+    cd -
+}
+
+case $1 in
+
+  start)
+    mount_nfs
+    sleep 5
+    create_links
+ #   sleep 5
+    
+    mkdir -p $LOG_DIR
+    chown vcap:vcap $LOG_DIR
+
+    export JAVA_HOME=$JAVA_HOME
+    cd $ARTIFACTORY_PKG_DIR
+
+    cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/etc/artifactory.lic $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/etc/ha-node.properties $ARTIFACTORY_PKG_DIR/etc
+    cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
+    mkdir -p $ARTIFACTORY_FILE_STORE
+
+    #Copy across HA related files to the NFS
+    cp $ARTIFACTORY_JOB_DIR/ha-etc/cluster.properties $CLUSTER_HOME/ha-etc
+    cp $ARTIFACTORY_JOB_DIR/ha-etc/storage.properties $CLUSTER_HOME/ha-etc
+
+    cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
+    rm -f $ARTIFACTORY_LOG
+    #setup logs to be visible in UI
+    cd logs
+    rm -f *.log
+    ln -s $LOG_DIR/artifactory.log
+    ln -s $LOG_DIR/access.log
+    ln -s $LOG_DIR/request.log
+    ln -s $LOG_DIR/import.export.log
+    cd ..
+
+    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
+      >>  $LOG_DIR/artifactory.stdout.log \
+      2>> $LOG_DIR/artifactory.stderr.log
+
+    waitServerStarts 90
+    curl -v http://localhost:8081/artifactory/api/system/ping
+    echo 'copying PID'
+    cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
+    setup_docker_repos
+
+    #setup HA node properties
+    chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties 
+    chown artifactory $ARTIFACTORY_PKG_DIR 
+    cp $ARTIFACTORY_PKG_DIR/etc/artifactory.system.properties $CLUSTER_HOME/ha-etc
+
+    echo 'StartupScriptComplete'
+    ;;
+
+  stop)
+    cp $ARTIFACTORY_MONIT_PID $ARTIFACTORY_PID || true
+    exec $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
+      >>  $LOG_DIR/artifactory.stdout.log \
+      2>> $LOG_DIR/artifactory.stderr.log || true
+    #unfortunately attempts to clean up this (by unmounting drives and deleting PID) cause issues with
+    #monit restart, now that the health check is being used.  Accordingly, we will use this method.
+    ;;
+  *)
+    echo "Usage: ctl {start|stop}" ;;
+
+esac
