@@ -119,12 +119,12 @@ function create_links {
     #be very careful on adding things to this during a migration
     cd $ARTIFACTORY_PKG_DIR
     rm -rf data
-    ln -s $ARTIFACTORY_FILE_STORE data
+ #   ln -s $ARTIFACTORY_FILE_STORE data
     rm -rf etc
-    ln -s $CLUSTER_HOME/ha-etc etc
+ #   ln -s $CLUSTER_HOME/ha-etc etc
     mkdir -p etc/plugins
     rm -rf backup
-    ln -s $CLUSTER_HOME/ha-backup backup
+ #   ln -s $CLUSTER_HOME/ha-backup backup
     cd -
 }
 
@@ -133,7 +133,7 @@ case $1 in
   start)
     mount_nfs
     sleep 5
-    create_links
+   create_links
  #   sleep 5
     
     mkdir -p $LOG_DIR
@@ -161,22 +161,20 @@ case $1 in
     ln -s $LOG_DIR/access.log
     ln -s $LOG_DIR/request.log
     ln -s $LOG_DIR/import.export.log
-    cd ..
+    cd .. 
+
 
     $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
       >>  $LOG_DIR/artifactory.stdout.log \
       2>> $LOG_DIR/artifactory.stderr.log
+   
+ rm $ARTIFACTORY_PKG_DIR/etc/artifactory.system.properties
 
     waitServerStarts 90
     curl -v http://localhost:8081/artifactory/api/system/ping
     echo 'copying PID'
     cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
     setup_docker_repos
-
-    #setup HA node properties
-    chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties 
-    chown artifactory $ARTIFACTORY_PKG_DIR 
-    cp $ARTIFACTORY_PKG_DIR/etc/artifactory.system.properties $CLUSTER_HOME/ha-etc
 
     echo 'StartupScriptComplete'
     ;;
