@@ -1,11 +1,6 @@
 check process artifactory
   with pidfile /var/vcap/sys/run/artifactory.pid
-  start program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl start" with timeout 120 seconds
+  start program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl start" with timeout 180 seconds
   stop program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl stop"
-  if failed 
-  	port 8081 
-  	protocol HTTP
-  	request "/artifactory/api/system/ping"
-  then restart
   group vcap
 

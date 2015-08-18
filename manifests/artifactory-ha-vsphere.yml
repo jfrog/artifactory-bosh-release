@@ -96,7 +96,7 @@ jobs:
   properties:
     artifactory_license_keys:
     - <%= `echo $ARTIFACTORY_LICENSE` %>
-    - <%= `echo $ARTIFACTORY_LICENSE` %>
+    - <%= `echo $ARTIFACTORY1_LICENSE` %>
     artifactory_cluster_security_token: jdzddf584148ddzd185ddr1
     artifactory_ha_nodes:
     - 10.60.7.54
