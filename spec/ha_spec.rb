@@ -7,11 +7,12 @@ require 'securerandom'
 require 'mysql'
 require 'digest'
 
-describe 'Standalone Artifactory' do
+describe 'HA Artifactory' do
   before(:all) do
     @gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
       :password => bosh_director_ssh_password)
-    @standalone_node_ip = get_standalone_node_ip_from bosh_manifest
+    @load_balancer_ip = get_load_balancer_ip_from bosh_manifest
+    @standalone_node_ip = get_first_node_ip_from bosh_manifest
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
@@ -21,11 +22,10 @@ describe 'Standalone Artifactory' do
   end
 
   describe 'Initial Checks' do
-    it 'should verify that deployed artifactory is running and version is correct' do
-      exec_on_gateway do | port |
-        response = RestClient.get artifactory_version_url port
-        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
-      end
+    it 'should verify that deployed artifactory is running, version is correct and HA addon is available' do  
+      response = RestClient.get "http://admin:password@" + @load_balancer_ip + ":8081/artifactory/api/system/version"
+      expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      expect(JSON.parse(response)['addons'].include? 'ha').to eq(true)
     end
 
     it 'should verify that artifactory is accessible via the route' do
@@ -60,127 +60,16 @@ describe 'Standalone Artifactory' do
     end
   end
 
-  describe 'peristence' do
-    describe "database connection" do
-      context "adding a new user" do
-        let(:random_user) { SecureRandom.hex }
-
-        before do
-          exec_on_gateway do | port |
-            response = RestClient.get artifactory_users_url(port: port)
-            user = JSON.parse(response).find do | user |
-              user.fetch("name") == random_user
-            end
-            expect(user).to be_nil
-
-            new_user = JSON.generate(:name => random_user, :password => "pass", :email => "#{random_user}@test.com")
-            RestClient.put artifactory_users_url(user: random_user, port: port), new_user,:content_type => 'application/json'
-          end
-        end
-
-        after do
-          exec_on_gateway do | port |
-            RestClient.delete artifactory_users_url(user: random_user, port: port)
-          end
-        end
-
-        it 'should be present in the mysql database' do
-          con = Mysql.connect(ENV["ARTIFACTORY_DB_HOST"], ENV["ARTIFACTORY_DB_USERNAME"],
-                              ENV["ARTIFACTORY_DB_PASSWORD"], ENV["ARTIFACTORY_DB_NAME"],
-                              ENV["ARTIFACTORY_DB_PORT"].to_i)
-          rs = con.query "SELECT count(*) FROM artdb_cf.users WHERE username = '#{random_user}'"
-          con.close
-          expect(rs.fetch_hash['count(*)'].to_i).to eq(1)
-        end
-      end
-    end
-
-    describe 'recreating vms' do
-
-      before(:all) do
-        @filename_artifact = SecureRandom.hex
-        @filepath_backup = "#{artifactory_package_path}/backup/#{SecureRandom.hex}"
-        @filepath_data =  "#{artifactory_package_path}/data/#{SecureRandom.hex}"
-        @filepath_etc = "#{artifactory_package_path}/etc/plugins/dummyPlugin.groovy"
-        @file_sha1 = ''
-
-        #upload an artifact
-        exec_on_gateway do | port |
-          response = RestClient.put artifactory_artifact_url(filename: @filename_artifact, port: port), File.read('README.md'), :content_type => 'text'
-          @file_sha1 = JSON.parse(response)["checksums"]["sha1"]
-          puts "uploaded file #{@filename_artifact} to artifactory with sha1 #{@file_sha1}"
-        end
-        #create a file in backup / data / etc
-        exec_on_node(@standalone_node_ip, "touch #{@filepath_backup}", :root => true )
-        exec_on_node(@standalone_node_ip, "touch #{@filepath_data}", :root => true )
-        #upload a plugin:  
-        #TODO: Replace this with appropriate REST API call when available.
-        myplugin = `cat assets/dummyPlugin.groovy`
-        command = "cat >#{@filepath_etc} <<EOL\n#{myplugin}EOL\n\n"
-        exec_on_node(@standalone_node_ip, "touch #{@filepath_etc}", :root => true)
-        exec_on_node(@standalone_node_ip, "chmod ugo+w #{@filepath_etc}", :root => true)
-        exec_on_node(@standalone_node_ip, command)
-        exec_on_node(@standalone_node_ip, "chmod o-w #{@filepath_etc}", :root => true)
-        #delete and recreate vms but not disks
-        puts 'stopping artifactory'
-        bundle_exec_bosh 'stop standalone --soft'
-        puts 'recreating nfs_server'
-        bundle_exec_bosh 'recreate nfs_server'
-        puts 'recreating standalone'
-        bundle_exec_bosh 'recreate standalone'
-
-        wait_for_artifactory_available
-      end
-
-      after(:all) do
-        #delete the artifact
-        exec_on_gateway do | port |
-          RestClient.delete artifactory_artifact_url(filename: @filename_artifact, port: port)
-        end
-        #delete the file in backup / data / etc
-        exec_on_node(@standalone_node_ip, "rm #{@filepath_backup}", :root => true )
-        exec_on_node(@standalone_node_ip, "rm #{@filepath_data}", :root => true )
-        exec_on_node(@standalone_node_ip, "rm #{@filepath_etc}", :root => true )
-      end
-
-      context 'when both the standalone & nfs_server are recreated by an operator' do
-        it 'still has backup data' do
-          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_backup}")
-          expect(result).to eq("#{@filepath_backup}\n")
-        end
-
-        it 'still has plugins' do
-          exec_on_gateway do | port |
-            response = RestClient.get artifactory_dummy_plugin port
-            expect(JSON.parse(response)['status']).to eq('okay')
-          end
-        end
-
-        it 'still has data dir data' do
-          result = exec_on_node(@standalone_node_ip, "ls #{@filepath_data}")
-          expect(result).to eq("#{@filepath_data}\n")
-        end
-
-        it 'still has the artifacts' do
-          #verfiy the artifact can be downloaded again
-          exec_on_gateway do | port |
-            response = RestClient.get artifactory_artifact_url(filename: @filename_artifact, port: port)
-            expect(Digest::SHA1.hexdigest(response)).to eq(@file_sha1)
-          end
-        end
-      end
-    end
-  end
+  
 
   describe 'licensing' do
     it 'should have a license present' do
-      exec_on_gateway do | port |
-        response = RestClient.get artifactory_license_url port
-        expect(JSON.parse(response)['type']).to eq('Trial')
+        response = RestClient.get artifactory_license_url artifactory_port
+	puts response        
+	expect(JSON.parse(response)['type']).to eq('High Availability')
         parsed_response = JSON.parse(response)['validThrough']
         $original_expiry_date = parsed_response
         puts "Original Expiry date: #{$original_expiry_date}"
-      end
     end
 
     context 'when license is changed' do
@@ -189,24 +78,20 @@ describe 'Standalone Artifactory' do
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
         puts "Deploying Lic 2:  If this test fails, check expiration date of license 2"
         bosh_deploy_and_wait_for_artifactory
-        exec_on_gateway do | port |
-          response = RestClient.get artifactory_license_url port
-          parsed_response = JSON.parse(response)['validThrough']
-          puts "Expiry Date: #{parsed_response}"
-          expect(parsed_response).to_not eq($original_expiry_date)
-        end
+        response = RestClient.get artifactory_license_url artifactory_port
+        parsed_response = JSON.parse(response)['validThrough']
+        puts "Expiry Date: #{parsed_response}"
+        expect(parsed_response).to_not eq($original_expiry_date)
       end
 
       it 'resets to the original license' do
         puts 'Resetting to original license from deployment'
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
         bosh_deploy_and_wait_for_artifactory
-        exec_on_gateway do | port |
-          response = RestClient.get artifactory_license_url port
-          parsed_response = JSON.parse(response)['validThrough']
-          puts "Expiry Date: #{parsed_response}"
-          expect(parsed_response).to eq($original_expiry_date)
-        end
+        response = RestClient.get artifactory_license_url artifactory_port
+        parsed_response = JSON.parse(response)['validThrough']
+        puts "Expiry Date: #{parsed_response}"
+        expect(parsed_response).to eq($original_expiry_date)
       end
     end
   end
@@ -231,10 +116,14 @@ def bundle_exec_bosh command
   expect($?.to_i).to eq(0), output
 end
 
-def get_standalone_node_ip_from bosh_manifest
+def get_first_node_ip_from bosh_manifest
  YAML.load_file(bosh_manifest)['jobs'].
- find{|job_hash| job_hash['name'] == 'standalone'}['networks'].
- first['static_ips'].first
+ find{|job_hash| job_hash['name'] == 'ha-artifactory'}['networks'].first['static_ips'].first
+end
+
+def get_load_balancer_ip_from bosh_manifest
+ YAML.load_file(bosh_manifest)['jobs'].
+ find{|job_hash| job_hash['name'] == 'nginx'}['properties']['artifactory_host']
 end
 
 def exec_on_gateway
@@ -334,11 +223,11 @@ def artifactory_users_url(user: "", port:)
 end
 
 def artifactory_artifact_url(filename:,  port:)
-  "http://#{artifactory_admin_user}:#{artifactory_admin_password}@localhost:#{port}/artifactory/libs-release-local/#{filename}"
+  "http://#{artifactory_admin_user}:#{artifactory_admin_password}@"+ @load_balancer_ip +":#{port}/artifactory/libs-release-local/#{filename}"
 end
 
 def artifactory_route_version_url
-  "http://bosh-artifactory.#{cf_domain}/artifactory/api/system/version"
+  "http://#{artifactory_admin_user}:#{artifactory_admin_password}@bosh-artifactory.#{cf_domain}/artifactory/api/system/version"
 end
 
 def artifactory_version_url port
@@ -350,7 +239,7 @@ def artifactory_dummy_plugin port
 end
 
 def artifactory_license_url port
- "#{artifactory_authenticated_api(port)}/system/license"
+ "http://#{artifactory_admin_user}:#{artifactory_admin_password}@"+ @load_balancer_ip +":#{port}/artifactory/api/system/license"
 end
 
 def bosh_director_ssh_username
