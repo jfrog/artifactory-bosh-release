@@ -83,6 +83,7 @@ jobs:
         ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
         ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
         ARTIFACTORY_LICENSE: {{artifactory_license}}
+        ARTIFACTORY1_LICENSE: {{artifactory1_license}}
         CF_DOMAIN: {{cf_domain}}
         NATS_HOST: {{nats_host}}
         NATS_PORT: {{nats_port}}
