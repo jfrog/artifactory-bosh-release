@@ -23,6 +23,7 @@ describe 'HA Artifactory' do
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
     #TODO: is hardcoding the license here really the right answer?
     ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
+    ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
     bosh_deploy_and_wait_for_artifactory
   end
 
