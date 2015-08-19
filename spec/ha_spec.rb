@@ -64,8 +64,7 @@ describe 'HA Artifactory' do
 
   describe 'licensing' do
     it 'should have a license present' do
-        response = RestClient.get artifactory_license_url artifactory_port
-	puts response        
+        response = RestClient.get artifactory_license_url artifactory_port      
 	expect(JSON.parse(response)['type']).to eq('High Availability')
         parsed_response = JSON.parse(response)['validThrough']
         $original_expiry_date = parsed_response
