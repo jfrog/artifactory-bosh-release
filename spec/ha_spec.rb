@@ -16,6 +16,10 @@ describe 'HA Artifactory' do
     puts @load_balancer_ip
     @standalone_node_ip = get_first_node_ip_from bosh_manifest
     puts @standalone_node_ip
+    puts "target #{bosh_target}"
+    puts "deployment #{bosh_manifest}"
+    puts "login #{bosh_username} #{bosh_password}"
+    puts ENV["TEST_LICENSE_1"]
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
