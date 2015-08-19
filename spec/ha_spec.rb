@@ -13,13 +13,11 @@ describe 'HA Artifactory' do
     @gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
       :password => bosh_director_ssh_password)
     @load_balancer_ip = get_load_balancer_ip_from bosh_manifest
-    puts @load_balancer_ip
     @standalone_node_ip = get_first_node_ip_from bosh_manifest
-    puts @standalone_node_ip
-    puts "target #{bosh_target}"
-    puts "deployment #{bosh_manifest}"
-    puts "login #{bosh_username} #{bosh_password}"
     puts ENV["TEST_LICENSE_1"]
+    puts ENV["TEST_LICENSE_2"]
+    puts ENV["ARTIFACTORY_LICENSE"]
+    puts ENV["ARTIFACTORY1_LICENSE"]
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
