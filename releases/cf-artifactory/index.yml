@@ -88,4 +88,6 @@ builds:
     version: 0.4.5
   fe793009-1d4b-47c9-9fdb-0dd5c851d259:
     version: 0.5.1
+  a5ff123b-8a1c-4593-810f-da01cbaf6efd:
+    version: 0.5.2
 format-version: '2'
