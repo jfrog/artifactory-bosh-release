@@ -14,16 +14,12 @@ describe 'HA Artifactory' do
       :password => bosh_director_ssh_password)
     @load_balancer_ip = get_load_balancer_ip_from bosh_manifest
     @standalone_node_ip = get_first_node_ip_from bosh_manifest
-    puts ENV["TEST_LICENSE_1"]
-    puts ENV["TEST_LICENSE_2"]
-    puts ENV["ARTIFACTORY_LICENSE"]
-    puts ENV["ARTIFACTORY1_LICENSE"]
     bundle_exec_bosh "target #{bosh_target}"
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
     #TODO: is hardcoding the license here really the right answer?
     ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
-    ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+    ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE"]
     bosh_deploy_and_wait_for_artifactory
   end
 
