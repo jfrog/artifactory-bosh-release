@@ -18,8 +18,8 @@ describe 'HA Artifactory' do
     bundle_exec_bosh "deployment #{bosh_manifest}"
     bundle_exec_bosh "login #{bosh_username} #{bosh_password}"
     #TODO: is hardcoding the license here really the right answer?
-    ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
-    ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE"]
+    ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+    ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE"]
     bosh_deploy_and_wait_for_artifactory
   end
 
@@ -77,6 +77,7 @@ describe 'HA Artifactory' do
    
       it 'updates the license' do
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
+        ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_3"]
         puts "Deploying Lic 2:  If this test fails, check expiration date of license 2"
         bosh_deploy_and_wait_for_artifactory
         response = RestClient.get artifactory_license_url artifactory_port
@@ -87,7 +88,8 @@ describe 'HA Artifactory' do
 
       it 'resets to the original license' do
         puts 'Resetting to original license from deployment'
-        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_1"]
+        ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE"]
         bosh_deploy_and_wait_for_artifactory
         response = RestClient.get artifactory_license_url artifactory_port
         parsed_response = JSON.parse(response)['validThrough']
