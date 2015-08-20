@@ -18,12 +18,13 @@ fly save-target http://10.60.7.101:8080 vsphere7
 ### Pipeline configuration
 
 To configure the concourse pipeline run the following command from the root project directory.
-You must specify two license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable)
+You must specify two pair of enterprise license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable)
 
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
 export TEST_LICENSE_2=$(cat assets/artifactory2.lic)
+export TEST_LICENSE_2=$(cat assets/artifactory3.lic)
 fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
  --vars-from ci/credentials.yml \
  --vars-from ci/bosh_credentials.yml \
@@ -31,7 +32,8 @@ fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
  --vars-from ci/cf_credentials.yml \
  --var test_license_1="$(echo $ARTIFACTORY_LICENSE)" \
  --var test_license_2="$(echo $TEST_LICENSE_2)" \
- --var artifactory_manifest=manifests/artifactory-vsphere.yml \
+ --var test_license_3="$(echo $TEST_LICENSE_3)" \
+ --var artifactory_manifest=manifests/artifactory-ha-vsphere.yml \
  --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)" \
  --var artifactory1_license="$(echo $ARTIFACTORY1_LICENSE)" \
  bosh-release

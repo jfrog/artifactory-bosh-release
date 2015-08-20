@@ -9,7 +9,6 @@ require 'digest'
 
 describe 'HA Artifactory' do
   before(:all) do
-    puts "before all"
     @gateway = Net::SSH::Gateway.new(bosh_target, bosh_director_ssh_username,
       :password => bosh_director_ssh_password)
     @load_balancer_ip = get_load_balancer_ip_from bosh_manifest
@@ -214,7 +213,7 @@ def artifactory_authenticated_api port
 end
 
 def artifactory_status_api port
- "#{artifactory_authenticated_api(port)}/system/ping"
+ "http://#{artifactory_admin_user}:#{artifactory_admin_password}@"+ @load_balancer_ip +":#{port}/artifactory/api/system/ping"
 end
 
 def artifactory_users_url(user: "", port:)
