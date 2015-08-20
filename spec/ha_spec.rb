@@ -154,9 +154,8 @@ def exec_on_node(node, cmd, options = {})
 end
 
 def wait_for_artifactory_available
-  exec_on_gateway do | port |
     begin
-      RestClient.get artifactory_status_api port
+      RestClient.get artifactory_status_api artifactory_port
     rescue RestClient::ServiceUnavailable
       puts "still waiting for artifactory to become available, sleeping for 5secs"
       sleep(5)
@@ -165,7 +164,6 @@ def wait_for_artifactory_available
       puts "license maybe expired"
     end
     puts "artifactory available"
-  end
 end
 
 def bosh_target
