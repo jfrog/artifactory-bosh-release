@@ -90,4 +90,6 @@ builds:
     version: 0.5.1
   a5ff123b-8a1c-4593-810f-da01cbaf6efd:
     version: 0.5.2
+  ada6d096-830f-47c6-9b4f-586d5c03506d:
+    version: 0.5.3
 format-version: '2'
