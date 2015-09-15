@@ -19,4 +19,7 @@ cf_credentials.yml
 *~
 *.lic
 *.iml
+*.tgz
+*.zip
+*.gz
 .idea/
