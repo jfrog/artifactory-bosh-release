@@ -19,11 +19,11 @@ nginx/pcre-8.37-patch-CVE2015-3210.tar.gz:
   object_id: 76dafd0e-f23c-4459-85d5-750a21a3aac9
   sha: 46e2839ab51af83e73c246e62d9abc3095ff5dd6
   size: 4524683
-artifactory/jfrog-artifactory-pro-4.0.2.zip:
-  object_id: 516a93ec-1faa-4cca-a2c1-14e3e6a8b696
-  sha: 900b57f1ba2209143cc7361b6825f814d7147640
-  size: 96661515
 jdk/jdk-1.8.0_51.gz:
   object_id: 07941616-c568-4c94-89b5-c8f20bf6b7b4
   sha: da1fe118417180c374ba9446f2ea3b4206db2ed6
   size: 173281904
+artifactory/jfrog-artifactory-pro-4.1.0.zip:
+  object_id: 07044590-5e17-4cd1-b901-11da56533ac7
+  sha: 18d347bbe9c1138efcecaec2a0201a67c63f1271
+  size: 92454439
