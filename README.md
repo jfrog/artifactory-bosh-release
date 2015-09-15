@@ -92,13 +92,17 @@ bundle exec rspec --format d
 ### Via vSphere
 
 ```
-export  EXPECTED_ARTIFACTORY_VERSION=4.0.2
+export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
+export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
+export  EXPECTED_ARTIFACTORY_VERSION=4.1.0
 export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
-export  BOSH_MANIFEST=manifests/artifactory-vsphere.yml
-export  TEST_LICENSE_1=$(cat assets/artifactory.lic)
-export  TEST_LICENSE_2=$(cat assets/artifactory2.lic)
+export  BOSH_MANIFEST=manifests/artifactory-ha-vsphere.yml
+export  TEST_LICENSE=$(cat assets/artifactory-H1.lic)
+export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
+export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
+export  TEST_LICENSE_1=$(cat assets/artifactory-H4.lic)
 export  ARTIFACTORY_DB_HOST=10.60.3.55
 export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf

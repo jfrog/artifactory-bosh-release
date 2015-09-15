@@ -23,8 +23,9 @@ You must specify two pair of enterprise license keys with different valid throug
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export TEST_LICENSE_2=$(cat assets/artifactory2.lic)
-export TEST_LICENSE_2=$(cat assets/artifactory3.lic)
+export  TEST_LICENSE_1=$(cat assets/artifactory-H1.lic)
+export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
+export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
 fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
  --vars-from ci/credentials.yml \
  --vars-from ci/bosh_credentials.yml \
