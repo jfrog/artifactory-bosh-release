@@ -23,6 +23,9 @@ properties:
   artifactory_host:
     description: "Artifactory host ip"
  
+  artifactory_ha_nodes:
+    description: "List of artifactory nodes"
+
   artifactory_route_name:
     description: "Name of the artifactory endpoint (domain is added)"
     default: artifactory

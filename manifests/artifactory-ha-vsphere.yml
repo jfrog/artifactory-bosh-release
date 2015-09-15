@@ -52,6 +52,9 @@ jobs:
   - name: services1
   properties:
     artifactory_host: 10.60.7.51
+    artifactory_ha_nodes:
+    - 10.60.7.54
+    - 10.60.7.52
     artifactory_route_name: bosh-artifactory
     artifactory_docker_dev_route_name: bosh-artifactory-docker-dev
     artifactory_docker_prod_route_name: bosh-artifactory-docker-prod

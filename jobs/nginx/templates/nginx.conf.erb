@@ -15,18 +15,19 @@ server_tokens off;
 #server_names_hashbucket_size 128;
 
 upstream artifactory {
-  ip_hash;  #for sitchiness by IP
-  server 10.60.7.54:8081;
-  server 10.60.7.52:8081;
+  ip_hash;  #for stickiness by IP
+#TODO This needs to be replaced with an iteration over the set
+  server <%= p('artifactory_ha_nodes').first %>:8081;
+  server <%= p('artifactory_ha_nodes').last %>:8081;
 }
 
 server {
-  listen 8081;
+  listen 80;
   server_name _;
 
   client_max_body_size 0; # disable any limits to avoid HTTP 413
   chunked_transfer_encoding on; # to avoid HTTP 411
-  rewrite ^/$ http://$host:8081/artifactory;
+  rewrite ^/$ http://$host/artifactory;
   location /artifactory {
     proxy_pass          http://artifactory;
     proxy_set_header    Host  $http_host;
@@ -50,11 +51,11 @@ server {
   proxy_set_header X-Forwarded-Proto $scheme;
 
   location /v1/ {
-    proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-prod-local/v1/;
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local/v1/;
   }
 
   location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-prod-local2/v2/;
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local2/v2/;
   }
 }
 
@@ -72,11 +73,11 @@ server {
   proxy_set_header X-Forwarded-Proto $scheme;
 
   location /v1/ {
-  proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-dev-local/v1/;
+  proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local/v1/;
   }
 
   location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>:8081/artifactory/api/docker/docker-dev-local2/v2/;
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local2/v2/;
   }
 }
 access_log           /var/vcap/sys/log/nginx/access.log;

@@ -24,7 +24,7 @@ describe 'HA Artifactory' do
 
   describe 'Initial Checks' do
     it 'should verify that deployed artifactory is running, version is correct and HA addon is available' do  
-      response = RestClient.get "http://admin:password@" + @load_balancer_ip + ":8081/artifactory/api/system/version"
+      response = RestClient.get "http://admin:password@" + @load_balancer_ip + "/artifactory/api/system/version"
       expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       expect(JSON.parse(response)['addons'].include? 'ha').to eq(true)
     end
@@ -199,7 +199,7 @@ def artifactory_admin_password
 end
 
 def artifactory_port
-  ENV['ARTIFACTORY_PORT'] || 8081
+  ENV['ARTIFACTORY_PORT'] || 80
 end
 
 def artifactory_api port
