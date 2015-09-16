@@ -14,6 +14,12 @@ templates:
   route-registrar-docker-prod_ctl.erb: bin/route-registrar-docker-prod_ctl
   registrar_settings-docker-prod.yml.erb: config/registrar_settings-docker-prod.yml
 
+  route-registrar-docker-dev-local_ctl.erb: bin/route-registrar-docker-dev-local_ctl
+  registrar_settings-docker-dev-local.yml.erb: config/registrar_settings-docker-dev-local.yml
+
+  route-registrar-docker-prod-local_ctl.erb: bin/route-registrar-docker-prod-local_ctl
+  registrar_settings-docker-prod-local.yml.erb: config/registrar_settings-docker-prod-local.yml
+
 packages: 
 - nginx
 - common

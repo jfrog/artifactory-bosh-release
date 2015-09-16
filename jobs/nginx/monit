@@ -21,3 +21,15 @@ check process route-registrar-docker-prod
   start program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod_ctl start" with timeout 10 seconds
   stop program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod_ctl stop" with timeout 10 seconds
   group vcap
+
+check process route-registrar-docker-dev-local
+  with pidfile /var/vcap/sys/run/route-registrar-docker-dev-local.pid
+  start program "/var/vcap/jobs/nginx/bin/route-registrar-docker-dev-local_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/nginx/bin/route-registrar-docker-dev-local_ctl stop" with timeout 10 seconds
+  group vcap
+
+check process route-registrar-docker-prod-local
+  with pidfile /var/vcap/sys/run/route-registrar-docker-prod-local.pid
+  start program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod-local_ctl start" with timeout 10 seconds
+  stop program "/var/vcap/jobs/nginx/bin/route-registrar-docker-prod-local_ctl stop" with timeout 10 seconds
+  group vcap

@@ -10,8 +10,11 @@ templates:
   storage.properties.erb: ha-etc/storage.properties
   docker-prod-local.json.erb: config/docker-prod-local.json
   docker-prod-local2.json.erb: config/docker-prod-local2.json
+  docker-prod-virtual.json.erb: config/docker-prod-virtual.json
   docker-dev-local.json.erb: config/docker-dev-local.json
   docker-dev-local2.json.erb: config/docker-dev-local2.json
+  docker-dev-virtual.json.erb: config/docker-dev-virtual.json
+  dockerhub-remote.json.erb: config/dockerhub-remote.json
 
 packages:
 - artifactory
