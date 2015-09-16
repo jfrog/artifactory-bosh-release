@@ -16,7 +16,7 @@ server_tokens off;
 
 upstream artifactory {
   ip_hash;  #for stickiness by IP
-#TODO This needs to be replaced with an iteration over the set
+#TODO This needs to be replaced with an iteration over the set so it scales to more than 2
   server <%= p('artifactory_ha_nodes').first %>:8081;
   server <%= p('artifactory_ha_nodes').last %>:8081;
 }
@@ -34,6 +34,24 @@ server {
     proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header  X-Real-IP      $remote_addr; # pass on real client's IP
     proxy_set_header X-Forwarded-Proto $scheme;
+  }
+}
+
+server {  #when 4.2 comes out, consolidate this back down to 2 repos, one prod one dev
+  listen 5000;
+  server_name _;
+
+  client_max_body_size 0; # disable any limits to avoid HTTP 413
+  chunked_transfer_encoding on; # to avoid HTTP 411
+
+  proxy_set_header    Host  $http_host;
+  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+  proxy_set_header X-Forwarded-Ssl on;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  location /v2/ {
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev/v2/;
   }
 }
 
@@ -81,4 +99,22 @@ server {
   }
 }
 access_log           /var/vcap/sys/log/nginx/access.log;
+}
+
+server {
+  listen 5003;
+  server_name _;
+
+  client_max_body_size 0; # disable any limits to avoid HTTP 413
+  chunked_transfer_encoding on; # to avoid HTTP 411
+
+  proxy_set_header    Host  $http_host;
+  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+  proxy_set_header X-Forwarded-Ssl on;
+  proxy_set_header X-Forwarded-Proto $scheme;
+
+  location /v2/ {
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod/v2/;
+  }
 }
