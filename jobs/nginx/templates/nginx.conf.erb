@@ -11,126 +11,126 @@ worker_connections  1024;
 }
 
 http {
-server_tokens off;
-#server_names_hashbucket_size 128;
+  server_tokens off;
+  #server_names_hashbucket_size 128;
 
-upstream artifactory {
-  ip_hash;  #for stickiness by IP
-#TODO This needs to be replaced with an iteration over the set so it scales to more than 2
-  server <%= p('artifactory_ha_nodes').first %>:8081;
-  server <%= p('artifactory_ha_nodes').last %>:8081;
-}
+  upstream artifactory {
+    ip_hash;  #for stickiness by IP
+  #TODO This needs to be replaced with an iteration over the set so it scales to more than 2
+    server <%= p('artifactory_ha_nodes').first %>:8081;
+    server <%= p('artifactory_ha_nodes').last %>:8081;
+  }
 
-server {
-  listen 80;
-  server_name _;
+  server {
+    listen 80;
+    server_name _;
 
-  client_max_body_size 0; # disable any limits to avoid HTTP 413
-  chunked_transfer_encoding on; # to avoid HTTP 411
-  rewrite ^/$ http://$host/artifactory;
-  location /artifactory {
-    proxy_pass          http://artifactory;
+    client_max_body_size 0; # disable any limits to avoid HTTP 413
+    chunked_transfer_encoding on; # to avoid HTTP 411
+    rewrite ^/$ http://$host/artifactory;
+    location /artifactory {
+      proxy_pass          http://artifactory;
+      proxy_set_header    Host  $http_host;
+      proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header  X-Real-IP      $remote_addr; # pass on real client's IP
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Original-URI $request_uri;
+      proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
+      proxy_read_timeout 900;
+
+    }
+  }
+
+  server {  #when 4.2 comes out, consolidate this back down to 2 repos, one prod one dev
+    listen 5000;
+    server_name _;
+
+    client_max_body_size 0; # disable any limits to avoid HTTP 413
+    chunked_transfer_encoding on; # to avoid HTTP 411
+
     proxy_set_header    Host  $http_host;
-    proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header  X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header X-Forwarded-Ssl on;
     proxy_set_header X-Forwarded-Proto $scheme;
     proxy_set_header X-Original-URI $request_uri;
     proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
     proxy_read_timeout 900;
 
-  }
-}
-
-server {  #when 4.2 comes out, consolidate this back down to 2 repos, one prod one dev
-  listen 5000;
-  server_name _;
-
-  client_max_body_size 0; # disable any limits to avoid HTTP 413
-  chunked_transfer_encoding on; # to avoid HTTP 411
-
-  proxy_set_header    Host  $http_host;
-  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
-  proxy_set_header X-Forwarded-Ssl on;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Original-URI $request_uri;
-  proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
-  proxy_read_timeout 900;
-
-  location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev/v2/;
-  }
-}
-
-server {
-  listen 5001;
-  server_name _;
-
-  client_max_body_size 0; # disable any limits to avoid HTTP 413
-  chunked_transfer_encoding on; # to avoid HTTP 411
-
-  proxy_set_header    Host  $http_host;
-  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
-  proxy_set_header X-Forwarded-Ssl on;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Original-URI $request_uri;
-  proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
-  proxy_read_timeout 900;
-
-  location /v1/ {
-    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local/v1/;
+    location /v2/ {
+      proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev/v2/;
+    }
   }
 
-  location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local2/v2/;
+  server {
+    listen 5001;
+    server_name _;
+
+    client_max_body_size 0; # disable any limits to avoid HTTP 413
+    chunked_transfer_encoding on; # to avoid HTTP 411
+
+    proxy_set_header    Host  $http_host;
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header X-Forwarded-Ssl on;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Original-URI $request_uri;
+    proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
+    proxy_read_timeout 900;
+
+    location /v1/ {
+      proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local/v1/;
+    }
+
+    location /v2/ {
+      proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod-local2/v2/;
+    }
   }
-}
 
-server {
-  listen 5002;
-  server_name _;
+  server {
+    listen 5002;
+    server_name _;
 
-  client_max_body_size 0; # disable any limits to avoid HTTP 413
-  chunked_transfer_encoding on; # to avoid HTTP 411
+    client_max_body_size 0; # disable any limits to avoid HTTP 413
+    chunked_transfer_encoding on; # to avoid HTTP 411
 
-  proxy_set_header    Host  $http_host;
-  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
-  proxy_set_header X-Forwarded-Ssl on;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Original-URI $request_uri;
-  proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
-  proxy_read_timeout 900;
+    proxy_set_header    Host  $http_host;
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header X-Forwarded-Ssl on;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Original-URI $request_uri;
+    proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
+    proxy_read_timeout 900;
 
-  location /v1/ {
-  proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local/v1/;
+    location /v1/ {
+    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local/v1/;
+    }
+
+    location /v2/ {
+      proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local2/v2/;
+    }
   }
 
-  location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-dev-local2/v2/;
+  server {
+    listen 5003;
+    server_name _;
+
+    client_max_body_size 0; # disable any limits to avoid HTTP 413
+    chunked_transfer_encoding on; # to avoid HTTP 411
+
+    proxy_set_header    Host  $http_host;
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
+    proxy_set_header X-Forwarded-Ssl on;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Original-URI $request_uri;
+    proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
+    proxy_read_timeout 900;
+
+    location /v2/ {
+      proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod/v2/;
+    }
   }
-}
-access_log           /var/vcap/sys/log/nginx/access.log;
-}
-
-server {
-  listen 5003;
-  server_name _;
-
-  client_max_body_size 0; # disable any limits to avoid HTTP 413
-  chunked_transfer_encoding on; # to avoid HTTP 411
-
-  proxy_set_header    Host  $http_host;
-  proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
-  proxy_set_header    X-Real-IP      $remote_addr; # pass on real client's IP
-  proxy_set_header X-Forwarded-Ssl on;
-  proxy_set_header X-Forwarded-Proto $scheme;
-  proxy_set_header X-Original-URI $request_uri;
-  proxy_pass_header   Server;  # To help debugging, list the server that actually did the reply rather than nginx
-  proxy_read_timeout 900;
-
-  location /v2/ {
-    proxy_pass          http://<%= p('artifactory_host') %>/artifactory/api/docker/docker-prod/v2/;
-  }
+  access_log           /var/vcap/sys/log/nginx/access.log;
 }
