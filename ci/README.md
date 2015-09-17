@@ -18,12 +18,11 @@ fly save-target http://10.60.7.101:8080 vsphere7
 ### Pipeline configuration
 
 To configure the concourse pipeline run the following command from the root project directory.
-You must specify two pair of enterprise license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable)
+You must specify two pair of enterprise license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable  . . . eg take out line breaks in license files below before using)
 
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export  TEST_LICENSE_1=$(cat assets/artifactory-H1.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
 export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
 fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
