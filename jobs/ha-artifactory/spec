@@ -8,6 +8,7 @@ templates:
   ha-node.properties.erb: etc/ha-node.properties
   cluster.properties.erb: ha-etc/cluster.properties
   storage.properties.erb: ha-etc/storage.properties
+  artifactory.system.properties.erb: ha-etc/artifactory.system.properties
   docker-prod-local.json.erb: config/docker-prod-local.json
   docker-prod-local2.json.erb: config/docker-prod-local2.json
   docker-prod-virtual.json.erb: config/docker-prod-virtual.json
