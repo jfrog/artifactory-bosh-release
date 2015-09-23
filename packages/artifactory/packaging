@@ -1,7 +1,7 @@
 # abort script on any command that exits with a non zero value
 set -e
 
-ARTIFACTORY_VERSION=4.1.0
+ARTIFACTORY_VERSION=4.1.2
 
 archive="artifactory/jfrog-artifactory-pro-${ARTIFACTORY_VERSION}.zip"
 
