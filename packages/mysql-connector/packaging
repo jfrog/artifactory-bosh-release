@@ -1,7 +1,7 @@
 # abort script on any command that exits with a non zero value
 set -e
 
-MYSQL_CONNECTOR_VERSION="5.1.35"
+MYSQL_CONNECTOR_VERSION="5.1.36"
 
 archive="mysql-connector/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}.tar.gz"
 
