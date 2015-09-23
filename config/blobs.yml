@@ -1,8 +1,4 @@
 ---
-mysql-connector/mysql-connector-java-5.1.35.tar.gz:
-  object_id: c7d1f320-8b85-410a-aa05-0f8b38fead24
-  sha: a3861e599a8f72527f630ce298a38204922f45d4
-  size: 3848304
 debian_nfs_server/nfs-kernel-server_1.2.0-4ubuntu4.2_amd64.deb:
   object_id: 3b1db8d2-3cf5-4e59-82ed-8ac5a68f9302
   sha: 2ec33a5319657a881b7b1cd8a9e1adf6a8312318
@@ -19,11 +15,15 @@ nginx/pcre-8.37-patch-CVE2015-3210.tar.gz:
   object_id: 76dafd0e-f23c-4459-85d5-750a21a3aac9
   sha: 46e2839ab51af83e73c246e62d9abc3095ff5dd6
   size: 4524683
-jdk/jdk-1.8.0_51.gz:
-  object_id: 07941616-c568-4c94-89b5-c8f20bf6b7b4
-  sha: da1fe118417180c374ba9446f2ea3b4206db2ed6
-  size: 173281904
-artifactory/jfrog-artifactory-pro-4.1.0.zip:
-  object_id: 07044590-5e17-4cd1-b901-11da56533ac7
-  sha: 18d347bbe9c1138efcecaec2a0201a67c63f1271
-  size: 92454439
+artifactory/jfrog-artifactory-pro-4.1.2.zip:
+  object_id: 97530d0e-0754-4c06-b9e3-d833c6e64ed5
+  sha: db5feb5b62cbe2fd21ee875c5833b694a881d5f5
+  size: 92457102
+jdk/jdk-1.8.0_60.gz:
+  object_id: c97b75c6-8490-4081-82f7-6e6be39cf508
+  sha: 19470e2ed867d9453e1bb5e1d6adca87cc23f55e
+  size: 181238643
+mysql-connector-java-5.1.36.tar.gz:
+  object_id: eaddb307-25cb-44cc-bdb7-cfdd8b37d625
+  sha: e7635143b33e701beff15576baae6377a0d46cd3
+  size: 3888402
