@@ -113,8 +113,8 @@ jobs:
         ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
         ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
         ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
-        TEST_LICENSE_1: {{test_license_1}}
-        TEST_LICENSE: {{artifactory1_license}}
+        TEST_LICENSE_1: {{artifactory1_license}}
+        TEST_LICENSE: {{artifactory_license}}
         TEST_LICENSE_2: {{test_license_2}}
         TEST_LICENSE_3: {{test_license_3}}
         CF_DOMAIN: {{cf_domain}}

@@ -30,7 +30,6 @@ fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
  --vars-from ci/bosh_credentials.yml \
  --vars-from ci/release_database_credentials.yml \
  --vars-from ci/cf_credentials.yml \
- --var test_license_1="$(echo $ARTIFACTORY_LICENSE)" \
  --var test_license_2="$(echo $TEST_LICENSE_2)" \
  --var test_license_3="$(echo $TEST_LICENSE_3)" \
  --var artifactory_manifest=manifests/artifactory-ha-vsphere.yml \
