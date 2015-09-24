@@ -209,6 +209,7 @@ case $1 in
       2>> $LOG_DIR/artifactory.stderr.log || true
     #unfortunately attempts to clean up this (by unmounting drives and deleting PID) cause issues with
     #monit restart, now that the health check is being used.  Accordingly, we will use this method.
+    kill -9 $(cat $ARTIFACTORY_MONIT_PID) || true
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
