@@ -98,4 +98,6 @@ builds:
     version: 0.6.2
   beee98a8-456b-45b7-b8d6-859f496d9ece:
     version: 0.6.3
+  803086d3-78b5-4f95-8c3e-f5d0fb0dcb20:
+    version: 0.6.4
 format-version: '2'
