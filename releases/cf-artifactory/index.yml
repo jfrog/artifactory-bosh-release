@@ -104,4 +104,6 @@ builds:
     version: 0.6.5
   57b5a9d7-2f80-4c10-b4af-b3bdfa127a60:
     version: 0.6.6
+  385617a2-6aa4-4bb5-a6df-d24c4e78d0a7:
+    version: 0.6.7
 format-version: '2'
