@@ -86,49 +86,52 @@ function waitServerStarts() {
 }
 
 function setup_docker_repos {
-    #TODO:  At some point we should consider ways to customize the repos.  But this is across-jobs
-    curl -uadmin:password localhost:8081/artifactory/api/repositories > repos.txt
-    if grep -qs 'docker-prod-local' repos.txt; then
-        echo 'Docker prod v1 found, not touching it'
-    else
-        echo 'No Docker Prod v1'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local.json
-    fi
-    if grep -qs 'docker-prod-local2' repos.txt; then
-        echo 'Docker prod v2 found, not touching it'
-    else
-        echo 'No Docker Prod v2'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local2.json
-    fi
-    if grep -qs 'docker-dev-local' repos.txt; then
-        echo 'Docker dev v1 found, not touching it'
-    else
-        echo 'No Docker Dev v1'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local.json
-    fi
-    if grep -qs 'docker-dev-local2' repos.txt; then
-        echo 'Docker dev v2 found, not touching it'
-    else
-        echo 'No Docker Dev v2'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local2.json
-    fi
-    if grep -qs 'dockerhub' repos.txt; then
-        echo 'Docker dev v2 found, not touching it'
-    else
-        echo 'No DockerHub remote'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.RemoteRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/dockerhub -T $ARTIFACTORY_JOB_DIR/config/dockerhub-remote.json
-    fi
-    if grep -qs 'docker-prod' repos.txt; then
-        echo 'Docker dev v2 found, not touching it'
-    else
-        echo 'No Docker Production Virtual'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod -T $ARTIFACTORY_JOB_DIR/config/docker-prod-virtual.json
-    fi
-    if grep -qs 'docker-all' repos.txt; then
-        echo 'Docker dev v2 found, not touching it'
-    else
-        echo 'No Docker Virtual'
-        curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev -T $ARTIFACTORY_JOB_DIR/config/docker-dev-virtual.json
+    #TODO:  At some point we should consider ways to customize the repos.  But this is across-jobs.
+    #TODO:  Use admin credentials secret instead of this approach.   
+    #As of now if the user changes the admin credentials this will not update.  Which is okay.
+    if curl -uadmin:password localhost:8081/artifactory/api/repositories > repos.txt; then
+        if grep -qs 'docker-prod-local' repos.txt; then
+            echo 'Docker prod v1 found, not touching it'
+        else
+            echo 'No Docker Prod v1'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local.json
+        fi
+        if grep -qs 'docker-prod-local2' repos.txt; then
+            echo 'Docker prod v2 found, not touching it'
+        else
+            echo 'No Docker Prod v2'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-prod-local2.json
+        fi
+        if grep -qs 'docker-dev-local' repos.txt; then
+            echo 'Docker dev v1 found, not touching it'
+        else
+            echo 'No Docker Dev v1'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local.json
+        fi
+        if grep -qs 'docker-dev-local2' repos.txt; then
+            echo 'Docker dev v2 found, not touching it'
+        else
+            echo 'No Docker Dev v2'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local2.json
+        fi
+        if grep -qs 'dockerhub' repos.txt; then
+            echo 'Docker dev v2 found, not touching it'
+        else
+            echo 'No DockerHub remote'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.RemoteRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/dockerhub -T $ARTIFACTORY_JOB_DIR/config/dockerhub-remote.json
+        fi
+        if grep -qs 'docker-prod' repos.txt; then
+            echo 'Docker dev v2 found, not touching it'
+        else
+            echo 'No Docker Production Virtual'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod -T $ARTIFACTORY_JOB_DIR/config/docker-prod-virtual.json
+        fi
+        if grep -qs 'docker-all' repos.txt; then
+            echo 'Docker dev v2 found, not touching it'
+        else
+            echo 'No Docker Virtual'
+            curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev -T $ARTIFACTORY_JOB_DIR/config/docker-dev-virtual.json
+        fi
     fi
 }
 
@@ -194,7 +197,9 @@ case $1 in
     #chown artifactory $ARTIFACTORY_PKG_DIR 
 
     waitServerStarts 90
-    curl -v -uadmin:password http://localhost:8081/artifactory/api/system/ping
+    curl -v -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.security.User+json" http://localhost:8081/artifactory/api/security/users/healthcheck -T $ARTIFACTORY_JOB_DIR/config/healthcheck-user.json || true
+    curl -v -uhealthcheck:jFrog1234 http://localhost:8081/artifactory/api/system/ping
+
     echo 'copying PID'
     cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
     setup_docker_repos

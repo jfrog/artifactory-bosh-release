@@ -1,7 +1,7 @@
 check process artifactory
   with pidfile /var/vcap/sys/run/artifactory.pid
-  start program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl start" with timeout 180 seconds
+  start program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl start" with timeout 210 seconds
   stop program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl stop" with timeout 120 seconds
-  if failed url http://admin:password@localhost:8081/artifactory/api/system/ping then restart
+  if failed url http://healthcheck:jFrog1234@localhost:8081/artifactory/api/system/ping then restart
   group vcap
 
