@@ -15,10 +15,6 @@ nginx/pcre-8.37-patch-CVE2015-3210.tar.gz:
   object_id: 76dafd0e-f23c-4459-85d5-750a21a3aac9
   sha: 46e2839ab51af83e73c246e62d9abc3095ff5dd6
   size: 4524683
-artifactory/jfrog-artifactory-pro-4.1.2.zip:
-  object_id: 97530d0e-0754-4c06-b9e3-d833c6e64ed5
-  sha: db5feb5b62cbe2fd21ee875c5833b694a881d5f5
-  size: 92457102
 jdk/jdk-1.8.0_60.gz:
   object_id: c97b75c6-8490-4081-82f7-6e6be39cf508
   sha: 19470e2ed867d9453e1bb5e1d6adca87cc23f55e
@@ -27,3 +23,7 @@ mysql-connector/mysql-connector-java-5.1.36.tar.gz:
   object_id: cf9b95ae-28bf-478c-b82c-a7e8ecf4b520
   sha: e7635143b33e701beff15576baae6377a0d46cd3
   size: 3888402
+artifactory/jfrog-artifactory-pro-4.1.3.zip:
+  object_id: 0a8f92c9-a0b0-46c2-8969-6c205e1934a6
+  sha: 89516c1934cb65fd80c375933fd5213dff7860b0
+  size: 92459448
