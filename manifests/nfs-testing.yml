@@ -1,0 +1,58 @@
+---
+name: nfs-testing
+director_uuid: <%= `bosh status --uuid` %>
+releases:
+- name: cf-artifactory
+  version: latest
+compilation:
+  cloud_properties:
+    name: random
+    cpu: 2
+    ram: 2_048
+    disk: 10_000
+  network: services1
+  reuse_compilation_vms: true
+  workers: 1
+update:
+  canaries: 1
+  canary_watch_time: 10000-100000
+  update_watch_time: 10000-100000
+  max_in_flight: 6
+networks:
+- name: services1
+  type: manual
+  subnets:
+  - range: 10.60.0.0/16
+    gateway: 10.60.0.1
+    dns: [10.60.0.10]
+    cloud_properties: {name: 'VM Network'}
+    reserved: [10.60.7.0 - 10.60.7.50, 10.60.6.0/24, 10.60.5.0/24, 10.60.4.0/24, 10.60.3.0/24, 10.60.2.0/24, 10.60.1.0/24, 10.60.0.2 - 10.60.0.255, 10.60.7.100 - 10.60.255.254]
+    static:
+    - 10.60.7.60
+resource_pools:
+- name: vms
+  network: services1
+  stemcell:
+    name: bosh-vsphere-esxi-ubuntu-trusty-go_agent
+    version: latest
+  cloud_properties:
+    cpu: 2
+    ram: 4_096
+    disk: 20_000
+jobs:
+- name: nfs_server
+  templates:
+  - name: debian_nfs_server
+    release: cf-artifactory
+  instances: 1
+  resource_pool: vms
+  persistent_disk: 8096
+  networks:
+  - name: services1
+    static_ips:
+    - 10.60.7.60
+  properties:
+    nfs_server:
+      allow_from_entries:
+      - 10.60.0.0/16
+      no_root_squash: true
