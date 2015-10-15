@@ -53,9 +53,6 @@ properties:
 
   nfs.server_ip:
     description: "The NFS server ip addresss"
-  nfs.mount_points.filestore:
-    description: "The NFS server mount point"
-    default: artifactory_file_store
   nfs.mount_points.home_dirs:
     description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
     default: artifactory_shared_home
