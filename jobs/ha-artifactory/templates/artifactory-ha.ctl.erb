@@ -115,19 +115,19 @@ function setup_docker_repos {
             curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.LocalRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev-local2 -T $ARTIFACTORY_JOB_DIR/config/docker-dev-local2.json
         fi
         if grep -qs 'dockerhub' repos.txt; then
-            echo 'Docker dev v2 found, not touching it'
+            echo 'Dockerhub found, not touching it'
         else
             echo 'No DockerHub remote'
             curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.RemoteRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/dockerhub -T $ARTIFACTORY_JOB_DIR/config/dockerhub-remote.json
         fi
         if grep -qs 'docker-prod' repos.txt; then
-            echo 'Docker dev v2 found, not touching it'
+            echo 'Docker prod virtual found, not touching it'
         else
             echo 'No Docker Production Virtual'
             curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod -T $ARTIFACTORY_JOB_DIR/config/docker-prod-virtual.json
         fi
         if grep -qs 'docker-dev' repos.txt; then
-            echo 'Docker dev v2 found, not touching it'
+            echo 'Docker dev virtual found, not touching it'
         else
             echo 'No Docker Virtual'
             curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-dev -T $ARTIFACTORY_JOB_DIR/config/docker-dev-virtual.json
