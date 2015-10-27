@@ -126,7 +126,7 @@ function setup_docker_repos {
             echo 'No Docker Production Virtual'
             curl -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.repositories.VirtualRepositoryConfiguration+json" http://localhost:8081/artifactory/api/repositories/docker-prod -T $ARTIFACTORY_JOB_DIR/config/docker-prod-virtual.json
         fi
-        if grep -qs 'docker-all' repos.txt; then
+        if grep -qs 'docker-dev' repos.txt; then
             echo 'Docker dev v2 found, not touching it'
         else
             echo 'No Docker Virtual'
