@@ -33,12 +33,14 @@ bundle exec bosh sync blobs
 
 sed -i "/ARTIFACTORY_VERSION=/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" packages/artifactory/packaging
 sed -i "/jfrog-artifactory-pro/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" packages/artifactory/spec
+sed -i "/EXPECTED_ARTIFACTORY_VERSION/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" spec/ha_spec.rb
 
 git config --global user.email "ci@localhost"
 git config --global user.name "CI Bot"
 
 git add config
 git add packages
+git add spec
 
 git status
 git commit -m "Update artifactory to $(cat assets/current-artifactory)"
