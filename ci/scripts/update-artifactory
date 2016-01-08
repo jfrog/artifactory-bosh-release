@@ -3,7 +3,7 @@
 
 set -e -x
 
-cd artifactory-pivotal
+cd artifactory-bosh-release-master
 echo $PATH
 
 export PATH=/home/vcap/.rbenv/bin:/home/vcap/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
