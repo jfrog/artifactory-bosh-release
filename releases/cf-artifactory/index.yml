@@ -112,4 +112,6 @@ builds:
     version: 0.6.9
   6e1e45e7-3e37-4373-bd06-6609c9cd5446:
     version: 0.6.10
+  21a36dc1-758b-4529-b57b-e2db9c37528b:
+    version: 0.6.11
 format-version: '2'
