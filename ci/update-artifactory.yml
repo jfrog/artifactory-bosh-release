@@ -3,5 +3,6 @@ platform: linux
 image: docker://artifactory-us.jfrog.info/pcfpartner/cf-artifactory-concourse
 inputs:
   - name: artifactory-bosh-release-master
+  - name: jfrog-artf-bosh-concourse-credentials
 run:
   path: artifactory-bosh-release-master/ci/scripts/update-artifactory

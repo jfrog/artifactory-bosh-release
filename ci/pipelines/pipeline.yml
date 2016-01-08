@@ -71,6 +71,7 @@ jobs:
   serial: true
   plan:
   - get: artifactory-bosh-release-master
+  - get: jfrog-artf-bosh-concourse-credentials
   - task: update-artifactory
     file: artifactory-bosh-release-master/ci/update-artifactory.yml
     config:

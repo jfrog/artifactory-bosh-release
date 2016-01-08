@@ -2,7 +2,7 @@
 # vim: set ft=sh
 
 set -e -x
-
+cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml artifactory-bosh-release-master/config/private.yml
 cd artifactory-bosh-release-master
 echo $PATH
 
