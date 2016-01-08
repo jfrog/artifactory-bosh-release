@@ -11,7 +11,7 @@ export PATH=/home/vcap/.rbenv/bin:/home/vcap/.rbenv/shims:/usr/local/sbin:/usr/l
 echo $PATH
 
 curl https://api.bintray.com/packages/jfrog/artifactory-pro/jfrog-artifactory-pro-zip/ | jq -r .latest_version > assets/artifactory-current
-cat assets/current-artifactory
+cat assets/artifactory-current
 
 head -n -4 config/blobs.yml > config/temp.yml
 mv config/temp.yml config/blobs.yml
