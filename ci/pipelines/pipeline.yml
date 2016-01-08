@@ -79,6 +79,10 @@ jobs:
         BOSH_TARGET: {{bosh_ip}}
         BOSH_USERNAME: {{bosh_username}}
         BOSH_PASSWORD: {{bosh_password}}
+  - put: artifactory-bosh-release-master
+    params:
+      repository: update-artifactory/artifactory-bosh-release-master
+      rebase: true
 
 - name: build-deploy-rc
   serial: true
