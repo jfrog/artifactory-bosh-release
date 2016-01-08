@@ -23,7 +23,7 @@ mysql-connector/mysql-connector-java-5.1.36.tar.gz:
   object_id: cf9b95ae-28bf-478c-b82c-a7e8ecf4b520
   sha: e7635143b33e701beff15576baae6377a0d46cd3
   size: 3888402
-artifactory/jfrog-artifactory-pro-4.2.0.zip:
-  object_id: aebd0823-939b-4a86-b35a-ba797737f4a9
-  sha: 3d8d4667828bf3570af71263816315bf082e79ef
-  size: 82766275
+artifactory/jfrog-artifactory-pro-4.4.0.zip:
+  object_id: 56e243f4-f6eb-4be6-923b-63beb1eeb043
+  sha: 796c9c10772ad3b57a86358084c38e7ea840a8cf
+  size: 87875751
