@@ -24,6 +24,8 @@ bundle config build.nokogiri --use-system-libraries
 
 bundle install --path vendor/bundle
 
+bundle exec bosh -n target ${BOSH_TARGET}
+bundle exec bosh -n login ${BOSH_USERNAME} ${BOSH_PASSWORD}
 bundle exec bosh add blob jfrog-artifactory-pro-$(cat assets/artifactory-current).zip artifactory
 bundle exec bosh -n upload blobs
 bundle exec bosh sync blobs
