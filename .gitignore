@@ -23,3 +23,4 @@ cf_credentials.yml
 *.zip
 *.gz
 .idea/
+assets/artifactory-current

@@ -1,0 +1,44 @@
+#!/bin/bash
+# vim: set ft=sh
+
+set -e -x
+
+cd artifactory-pivotal
+echo $PATH
+
+export PATH=/home/vcap/.rbenv/bin:/home/vcap/.rbenv/shims:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+echo $PATH
+
+curl https://api.bintray.com/packages/jfrog/artifactory-pro/jfrog-artifactory-pro-zip/ | jq -r .latest_version > assets/artifactory-current
+cat assets/current-artifactory
+
+head -n -4 config/blobs.yml > config/temp.yml
+mv config/temp.yml config/blobs.yml
+
+curl -uadmin:password "https://artifactory-us.jfrog.info/artifactory/bintray-artifactory-pro/org/artifactory/pro/jfrog-artifactory-pro/$(cat assets/artifactory-current)/jfrog-artifactory-pro-$(cat assets/artifactory-current).zip" -O
+
+cat assets/current-artifactory
+bundle --version
+
+bundle config build.nokogiri --use-system-libraries
+
+bundle install --path vendor/bundle
+
+bundle exec bosh add blob jfrog-artifactory-pro-$(cat assets/artifactory-current).zip artifactory
+bundle exec bosh -n upload blobs
+bundle exec bosh sync blobs
+
+
+sed -i "/ARTIFACTORY_VERSION=/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" packages/artifactory/packaging
+sed -i "/jfrog-artifactory-pro/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" packages/artifactory/spec
+
+git config --global user.email "ci@localhost"
+git config --global user.name "CI Bot"
+
+git add config
+git add packages
+
+git status
+git commit -m "Update artifactory to $(cat assets/current-artifactory)"
+git status

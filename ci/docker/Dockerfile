@@ -34,14 +34,16 @@ ENV PATH /home/vcap/.rbenv/bin:$HOME/.rbenv/shims:$PATH
 RUN rbenv install 2.1.2
 RUN rbenv global 2.1.2
 
-RUN gem install aws-sdk bundler mini_portile:0.6.2 mini_portile:0.5.2 mini_portile:0.5.3 nokogiri nokogiri:1.6.4 nokogiri:1.6.5 nokogiri:1.6.6.2 capybara-webkit:1.3.1 poltergeist:1.5.1 rspec rspec_junit_formatter --no-ri --no-rdoc
+RUN gem install aws-sdk bundler mini_portile:0.6.2 mini_portile:0.5.2 mini_portile:0.5.3 nokogiri nokogiri:1.6.4 nokogiri:1.6.5 nokogiri:1.6.6.2 rack:1.0.0 capybara:2.5.0 capybara-webkit:1.7.1 poltergeist:1.5.1 rspec rspec_junit_formatter --no-ri --no-rdoc
 RUN rbenv rehash
 
 #
-#INSTALL MYSQL DEPENDENCIES
+#INSTALL MYSQL DEPENDENCIES and JQ
 #
-RUN apt-get install libmysqlclient15-dev
+RUN apt-get install libmysqlclient15-dev jq
 
 RUN gem install mysql
+
+RUN apt-get clean all
 
 ENV IN_DOCKER_CONTAINER true

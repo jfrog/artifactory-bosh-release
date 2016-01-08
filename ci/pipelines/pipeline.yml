@@ -59,6 +59,21 @@ jobs:
   - put: version
     params: {file: version/number}
 
+- name: bump-major
+  serial: true
+  plan:
+  - get: version
+    params: {bump: major}
+  - put: version
+    params: {file: version/number}
+
+- name: update-artifactory
+  serial: true
+  plan:
+  - get: artifactory-bosh-release-master
+  - task: update-artifactory
+    file: artifactory-bosh-release-master/ci/update-artifactory.yml
+
 - name: build-deploy-rc
   serial: true
   plan:

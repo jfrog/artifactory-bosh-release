@@ -1,0 +1,7 @@
+---    
+platform: linux
+image: docker://artifactory-us.jfrog.info/pcfpartner/cf-artifactory-concourse
+inputs:
+  - name: artifactory-bosh-release-master
+run:
+  path: artifactory-bosh-release-master/ci/scripts/update-artifactory
