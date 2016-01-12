@@ -16,7 +16,6 @@ templates:
   docker-dev-local2.json.erb: config/docker-dev-local2.json
   docker-dev-virtual.json.erb: config/docker-dev-virtual.json
   dockerhub-remote.json.erb: config/dockerhub-remote.json
-  healthcheck-user.json.erb: config/healthcheck-user.json
 
 packages:
 - artifactory

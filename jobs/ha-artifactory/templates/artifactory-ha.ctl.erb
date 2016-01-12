@@ -197,8 +197,7 @@ case $1 in
     #chown artifactory $ARTIFACTORY_PKG_DIR 
 
     waitServerStarts 90
-    curl -v -uadmin:password -X PUT -H "content-type: application/vnd.org.jfrog.artifactory.security.User+json" http://localhost:8081/artifactory/api/security/users/healthcheck -T $ARTIFACTORY_JOB_DIR/config/healthcheck-user.json || true
-    curl -v -uhealthcheck:jFrog1234 http://localhost:8081/artifactory/api/system/ping
+    curl -v http://localhost:8081/artifactory/api/system/ping
 
     echo 'copying PID'
     cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
