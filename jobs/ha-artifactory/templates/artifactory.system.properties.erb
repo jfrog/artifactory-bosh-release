@@ -102,11 +102,23 @@ artifactory.repo.global.disabled=true
 ## Number of seconds for authentications to idle in the cache
 #artifactory.security.authentication.cache.idleTimeSecs=300
 
-## Minimal number of seconds that should be the difference between each user last access timestamp
+## Minimal number of seconds that should be the difference between each user last access timestamp 
 #artifactory.security.userLastAccessUpdatesResolutionSecs=60
 
 ## If Login Remember Me should be disabled and users will have to input their credentials on each login.
 #artifactory.security.disableRememberMe=false
+
+## Caches blocked user in sake of performance improvement
+## and takes load off authentication mechanism/db
+#artifactory.security.useFrontCacheForBlockedUsers=true
+
+## Login dynamically blocked for increasing amount of time
+## since third incorrect login, algorithm is:
+## (INCORRECT_ATTEMPTS-3) * loginBlockDelay (millis)
+##
+## note: delay may not exceed 5000 (5 seconds)
+##
+#artifactory.security.loginBlockDelay=500
 
 ## Path to alternate Spring configuration file
 #artifactory.spring.configDir=null
@@ -114,7 +126,7 @@ artifactory.repo.global.disabled=true
 ## Number of lock timeouts to retry while waiting for a task to complete
 #artifactory.task.completionLockTimeoutRetries=100
 
-## Whether logging and processing of traffic is active
+## Whether logging and processing of traffic is active  
 #artifactory.traffic.collectionActive=false
 
 ## Number of seconds to wait between each version information update query
@@ -239,3 +251,23 @@ derby.language.logStatementText=false
 
 ## Maximum number repositories to import in parallel (default is one less than the available processors)
 #artifactory.import.max.parallelRepos
+
+## Idle connection monitor interval (in seconds)
+#artifactory.repo.http.idleConnectionMonitorInterval=10
+
+## Disables idle HTTP connections monitoring (idle connections are closed automatically when #idleConnectionMonitorInterval expires)
+#artifactory.repo.http.disableIdleConnectionMonitoring=false
+
+## Time to wait for content collection accomplishing (in minutes)
+#artifactory.support.core.bundle.contentCollectionAwaitTimeout=60
+
+## Artifactory by default blocks concurrent execution of Support content collection,
+## however one can configure time to wait for next available execution slot before
+## withdraw (in seconds)
+#artifactory.support.core.bundle.waitForSlotBeforeWithdraw=600
+
+## Max (previously created) bundles to keep
+#artifactory.support.core.bundle.maxBundles=5
+
+## Max (previously created) bundles to keep
+#artifactory.support.core.bundle.maxBundles=5
