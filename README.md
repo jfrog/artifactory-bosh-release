@@ -12,7 +12,7 @@ brew install chruby
 this will give you some instructions on some things you need to add to your profile/bashrc. Follow these instructions.  Then:
 ```
 brew install ruby-install
-ruby-install 2.1.2
+ruby-install ruby 2.1.2
 ```
 Now make sure you close the shell and start a new one.  OTHERWISE chruby WILL NOT WORK
 ####Other Prerequisites
