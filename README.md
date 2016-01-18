@@ -73,7 +73,7 @@ bosh -n create release --force && bosh upload release
 Set Manifest before deploy:
 
 ```
-bosh deployment manifests/{{your target}}.yml 
+bosh deployment manifests/{{your_target}}.yml 
 bosh deploy
 ```
 
