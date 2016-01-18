@@ -67,7 +67,14 @@ export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
 
-bosh -n create release --force && bosh upload release && bosh deploy
+bosh -n create release --force && bosh upload release 
+```
+
+Set Manifest before deploy:
+
+```
+bosh deployment manifests/{{your target}}.yml 
+bosh deploy
 ```
 
 ## Running the tests
