@@ -40,6 +40,14 @@ GRANT ALL on artdb_cf.* TO 'artifactory'@'%' IDENTIFIED BY 'password';
 FLUSH PRIVILEGES;
 ```
 
+- Add submodule route-registrar:
+   Run following command in root directory of Project.
+```
+git submodule init
+git submodule update
+```
+
+
 - To use this release you must provide the Artifactory license string
 in an environment variable called ARTIFACTORY_LICENSE.
 
