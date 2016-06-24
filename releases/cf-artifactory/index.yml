@@ -122,4 +122,6 @@ builds:
     version: 0.7.3
   af7b2263-de95-4deb-afa0-6e0c831555b5:
     version: 1.0.1
+  8ead73d0-c1fb-4789-be71-57491d0551b3:
+    version: 1.1.2
 format-version: '2'
