@@ -140,7 +140,7 @@ resource_pools:
     cloud_properties:
       cpu: 2
       ram: 8_096
-      disk: 32_000
+      disk: 64_000
 
 compilation:
   workers: 3
