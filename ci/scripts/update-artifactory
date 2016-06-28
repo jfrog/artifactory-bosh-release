@@ -43,5 +43,5 @@ git add packages
 git add spec
 
 git status
-git commit -m "Update artifactory to $(cat assets/current-artifactory)"
+git commit -m "Update artifactory to $(cat assets/artifactory-current)"
 git status
