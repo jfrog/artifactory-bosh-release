@@ -24,3 +24,4 @@ cf_credentials.yml
 *.gz
 .idea/
 assets/artifactory-current
+assets/
