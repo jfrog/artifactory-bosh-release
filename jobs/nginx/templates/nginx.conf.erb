@@ -15,10 +15,17 @@ http {
   #server_names_hashbucket_size 128;
 
   upstream artifactory {
-    ip_hash;  #for stickiness by IP
-  #TODO This needs to be replaced with an iteration over the set so it scales to more than 2
-    server <%= p('artifactory_ha_nodes').first %>:8081;
-    server <%= p('artifactory_ha_nodes').last %>:8081;
+    ip_hash;  #for stickiness by IP  TODO: Have two upstreams.  One for webapp/ui, which is sticky, one for REST API
+<%
+node_ip_address = spec.networks.send(spec.networks.methods(false).first).ip
+node_ip_idx = p('artifactory_ha_nodes').index(node_ip_address)
+if_p("artifactory_ha_nodes") do |nodes|
+  nodes.each do |node|
+%><%= '    server '+node+':8081;' %>
+<%
+  end
+end
+%>
   }
 
   server {
