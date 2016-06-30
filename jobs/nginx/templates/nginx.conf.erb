@@ -28,7 +28,7 @@ end
 
   server {
     listen 80;
-    server_name <%= p('artifactory_route_name') %>.<%= p('cf.domain') %>;
+    server_name _;
     if ($http_x_forwarded_proto = '') {
         set $http_x_forwarded_proto  $scheme;
     }

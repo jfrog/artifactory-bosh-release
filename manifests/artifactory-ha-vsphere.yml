@@ -3,7 +3,7 @@ name: cf-artifactory
 director_uuid: <%= `bosh status --uuid` %>
 releases:
 - name: cf-artifactory
-  version: 1.1.4+dev.7
+  version: latest
 compilation:
   cloud_properties:
     name: random
