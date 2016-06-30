@@ -4,4 +4,4 @@ name: jdk
 dependencies: []
 
 files:
-- jdk/jdk-1.8.0_60.gz
+- jdk/jdk-1.8.0_91.gz
