@@ -3,7 +3,7 @@ name: cf-artifactory
 director_uuid: <%= `bosh status --uuid` %>
 releases:
 - name: cf-artifactory
-  version: latest
+  version: 1.1.4+dev.8
 compilation:
   cloud_properties:
     name: random
@@ -113,4 +113,7 @@ jobs:
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
     nfs:
       server_ip: 10.60.7.56
+    binarystore:
+      identity: <%= `echo $BINARYSTORE_IDENTITY` %>
+      credential: <%= `echo $BINARYSTORE_CREDENTIAL` %>
 

@@ -172,6 +172,9 @@ case $1 in
     #Copy across HA related files to the NFS
     cp $ARTIFACTORY_JOB_DIR/ha-etc/cluster.properties $CLUSTER_HOME/ha-etc
     cp $ARTIFACTORY_JOB_DIR/ha-etc/storage.properties $CLUSTER_HOME/ha-etc
+    
+    #Copy across binaryfilestore to the NFS
+    cp $ARTIFACTORY_JOB_DIR/ha-etc/binarystore.xml $CLUSTER_HOME/ha-etc
 
     cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
     rm -f $ARTIFACTORY_LOG

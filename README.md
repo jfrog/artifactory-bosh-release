@@ -66,6 +66,8 @@ export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
+export  BINARYSTORE_IDENTITY=identity
+export  BINARYSTORE_CREDENTIALS=credentials
 
 bosh -n create release --force && bosh upload release 
 ```
@@ -129,6 +131,8 @@ export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
+export  BINARYSTORE_IDENTITY=identity
+export  BINARYSTORE_CREDENTIALS=credentials
 bundle exec rspec --format d
 
 ```

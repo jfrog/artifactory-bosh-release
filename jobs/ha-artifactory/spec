@@ -1,4 +1,3 @@
----
 name: ha-artifactory
 templates:
   artifactory-ha.ctl.erb: bin/artifactory-ha.ctl
@@ -8,6 +7,7 @@ templates:
   ha-node.properties.erb: etc/ha-node.properties
   cluster.properties.erb: ha-etc/cluster.properties
   storage.properties.erb: ha-etc/storage.properties
+  binarystore.xml.erb: ha-etc/binarystore.xml
   artifactory.system.properties.erb: ha-etc/artifactory.system.properties
   docker-prod-local.json.erb: config/docker-prod-local.json
   docker-prod-local2.json.erb: config/docker-prod-local2.json
@@ -38,7 +38,7 @@ properties:
     description: "List of Artifactory node IP addresses that form the HA cluster"
   artifactory_primary_node:
     description: "The IP address of the HA node that will act as the primary node"
-
+    
   database.host:
     description: "The Artifactory database host. Example: 10.6.3.47"
   database.port:
@@ -55,4 +55,9 @@ properties:
   nfs.mount_points.home_dirs:
     description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
     default: artifactory_shared_home
+    
+  binarystore.identity:
+    description: "The identity/access-key for the cloud storage bucket"   
+  binarystore.credential:
+    description:  "The credential/secret for the cloud storage bucket"
 
