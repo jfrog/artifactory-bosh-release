@@ -114,6 +114,8 @@ jobs:
         NATS_PORT: {{nats_port}}
         NATS_USERNAME: {{nats_username}}
         NATS_PASSWORD: {{nats_password}}
+        BINARYSTORE_IDENTITY: {{gcp_identity}}
+        BINARYSTORE_CREDENTIAL: {{gcp_credential}}
 
 - name: integration
   serial: true
@@ -147,6 +149,8 @@ jobs:
         NATS_PORT: {{nats_port}}
         NATS_USERNAME: {{nats_username}}
         NATS_PASSWORD: {{nats_password}}
+        BINARYSTORE_IDENTITY: {{gcp_identity}}
+        BINARYSTORE_CREDENTIAL: {{gcp_credential}}
 
 - name: shipit
   serial: true

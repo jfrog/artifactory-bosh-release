@@ -13,7 +13,7 @@ For a simple Concourse environment via Vagrant follow the docs [here](http://con
 Use `fly save-target <URL of concourse>`
 for example:
 ```
-fly save-target http://10.60.7.101:8080 vsphere7
+fly login http://10.60.7.101:8080 vsphere7
 ```
 ### Pipeline configuration
 
@@ -23,19 +23,21 @@ You must specify two pair of enterprise license keys with different valid throug
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
+export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H3.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
 export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
-fly -t vsphere7 c -c ci/pipelines/pipeline.yml \
- --vars-from ci/credentials.yml \
- --vars-from ci/bosh_credentials.yml \
- --vars-from ci/release_database_credentials.yml \
- --vars-from ci/cf_credentials.yml \
+fly -t http://10.60.7.101:8080 sp -c ci/pipelines/pipeline.yml \
+ --load-vars-from ci/credentials.yml \
+ --load-vars-from ci/bosh_credentials.yml \
+ --load-vars-from ci/release_database_credentials.yml \
+ --load-vars-from ci/cf_credentials.yml \
+ --load-vars-from ci/binarystore_credentials.yml \
  --var test_license_2="$(echo $TEST_LICENSE_2)" \
  --var test_license_3="$(echo $TEST_LICENSE_3)" \
  --var artifactory_manifest=manifests/artifactory-ha-vsphere.yml \
  --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)" \
  --var artifactory1_license="$(echo $ARTIFACTORY1_LICENSE)" \
- bosh-release
+ -p bosh-release
 ```
 
 ### Fly CLI Setup

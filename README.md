@@ -59,8 +59,9 @@ export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
-export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
-export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
+export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
+export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
+export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H3.lic)
 export  NATS_USERNAME=nats
 export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
@@ -90,34 +91,13 @@ Note that the tests expect artifactory to have been deployed to your BOSH
 environment. You must specify two license keys with different valid through dates
 to use during testing.
 
-### Via Vagrant
-
-```
-export  BOSH_TARGET=192.168.50.4
-export  BOSH_DIRECTOR_SSH_USERNAME=vagrant
-export  BOSH_DIRECTOR_SSH_PASSWORD=vagrant
-export  BOSH_MANIFEST=manifests/artifactory-lite.yml
-export  TEST_LICENSE_1=$(cat assets/artifactory.lic)
-export  TEST_LICENSE_2=$(cat assets/artifactory-expired.lic)
-export  ARTIFACTORY_DB_HOST=10.60.3.55
-export  ARTIFACTORY_DB_PORT=3306
-export  ARTIFACTORY_DB_NAME=artdb_cf
-export  ARTIFACTORY_DB_USERNAME=artifactory
-export  ARTIFACTORY_DB_PASSWORD=password
-export  NATS_USERNAME=nats
-export  NATS_PASSWORD=password
-export  NATS_HOST=10.60.3.2
-export  NATS_PORT=4222
-bundle exec rspec --format d
-
-```
-
 ### Via vSphere
 
 ```
 export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export  EXPECTED_ARTIFACTORY_VERSION=4.1.0
+export  ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H3.lic)
+export  EXPECTED_ARTIFACTORY_VERSION=4.8.2
 export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
@@ -125,7 +105,8 @@ export  BOSH_MANIFEST=manifests/artifactory-ha-vsphere.yml
 export  TEST_LICENSE=$(cat assets/artifactory-H1.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
 export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
-export  TEST_LICENSE_1=$(cat assets/artifactory-H4.lic)
+export  TEST_LICENSE_1=$(cat assets/artifactory-H2.lic)
+export  TEST_LICENSE_4=$(cat assets/artifactory-H3.lic)
 export  ARTIFACTORY_DB_HOST=10.60.3.55
 export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
