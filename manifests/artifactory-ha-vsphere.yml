@@ -3,7 +3,7 @@ name: cf-artifactory
 director_uuid: <%= `bosh status --uuid` %>
 releases:
 - name: cf-artifactory
-  version: 1.1.4+dev.8
+  version: 1.1.4+dev.7
 compilation:
   cloud_properties:
     name: random
@@ -44,7 +44,7 @@ resource_pools:
 jobs:
 - name: nginx
   templates:
-  - name: nginx 
+  - name: nginx
     release: cf-artifactory
   instances: 1
   resource_pool: vms
@@ -85,7 +85,7 @@ jobs:
       - 10.60.7.52
       no_root_squash: true
 
-- name: ha-artifactory 
+- name: ha-artifactory
   templates:
   - name: ha-artifactory
     release: cf-artifactory
@@ -114,6 +114,10 @@ jobs:
     nfs:
       server_ip: 10.60.7.56
     binarystore:
+      provider: <%= `echo $BINARYSTORE_PROVIDER` %>
+      bucketname: <%= `echo $BINARYSTORE_BUCKETNAME` %>
+      endpoint: <%= `echo $BINARYSTORE_ENDPOINT` %>
+      region: <%= `echo $BINARYSTORE_REGION` %>
       identity: <%= `echo $BINARYSTORE_IDENTITY` %>
       credential: <%= `echo $BINARYSTORE_CREDENTIAL` %>
 

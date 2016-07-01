@@ -59,23 +59,28 @@ export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
-export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
-export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
+export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
+export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
 export  NATS_USERNAME=nats
 export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
-export  BINARYSTORE_IDENTITY=identity
-export  BINARYSTORE_CREDENTIALS=credentials
 
-bosh -n create release --force && bosh upload release 
+export  BINARYSTORE_PROVIDER=For GCP use "google-storage", for aws-s3 use "s3"
+export  BINARYSTORE_BUCKETNAME=bucketname
+export  BINARYSTORE_ENDPOINT=endpoint
+export  BINARYSTORE_REGION=region
+export  BINARYSTORE_IDENTITY=identity
+export  BINARYSTORE_CREDENTIAL=credential
+
+bosh -n create release --force && bosh upload release
 ```
 
 Set Manifest before deploy:
 
 ```
-bosh deployment manifests/{{your_target}}.yml 
+bosh deployment manifests/{{your_target}}.yml
 bosh deploy
 ```
 

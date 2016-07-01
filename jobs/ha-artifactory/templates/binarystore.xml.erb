@@ -1,11 +1,12 @@
-<config version="2">
-    <chain template="google-storage"/>
-    <provider id="google-storage" type="google-storage">
-        <bucketName>artifactory-bosh-test-01</bucketName>
-        <providerId>google-cloud-storage</providerId>
-        <endpoint>commondatastorage.googleapis.com</endpoint>
+<config version="v1">
+    <chain template=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %>/>
+    <provider id=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %> type=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %>>
+        <bucketName><%= p('binarystore.bucketname') %></bucketName>
+        <providerId><%= p('binarystore.provider') %></providerId>
+        <endpoint><%= p('binarystore.endpoint') %></endpoint>
+        <region><%= p('binarystore.region') %></region>
         <identity><%= p('binarystore.identity') %></identity>
         <credential><%= p('binarystore.credential') %></credential>
-        <httpsOnly>false</httpsOnly>
+        <httpsOnly>true</httpsOnly>
     </provider>
 </config>

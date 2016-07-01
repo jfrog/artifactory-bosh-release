@@ -38,7 +38,7 @@ properties:
     description: "List of Artifactory node IP addresses that form the HA cluster"
   artifactory_primary_node:
     description: "The IP address of the HA node that will act as the primary node"
-    
+
   database.host:
     description: "The Artifactory database host. Example: 10.6.3.47"
   database.port:
@@ -55,9 +55,18 @@ properties:
   nfs.mount_points.home_dirs:
     description: "Base directory for mounting $ARTIFACTORY_HOME persisted directories"
     default: artifactory_shared_home
-    
+
+
+  binarystore.provider:
+    description: "provide the provider id. For GCP/AWS use google-storage/s3"
+  binarystore.bucketname:
+    description: "provide the bucket name"
+  binarystore.endpoint:
+    description: "provide the cloud storage provider’s URL"
+  binarystore.region:
+    description: "provide the cloud storage region"
   binarystore.identity:
-    description: "The identity/access-key for the cloud storage bucket"   
+    description: "The identity/access-key for the cloud storage bucket"
   binarystore.credential:
     description:  "The credential/secret for the cloud storage bucket"
 
