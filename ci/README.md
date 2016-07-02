@@ -23,7 +23,7 @@ You must specify two pair of enterprise license keys with different valid throug
 ```
 export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H3.lic)
+export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H4.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
 export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
 fly -t http://10.60.7.101:8080 sp -c ci/pipelines/pipeline.yml \
@@ -37,6 +37,7 @@ fly -t http://10.60.7.101:8080 sp -c ci/pipelines/pipeline.yml \
  --var artifactory_manifest=manifests/artifactory-ha-vsphere.yml \
  --var artifactory_license="$(echo $ARTIFACTORY_LICENSE)" \
  --var artifactory1_license="$(echo $ARTIFACTORY1_LICENSE)" \
+ --var artifactory2_license="$(echo $ARTIFACTORY2_LICENSE)" \
  -p bosh-release
 ```
 

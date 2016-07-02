@@ -114,8 +114,12 @@ jobs:
         NATS_PORT: {{nats_port}}
         NATS_USERNAME: {{nats_username}}
         NATS_PASSWORD: {{nats_password}}
-        BINARYSTORE_IDENTITY: {{gcp_identity}}
-        BINARYSTORE_CREDENTIAL: {{gcp_credential}}
+        BINARYSTORE_PROVIDER: {{s3_provider}}
+        BINARYSTORE_BUCKETNAME: {{s3_bucket}}
+        BINARYSTORE_ENDPOINT: {{s3_endpoint}}
+        BINARYSTORE_REGION: {{s3_region}}
+        BINARYSTORE_IDENTITY: {{s3_identity}}
+        BINARYSTORE_CREDENTIAL: {{s3_credential}}
 
 - name: integration
   serial: true
@@ -144,13 +148,18 @@ jobs:
         TEST_LICENSE: {{artifactory_license}}
         TEST_LICENSE_2: {{test_license_2}}
         TEST_LICENSE_3: {{test_license_3}}
+        TEST_LICENSE_4: {{artifactory2_license}}
         CF_DOMAIN: {{cf_domain}}
         NATS_HOST: {{nats_host}}
         NATS_PORT: {{nats_port}}
         NATS_USERNAME: {{nats_username}}
         NATS_PASSWORD: {{nats_password}}
-        BINARYSTORE_IDENTITY: {{gcp_identity}}
-        BINARYSTORE_CREDENTIAL: {{gcp_credential}}
+        BINARYSTORE_PROVIDER: {{s3_provider}}
+        BINARYSTORE_BUCKETNAME: {{s3_bucket}}
+        BINARYSTORE_ENDPOINT: {{s3_endpoint}}
+        BINARYSTORE_REGION: {{s3_region}}
+        BINARYSTORE_IDENTITY: {{s3_identity}}
+        BINARYSTORE_CREDENTIAL: {{s3_credential}}
 
 - name: shipit
   serial: true
