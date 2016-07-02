@@ -57,7 +57,11 @@ function waitServerStarts() {
             [ $nbSeconds -gt $secsToWait ] && exitError "File $ARTIFACTORY_LOG was not created after $nbSeconds!"
             continue;
         else
-            $printLog && echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+            if [ "$printLog" == "true" ]; then
+                echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+                echo 'copying PID'
+                cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
+            fi
             printLog=false
         fi
         if [ "$doTouchLogback" == "false" ]; then
@@ -202,8 +206,6 @@ case $1 in
     waitServerStarts 90
     curl -v http://localhost:8081/artifactory/api/system/ping
 
-    echo 'copying PID'
-    cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
     setup_docker_repos
     
     echo 'StartupScriptComplete'
