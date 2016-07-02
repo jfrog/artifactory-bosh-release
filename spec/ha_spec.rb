@@ -98,8 +98,51 @@ describe 'HA Artifactory' do
     end
   end
 
-  describe 'final routing check' do
+  describe 'Scaling' do
+    context 'Scale to 1 and verify artifactory still accessible' do
+      it 'Deploys down to 1 node and verify artifactory still accessible' do
+        ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+        bundle_exec_bosh "deployment #{bosh_manifest_source}1.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      end
+      it 'should verify via clusterdump number of active nodes'
+    end
+    context 'Scale to 3' do
+      it 'Deploys 3 nodes and verify artifactory still accessible' do
+        ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE"]
+        ENV["ARTIFACTORY2_LICENSE"] = ENV["TEST_LICENSE_4"]
+        bundle_exec_bosh "deployment #{bosh_manifest_source}3.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      end
+      it 'should verify via clusterdump number of active nodes'
+    end
+    context 'Scale to 3 artifactory and 2 nginx' do
+      it 'Deploys 3 nodes w/2 nginx and verify artifactory still accessible' do
+        ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_1"]
+        ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE"]
+        ENV["ARTIFACTORY2_LICENSE"] = ENV["TEST_LICENSE_4"]
+        bundle_exec_bosh "deployment #{bosh_manifest_source}3-2.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      end
+      it 'should verify via clusterdump number of active nodes'
+      it 'should verify that load balancing is functioning' do
+        pending("nginx check")
+        raise 'nginx has a local ip dependency for docker'
+      end
+    end
+  end
+
+  describe 'final check' do
     context 'everything should be done now' do
+      it 'confirms cluster has 3 nodes'
+      it 'confirms that deploy/resolve works'
       it 'verify that route is still available after the tests have ran' do
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
@@ -184,6 +227,10 @@ end
 
 def bosh_manifest
   ENV['BOSH_MANIFEST'] || 'manifests/artifactory-lite.yml'
+end
+
+def bosh_manifest_source
+  bosh_manifest.chomp('.yml')
 end
 
 def expected_artifactory_version
