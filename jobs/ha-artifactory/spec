@@ -59,6 +59,7 @@ properties:
 
   binarystore.provider:
     description: "provide the provider id. For GCP/AWS use google-storage/s3"
+    default: nfs
   binarystore.bucketname:
     description: "provide the bucket name"
   binarystore.endpoint:

@@ -139,6 +139,28 @@ describe 'HA Artifactory' do
     end
   end
 
+  describe 'binary store check' do
+    context 'GCP' do
+      it 'deploys and is accessible'
+      it 'can deploy and resolve artifacts'
+      it 'verifies that objects actually went to blob'
+    end
+    context 'S3' do
+      it 'deploys and is accessible'
+      it 'can deploy and resolve artifacts'
+      it 'verifies that objects actually went to blob'
+    end
+    context 'NFS' do
+      it 'deploys and is accessible' do
+        bundle_exec_bosh "deployment #{bosh_manifest_source}-nfs.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+      end
+      it 'can deploy and resolve artifacts'
+    end
+  end
+
   describe 'final check' do
     context 'everything should be done now' do
       it 'confirms cluster has 3 nodes'
