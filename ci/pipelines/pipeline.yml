@@ -88,7 +88,7 @@ jobs:
   serial: true
   plan:
   - get: version
-    params: {bump: patch, pre: rc}
+    params: {pre: rc}
   - put: version
     params: {file: version/number}
   - get: artifactory-bosh-release-develop
@@ -167,7 +167,7 @@ jobs:
   - put: final_bosh_release
     params: {from: artifactory-bosh-release-master/releases/cf-artifactory/cf-artifactory-.*.tgz}
   - put: version
-    params: {file: version/number}
+    params: {bump: patch}
   - put: artifactory-bosh-release-master
     params:
       repository: promote-to-final/artifactory-bosh-release-master
