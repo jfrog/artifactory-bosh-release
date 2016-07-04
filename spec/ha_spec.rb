@@ -30,6 +30,7 @@ describe 'HA Artifactory' do
     end
 
     it 'should verify that artifactory is accessible via the route' do
+      wait_for_artifactory_route_available
       response = RestClient.get artifactory_route_version_url
       expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
     end
@@ -116,6 +117,7 @@ describe 'HA Artifactory' do
         ENV["ARTIFACTORY2_LICENSE"] = ENV["TEST_LICENSE_4"]
         bundle_exec_bosh "deployment #{bosh_manifest_source}3.yml"
         bosh_deploy_and_wait_for_artifactory
+        wait_for_artifactory_route_available
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
@@ -128,6 +130,7 @@ describe 'HA Artifactory' do
         ENV["ARTIFACTORY2_LICENSE"] = ENV["TEST_LICENSE_4"]
         bundle_exec_bosh "deployment #{bosh_manifest_source}3-2.yml"
         bosh_deploy_and_wait_for_artifactory
+        wait_for_artifactory_route_available
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
@@ -219,16 +222,41 @@ def exec_on_node(node, cmd, options = {})
 end
 
 def wait_for_artifactory_available
-    begin
-      RestClient.get artifactory_status_api artifactory_port
-    rescue RestClient::ServiceUnavailable
-      puts "still waiting for artifactory to become available, sleeping for 5secs"
-      sleep(5)
+  count = 0
+  begin
+    RestClient.get artifactory_status_api artifactory_port
+  rescue RestClient::ServiceUnavailable
+    puts "still waiting for artifactory to become available. count: #{count}; sleeping for 5secs"
+    sleep(5)
+    count = count + 1
+    if count < 15 then
       retry
-    rescue RestClient::Forbidden
-      puts "license maybe expired"
+    else
+      expect(count<15)
     end
-    puts "artifactory available"
+  rescue RestClient::Forbidden
+    puts "license may be expired"
+  end
+  puts "artifactory available"
+end
+
+def wait_for_artifactory_route_available
+  count = 0
+  begin
+    RestClient.get artifactory_route_status_api
+  rescue RestClient::ServiceUnavailable
+    puts "still waiting for artifactory via route to become available. count: #{count}; sleeping for 5secs"
+    sleep(5)
+    count = count + 1
+    if count < 15 then
+      retry
+    else
+      expect(count<15)
+    end
+  rescue RestClient::Forbidden
+    puts "license may be expired"
+  end
+  puts "artifactory via route available"
 end
 
 def bosh_target
@@ -293,6 +321,10 @@ end
 
 def artifactory_artifact_url(filename:,  port:)
   "http://#{artifactory_admin_user}:#{artifactory_admin_password}@"+ @load_balancer_ip +":#{port}/artifactory/libs-release-local/#{filename}"
+end
+
+def artifactory_route_status_api
+  "http://bosh-artifactory.#{cf_domain}/artifactory/api/system/ping"
 end
 
 def artifactory_route_version_url
