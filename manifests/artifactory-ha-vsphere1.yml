@@ -44,7 +44,7 @@ resource_pools:
 jobs:
 - name: nginx
   templates:
-  - name: nginx 
+  - name: nginx
     release: cf-artifactory
   instances: 1
   resource_pool: vms
@@ -83,7 +83,7 @@ jobs:
       - 10.60.7.0/24
       no_root_squash: true
 
-- name: ha-artifactory 
+- name: ha-artifactory
   templates:
   - name: ha-artifactory
     release: cf-artifactory

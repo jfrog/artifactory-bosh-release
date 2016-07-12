@@ -44,7 +44,7 @@ resource_pools:
 jobs:
 - name: nginx
   templates:
-  - name: nginx 
+  - name: nginx
     release: cf-artifactory
   instances: 1
   resource_pool: vms
@@ -85,7 +85,7 @@ jobs:
       - 10.60.7.52
       no_root_squash: true
 
-- name: ha-artifactory 
+- name: ha-artifactory
   templates:
   - name: ha-artifactory
     release: cf-artifactory
@@ -113,4 +113,7 @@ jobs:
       password: <%= `echo $ARTIFACTORY_DB_PASSWORD` %>
     nfs:
       server_ip: 10.60.7.56
+    binarystore:
+      provider: file-system
+      nfs_mountpoint: /var/vcap/data/sys/cluster_home/ha-data/filestore
 

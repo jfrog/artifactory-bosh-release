@@ -23,7 +23,7 @@ describe 'HA Artifactory' do
   end
 
   describe 'Initial Checks' do
-    it 'should verify that deployed artifactory is running, version is correct and HA addon is available' do  
+    it 'should verify that deployed artifactory is running, version is correct and HA addon is available' do
       response = RestClient.get "http://admin:password@" + @load_balancer_ip + "/artifactory/api/system/version"
       expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       expect(JSON.parse(response)['addons'].include? 'ha').to eq(true)
@@ -62,11 +62,11 @@ describe 'HA Artifactory' do
     end
   end
 
-  
+
 
   describe 'licensing' do
     it 'should have a license present' do
-        response = RestClient.get artifactory_license_url artifactory_port      
+        response = RestClient.get artifactory_license_url artifactory_port
 	expect(JSON.parse(response)['type']).to eq('High Availability')
         parsed_response = JSON.parse(response)['validThrough']
         $original_expiry_date = parsed_response
@@ -74,7 +74,7 @@ describe 'HA Artifactory' do
     end
 
     context 'when license is changed' do
-   
+
       it 'updates the license' do
         ENV["ARTIFACTORY_LICENSE"] = ENV["TEST_LICENSE_2"]
         ENV["ARTIFACTORY1_LICENSE"] = ENV["TEST_LICENSE_3"]
@@ -144,12 +144,26 @@ describe 'HA Artifactory' do
 
   describe 'binary store check' do
     context 'GCP' do
-      it 'deploys and is accessible'
+      it 'deploys and is accessible' do
+        ENV["BINARYSTORE_IDENTITY"] = ENV["BINARYSTORE_IDENTITY_GC"]
+        ENV["BINARYSTORE_CREDENTIAL"] = ENV["BINARYSTORE_CREDENTIAL_GC"]
+        bundle_exec_bosh "deployment #{bosh_manifest_source}-gc.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+     end
       it 'can deploy and resolve artifacts'
       it 'verifies that objects actually went to blob'
     end
     context 'S3' do
-      it 'deploys and is accessible'
+      it 'deploys and is accessible'  do
+        ENV["BINARYSTORE_IDENTITY"] = ENV["BINARYSTORE_IDENTITY_S3"]
+        ENV["BINARYSTORE_CREDENTIAL"] = ENV["BINARYSTORE_CREDENTIAL_S3"]
+        bundle_exec_bosh "deployment #{bosh_manifest_source}-s3.yml"
+        bosh_deploy_and_wait_for_artifactory
+        response = RestClient.get artifactory_route_version_url
+        expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
+     end
       it 'can deploy and resolve artifacts'
       it 'verifies that objects actually went to blob'
     end

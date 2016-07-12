@@ -58,16 +58,20 @@ properties:
 
 
   binarystore.provider:
-    description: "provide the provider id. For GCP/AWS use google-storage/s3"
-    default: nfs
+    description: "provide the provider id. For GCP/AWS/nfs use google-storage/s3/file-system"
+    default: file-system
   binarystore.bucketname:
     description: "provide the bucket name"
   binarystore.endpoint:
     description: "provide the cloud storage provider’s URL"
   binarystore.region:
     description: "provide the cloud storage region"
+    default: false
   binarystore.identity:
     description: "The identity/access-key for the cloud storage bucket"
   binarystore.credential:
     description:  "The credential/secret for the cloud storage bucket"
+  binarystore.nfs_mountpoint:
+    description:  "the nfs mount point location"
+    default: /var/vcap/data/sys/cluster_home/ha-data/filestore
 

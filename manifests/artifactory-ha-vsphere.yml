@@ -115,6 +115,7 @@ jobs:
       server_ip: 10.60.7.56
     binarystore:
       provider: <%= `echo $BINARYSTORE_PROVIDER` %>
+      nfs_mountpoint: /var/vcap/data/sys/cluster_home/ha-data/filestore
       bucketname: <%= `echo $BINARYSTORE_BUCKETNAME` %>
       endpoint: <%= `echo $BINARYSTORE_ENDPOINT` %>
       region: <%= `echo $BINARYSTORE_REGION` %>

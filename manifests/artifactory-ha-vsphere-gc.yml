@@ -18,7 +18,6 @@ update:
   canary_watch_time: 10000-100000
   update_watch_time: 10000-100000
   max_in_flight: 6
-  serial: false
 networks:
 - name: services1
   type: manual
@@ -31,7 +30,6 @@ networks:
     static:
     - 10.60.7.52
     - 10.60.7.54
-    - 10.60.7.55
     - 10.60.7.56
 resource_pools:
 - name: vms
@@ -48,7 +46,7 @@ jobs:
   templates:
   - name: nginx
     release: cf-artifactory
-  instances: 2
+  instances: 1
   resource_pool: vms
   networks:
   - name: services1
@@ -57,7 +55,6 @@ jobs:
     artifactory_ha_nodes:
     - 10.60.7.54
     - 10.60.7.52
-    - 10.60.7.55
     artifactory_route_name: bosh-artifactory
     artifactory_docker_dev_route_name: bosh-artifactory-docker-dev
     artifactory_docker_prod_route_name: bosh-artifactory-docker-prod
@@ -86,31 +83,27 @@ jobs:
       allow_from_entries:
       - 10.60.7.54
       - 10.60.7.52
-      - 10.60.7.55
       no_root_squash: true
 
 - name: ha-artifactory
   templates:
   - name: ha-artifactory
     release: cf-artifactory
-  instances: 3
+  instances: 2
   resource_pool: vms
   networks:
   - name: services1
     static_ips:
     - 10.60.7.54
     - 10.60.7.52
-    - 10.60.7.55
   properties:
     artifactory_license_keys:
     - <%= `echo $ARTIFACTORY_LICENSE` %>
     - <%= `echo $ARTIFACTORY1_LICENSE` %>
-    - <%= `echo $ARTIFACTORY2_LICENSE` %>
     artifactory_cluster_security_token: jdzddf584148ddzd185ddr1
     artifactory_ha_nodes:
     - 10.60.7.54
     - 10.60.7.52
-    - 10.60.7.55
     artifactory_primary_node: 10.60.7.54
     database:
       host: <%= `echo $ARTIFACTORY_DB_HOST` %>
@@ -121,9 +114,9 @@ jobs:
     nfs:
       server_ip: 10.60.7.56
     binarystore:
-      provider: <%= `echo $BINARYSTORE_PROVIDER` %>
-      bucketname: <%= `echo $BINARYSTORE_BUCKETNAME` %>
-      endpoint: <%= `echo $BINARYSTORE_ENDPOINT` %>
-      region: <%= `echo $BINARYSTORE_REGION` %>
+      provider: google-storage
+      bucketname: artifactory-bosh-test-01
+      endpoint: commondatastorage.googleapis.com
       identity: <%= `echo $BINARYSTORE_IDENTITY` %>
       credential: <%= `echo $BINARYSTORE_CREDENTIAL` %>
+

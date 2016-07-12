@@ -68,12 +68,13 @@ export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
 
-export  BINARYSTORE_PROVIDER=For GCP use "google-storage", for aws-s3 use "s3"
+export  BINARYSTORE_PROVIDER=For GCP use "google-storage", for aws-s3 use "s3", for nfs use "file-system"
 export  BINARYSTORE_BUCKETNAME=bucketname
 export  BINARYSTORE_ENDPOINT=endpoint
 export  BINARYSTORE_REGION=region
 export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
+export  BINARY_NFS_MOUNTPOINT=your nfs point location
 
 bosh -n create release --force && bosh upload release
 ```
@@ -113,6 +114,7 @@ export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
 export  NATS_USERNAME=nats
+export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
@@ -122,7 +124,6 @@ export  BINARYSTORE_ENDPOINT=http://s3.amazonaws.com
 export  BINARYSTORE_REGION=us-west-2
 export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
-export  NATS_PASSWORD=password
 bundle exec rspec --format d
 
 ```

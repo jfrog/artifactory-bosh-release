@@ -1,12 +1,34 @@
+<% if p('binarystore.region') === false
+	region_tag=''
+   else
+	region_tag='<region>'+p('binarystore.region')+'</region>'
+   end
+%>
+<% if p('binarystore.provider') == "file-system"
+	nfs_mountpoint_tag='<fileStoreDir>'+ p('binarystore.nfs_mountpoint')+'</fileStoreDir>'
+	bucketname_tag=''
+	endpoint_tag=''
+    region_tag=''
+    identity_tag=''
+    credential_tag=''
+   else
+    nfs_mountpoint_tag=''
+    bucketname_tag='<bucketName>'+p('binarystore.bucketname')+'</bucketName>'
+    endpoint_tag='<endpoint>'+p('binarystore.endpoint')+'</endpoint>'
+    identity_tag='<identity>'+p('binarystore.identity')+'</identity>'
+    credential_tag='<credential>'+p('binarystore.credential')+'</credential>'
+   end
+%>
 <config version="v1">
     <chain template=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %>/>
     <provider id=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %> type=<%= %q["] %><%= p('binarystore.provider') %><%= %q["] %>>
-        <bucketName><%= p('binarystore.bucketname') %></bucketName>
         <providerId><%= p('binarystore.provider') %></providerId>
-        <endpoint><%= p('binarystore.endpoint') %></endpoint>
-        <region><%= p('binarystore.region') %></region>
-        <identity><%= p('binarystore.identity') %></identity>
-        <credential><%= p('binarystore.credential') %></credential>
+        <%= nfs_mountpoint_tag %>
+        <%= bucketname_tag %>
+        <%= endpoint_tag %>
+        <%= region_tag %>
+        <%= identity_tag %>
+        <%= credential_tag %>
         <httpsOnly>true</httpsOnly>
     </provider>
 </config>
