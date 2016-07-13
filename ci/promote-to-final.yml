@@ -3,7 +3,7 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: artifactory-us.jfrog.info/pcfpartner/cf-artifactory-concourse
+    repository: artifactory-us.jfrog.info/pcfpartner/concourse-ci
     insecure_registries: ["artifactory-us.jfrog.info"]
     username: concourse-ci
     password: password
