@@ -3,7 +3,8 @@
 
 set -e -x
 
-git clone --recursive ./artifactory-bosh-release-master ./final-bosh
+#cannot use git clone because step does not have credentials for route-registrar
+cp -R artifactory-bosh-release-master final-bosh
 
 VERSION=$(cat ./version/version)
 if [ -z "$VERSION" ]; then
