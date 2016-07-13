@@ -130,4 +130,6 @@ builds:
     version: 1.1.4
   f5e28c7c-a484-42f8-89be-a37bb1994845:
     version: 1.2.0
+  0f50b12c-683c-40d4-89d8-9ec8f7e9c2ca:
+    version: 1.2.1
 format-version: '2'
