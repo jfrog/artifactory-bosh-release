@@ -175,12 +175,12 @@ jobs:
   - task: promote-to-final
     file: artifactory-bosh-release-master/ci/promote-to-final.yml
   - put: final_bosh_release
-    params: {file: final-bosh/releases/cf-artifactory/cf-artifactory-*.tgz}
+    params: {file: final-bosh/artifactory-bosh-release-master/releases/cf-artifactory/cf-artifactory-*.tgz}
   - put: version
     params: {bump: patch}
   - put: artifactory-bosh-release-master
     params:
-      repository: final-bosh
+      repository: final-bosh/artifactory-bosh-release-master
       tag: version/number
       rebase: true
       tag_prefix: v
