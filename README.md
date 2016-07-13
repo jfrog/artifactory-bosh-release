@@ -124,6 +124,7 @@ export  BINARYSTORE_ENDPOINT=http://s3.amazonaws.com
 export  BINARYSTORE_REGION=us-west-2
 export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
+export  BINARY_NFS_MOUNTPOINT=your nfs point location
 bundle exec rspec --format d
 
 ```

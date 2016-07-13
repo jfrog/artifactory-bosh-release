@@ -1,5 +1,7 @@
 /.blobs
 /.dev_builds
+/.dev_*
+/dev_relold
 /.final_builds
 /blobs
 /config/dev.yml
@@ -26,3 +28,4 @@ cf_credentials.yml
 .idea/
 assets/artifactory-current
 assets/
+*.DS_Store
