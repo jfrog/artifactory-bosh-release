@@ -180,7 +180,7 @@ jobs:
     params: {bump: patch}
   - put: artifactory-bosh-release-master
     params:
-      repository: promote-to-final/artifactory-bosh-release-master
+      repository: final-bosh
       tag: version/number
       rebase: true
       tag_prefix: v
