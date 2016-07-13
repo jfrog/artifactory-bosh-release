@@ -149,6 +149,7 @@ describe 'HA Artifactory' do
         ENV["BINARYSTORE_CREDENTIAL"] = ENV["BINARYSTORE_CREDENTIAL_GC"]
         bundle_exec_bosh "deployment #{bosh_manifest_source}-gc.yml"
         bosh_deploy_and_wait_for_artifactory
+        wait_for_artifactory_route_available
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
      end
@@ -161,6 +162,7 @@ describe 'HA Artifactory' do
         ENV["BINARYSTORE_CREDENTIAL"] = ENV["BINARYSTORE_CREDENTIAL_S3"]
         bundle_exec_bosh "deployment #{bosh_manifest_source}-s3.yml"
         bosh_deploy_and_wait_for_artifactory
+        wait_for_artifactory_route_available
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
      end
@@ -171,6 +173,7 @@ describe 'HA Artifactory' do
       it 'deploys and is accessible' do
         bundle_exec_bosh "deployment #{bosh_manifest_source}-nfs.yml"
         bosh_deploy_and_wait_for_artifactory
+        wait_for_artifactory_route_available
         response = RestClient.get artifactory_route_version_url
         expect(JSON.parse(response)['version']).to eq(expected_artifactory_version)
       end
