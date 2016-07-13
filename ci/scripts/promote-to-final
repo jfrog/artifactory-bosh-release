@@ -3,7 +3,7 @@
 
 set -e -x
 
-git clone ./artifactory-bosh-release-master ./final-bosh
+git clone --recursive ./artifactory-bosh-release-master ./final-bosh
 
 VERSION=$(cat ./version/version)
 if [ -z "$VERSION" ]; then
