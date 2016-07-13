@@ -74,11 +74,10 @@ jobs:
   - get: jfrog-artf-bosh-concourse-credentials
   - task: update-artifactory
     file: artifactory-bosh-release-master/ci/update-artifactory.yml
-    config:
-      params:
-        BOSH_TARGET: {{bosh_ip}}
-        BOSH_USERNAME: {{bosh_username}}
-        BOSH_PASSWORD: {{bosh_password}}
+    params:
+      BOSH_TARGET: {{bosh_ip}}
+      BOSH_USERNAME: {{bosh_username}}
+      BOSH_PASSWORD: {{bosh_password}}
   - put: artifactory-bosh-release-master
     params:
       repository: update-artifactory/artifactory-bosh-release-master
@@ -96,30 +95,29 @@ jobs:
   - get: artifactory-bosh-release-master
   - task: build-artifact
     file: artifactory-bosh-release-master/ci/build-deploy-rc-artifact.yml
-    config:
-      params:
-        BOSH_TARGET: {{bosh_ip}}
-        BOSH_USERNAME: {{bosh_username}}
-        BOSH_PASSWORD: {{bosh_password}}
-        BOSH_MANIFEST: {{artifactory_manifest}}
-        ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
-        ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
-        ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
-        ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
-        ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
-        ARTIFACTORY_LICENSE: {{artifactory_license}}
-        ARTIFACTORY1_LICENSE: {{artifactory1_license}}
-        CF_DOMAIN: {{cf_domain}}
-        NATS_HOST: {{nats_host}}
-        NATS_PORT: {{nats_port}}
-        NATS_USERNAME: {{nats_username}}
-        NATS_PASSWORD: {{nats_password}}
-        BINARYSTORE_PROVIDER: {{s3_provider}}
-        BINARYSTORE_BUCKETNAME: {{s3_bucket}}
-        BINARYSTORE_ENDPOINT: {{s3_endpoint}}
-        BINARYSTORE_REGION: {{s3_region}}
-        BINARYSTORE_IDENTITY: {{s3_identity}}
-        BINARYSTORE_CREDENTIAL: {{s3_credential}}
+    params:
+      BOSH_TARGET: {{bosh_ip}}
+      BOSH_USERNAME: {{bosh_username}}
+      BOSH_PASSWORD: {{bosh_password}}
+      BOSH_MANIFEST: {{artifactory_manifest}}
+      ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
+      ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
+      ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
+      ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
+      ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
+      ARTIFACTORY_LICENSE: {{artifactory_license}}
+      ARTIFACTORY1_LICENSE: {{artifactory1_license}}
+      CF_DOMAIN: {{cf_domain}}
+      NATS_HOST: {{nats_host}}
+      NATS_PORT: {{nats_port}}
+      NATS_USERNAME: {{nats_username}}
+      NATS_PASSWORD: {{nats_password}}
+      BINARYSTORE_PROVIDER: {{s3_provider}}
+      BINARYSTORE_BUCKETNAME: {{s3_bucket}}
+      BINARYSTORE_ENDPOINT: {{s3_endpoint}}
+      BINARYSTORE_REGION: {{s3_region}}
+      BINARYSTORE_IDENTITY: {{s3_identity}}
+      BINARYSTORE_CREDENTIAL: {{s3_credential}}
 
 - name: integration
   serial: true
@@ -131,35 +129,38 @@ jobs:
     trigger: true
   - task: integration
     file: artifactory-bosh-release-master/ci/integration.yml
-    config:
-      params:
-        BOSH_TARGET: {{bosh_ip}}
-        BOSH_USERNAME: {{bosh_username}}
-        BOSH_PASSWORD: {{bosh_password}}
-        BOSH_MANIFEST: {{artifactory_manifest}}
-        BOSH_DIRECTOR_SSH_USERNAME: {{bosh_director_ssh_username}}
-        BOSH_DIRECTOR_SSH_PASSWORD: {{bosh_director_ssh_password}}
-        ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
-        ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
-        ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
-        ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
-        ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
-        TEST_LICENSE_1: {{artifactory1_license}}
-        TEST_LICENSE: {{artifactory_license}}
-        TEST_LICENSE_2: {{test_license_2}}
-        TEST_LICENSE_3: {{test_license_3}}
-        TEST_LICENSE_4: {{artifactory2_license}}
-        CF_DOMAIN: {{cf_domain}}
-        NATS_HOST: {{nats_host}}
-        NATS_PORT: {{nats_port}}
-        NATS_USERNAME: {{nats_username}}
-        NATS_PASSWORD: {{nats_password}}
-        BINARYSTORE_PROVIDER: {{s3_provider}}
-        BINARYSTORE_BUCKETNAME: {{s3_bucket}}
-        BINARYSTORE_ENDPOINT: {{s3_endpoint}}
-        BINARYSTORE_REGION: {{s3_region}}
-        BINARYSTORE_IDENTITY: {{s3_identity}}
-        BINARYSTORE_CREDENTIAL: {{s3_credential}}
+    params:
+      BOSH_TARGET: {{bosh_ip}}
+      BOSH_USERNAME: {{bosh_username}}
+      BOSH_PASSWORD: {{bosh_password}}
+      BOSH_MANIFEST: {{artifactory_manifest}}
+      BOSH_DIRECTOR_SSH_USERNAME: {{bosh_director_ssh_username}}
+      BOSH_DIRECTOR_SSH_PASSWORD: {{bosh_director_ssh_password}}
+      ARTIFACTORY_DB_HOST: {{artifactory_db_host}}
+      ARTIFACTORY_DB_PORT: {{artifactory_db_port}}
+      ARTIFACTORY_DB_NAME: {{artifactory_db_name}}
+      ARTIFACTORY_DB_USERNAME: {{artifactory_db_username}}
+      ARTIFACTORY_DB_PASSWORD: {{artifactory_db_password}}
+      TEST_LICENSE_1: {{artifactory1_license}}
+      TEST_LICENSE: {{artifactory_license}}
+      TEST_LICENSE_2: {{test_license_2}}
+      TEST_LICENSE_3: {{test_license_3}}
+      TEST_LICENSE_4: {{artifactory2_license}}
+      CF_DOMAIN: {{cf_domain}}
+      NATS_HOST: {{nats_host}}
+      NATS_PORT: {{nats_port}}
+      NATS_USERNAME: {{nats_username}}
+      NATS_PASSWORD: {{nats_password}}
+      BINARYSTORE_PROVIDER: {{s3_provider}}
+      BINARYSTORE_BUCKETNAME: {{s3_bucket}}
+      BINARYSTORE_ENDPOINT: {{s3_endpoint}}
+      BINARYSTORE_REGION: {{s3_region}}
+      BINARYSTORE_IDENTITY: {{s3_identity}}
+      BINARYSTORE_CREDENTIAL: {{s3_credential}}
+      BINARYSTORE_IDENTITY_S3: {{s3_identity}}
+      BINARYSTORE_CREDENTIAL_S3: {{s3_credential}}
+      BINARYSTORE_IDENTITY_GC: {{gcp_identity}}
+      BINARYSTORE_CREDENTIAL_GC: {{gcp_credential}}
 
 - name: shipit
   serial: true

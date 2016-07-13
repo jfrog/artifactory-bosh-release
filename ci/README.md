@@ -26,7 +26,8 @@ export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
 export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H4.lic)
 export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
 export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
-fly -t http://10.60.7.101:8080 sp -c ci/pipelines/pipeline.yml \
+export  TEST_LICENSE_4=$(cat assets/artifactory-H4.lic)
+fly -t jfrog4 sp -c ci/pipelines/pipeline.yml \
  --load-vars-from ci/credentials.yml \
  --load-vars-from ci/bosh_credentials.yml \
  --load-vars-from ci/release_database_credentials.yml \
