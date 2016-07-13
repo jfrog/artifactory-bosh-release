@@ -14,7 +14,7 @@ fi
 
 cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml ./final-bosh/artifactory-bosh-release-master/config/private.yml
 
-cd final-bosh
+cd final-bosh/artifactory-bosh-release-master
 
 git config --global user.email "ci@localhost"
 git config --global user.name "CI Bot"
