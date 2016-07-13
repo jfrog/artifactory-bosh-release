@@ -41,7 +41,7 @@ resources:
     region_name: {{s3-region-name}}
     bucket:  {{s3-final-release-bucket}}
     private: true
-    regexp: artifactory-bosh-release-(.*).tgz
+    regexp: cf-artifactory-(.*).tgz
 
 - name: artifactory-pivotal
   type: git
