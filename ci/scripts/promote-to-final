@@ -3,15 +3,17 @@
 
 set -e -x
 
-VERSION=$(cat ./version/number)
+git clone ./artifactory-bosh-release-master ./final-bosh
+
+VERSION=$(cat ./version/version)
 if [ -z "$VERSION" ]; then
   echo "missing version number"
   exit 20
 fi
 
-cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml artifactory-bosh-release-master/config/private.yml
+cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml final-bosh/config/private.yml
 
-cd artifactory-bosh-release-master
+cd final-bosh
 
 git config --global user.email "ci@localhost"
 git config --global user.name "CI Bot"

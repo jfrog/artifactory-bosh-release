@@ -1,9 +1,20 @@
 ---    
 platform: linux
-image: docker://artifactory-us.jfrog.info/pcfpartner/concourse-ci
+image_resource:
+  type: docker-image
+  source:
+    repository: artifactory-us.jfrog.info/pcfpartner/concourse-ci
+    insecure_registries: ["artifactory-us.jfrog.info"]
+    username: concourse-ci
+    password: password
+
 inputs:
   - name: artifactory-bosh-release-master
   - name: version 
   - name: jfrog-artf-bosh-concourse-credentials
+
+outputs:
+  - name: final-bosh
+
 run:
   path: artifactory-bosh-release-master/ci/scripts/promote-to-final 
