@@ -12,7 +12,11 @@ if [ -z "$VERSION" ]; then
   exit 20
 fi
 
-cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml final-bosh/config/private.yml
+ls final-bosh
+
+ls final-bosh/config
+
+cp jfrog-artf-bosh-concourse-credentials/bosh/private.yml ./final-bosh/config/
 
 cd final-bosh
 
