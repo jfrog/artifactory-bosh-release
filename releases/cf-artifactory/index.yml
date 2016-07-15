@@ -132,4 +132,6 @@ builds:
     version: 1.2.0
   0f50b12c-683c-40d4-89d8-9ec8f7e9c2ca:
     version: 1.2.1
+  7efea718-baa2-47a1-9b3f-386dbcbd447c:
+    version: 1.2.2
 format-version: '2'
