@@ -4,4 +4,4 @@ name: artifactory
 dependencies: []
 
 files:
-- artifactory/jfrog-artifactory-pro-4.8.2.zip
+- artifactory/jfrog-artifactory-pro-4.11.0.zip

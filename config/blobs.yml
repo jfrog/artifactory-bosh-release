@@ -23,7 +23,7 @@ jdk/jdk-1.8.0_91.gz:
   object_id: 8a0b5bf6-a573-4059-8f7a-513da2a44e27
   sha: 32c09622d019bc74acd05822272dba46085c585b
   size: 181367942
-artifactory/jfrog-artifactory-pro-4.8.2.zip:
-  object_id: 32b397fc-20b8-4600-8605-f8e6cf67c114
-  sha: 4296ad5d18b171978793e82ee04575b8d6ebe5c4
-  size: 88144205
+artifactory/jfrog-artifactory-pro-4.11.0.zip:
+  object_id: 630362f2-42e9-4510-a4c5-47de7cef77b5
+  sha: fc95631d1734793145afe374756ac235bda0ff09
+  size: 88656432
