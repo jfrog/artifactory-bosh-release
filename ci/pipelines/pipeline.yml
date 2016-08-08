@@ -80,7 +80,7 @@ jobs:
       BOSH_PASSWORD: {{bosh_password}}
   - put: artifactory-bosh-release-master
     params:
-      repository: update-artifactory/artifactory-bosh-release-master
+      repository: updated-release
       rebase: true
 
 - name: build-deploy-rc
