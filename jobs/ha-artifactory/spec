@@ -71,6 +71,9 @@ properties:
     description: "The identity/access-key for the cloud storage bucket"
   binarystore.credential:
     description:  "The credential/secret for the cloud storage bucket"
+  binarystore.httpsonly:
+    description: "HttpsOnly setting"
+    default: true
   binarystore.nfs_mountpoint:
     description:  "the nfs mount point location"
     default: /var/vcap/data/sys/cluster_home/ha-data/filestore

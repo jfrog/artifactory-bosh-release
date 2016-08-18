@@ -76,7 +76,7 @@ export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
 export  BINARY_NFS_MOUNTPOINT=your nfs point location
 
-bosh -n create release --force && bosh upload release
+bosh -n create release --force --with-tarball && bosh upload release
 ```
 
 Set Manifest before deploy:
@@ -98,7 +98,7 @@ to use during testing.
 export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
 export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
 export  ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H4.lic)
-export  EXPECTED_ARTIFACTORY_VERSION=4.8.2
+export  EXPECTED_ARTIFACTORY_VERSION=4.11
 export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
@@ -114,14 +114,14 @@ export  ARTIFACTORY_DB_NAME=artdb_cf
 export  ARTIFACTORY_DB_USERNAME=artifactory
 export  ARTIFACTORY_DB_PASSWORD=password
 export  NATS_USERNAME=nats
-export  NATS_PASSWORD=password
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
-export  BINARYSTORE_PROVIDER=s3
+export  BINARYSTORE_PROVIDER=google-storage
 export  BINARYSTORE_BUCKETNAME=artifactory-bosh-test-01
-export  BINARYSTORE_ENDPOINT=http://s3.amazonaws.com
+export  BINARYSTORE_ENDPOINT=commondatastorage.googleapis.com
 export  BINARYSTORE_REGION=us-west-2
+export  NATS_PASSWORD=password
 export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
 export  BINARY_NFS_MOUNTPOINT=your nfs point location
