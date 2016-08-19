@@ -136,4 +136,6 @@ builds:
     version: 1.2.2
   a39bb773-5f10-40d7-898a-d99f00666575:
     version: 1.3.0
+  a6744dab-c1ae-44d8-9c69-64dda7870348:
+    version: 1.3.2
 format-version: '2'
