@@ -8,7 +8,6 @@ EXPORTS='/export'
 FILE_STORE='filestore'
 SHARED_HOME='artifactory_shared_home'
 ARTIFACTORY_SHARED_HOME="$NFS_STORE/$SHARED_HOME"
-EXPORT_FILE_STORE="$EXPORTS/$FILE_STORE"
 EXPORT_SHARED_HOME="$EXPORTS/$SHARED_HOME"
 ARTIFACTORY_ETC="$ARTIFACTORY_SHARED_HOME/ha-etc"
 ARTIFACTORY_DATA="$ARTIFACTORY_SHARED_HOME/ha-data"
@@ -25,11 +24,6 @@ case $1 in
     rm -rf /etc/init.d/nfs-kernel-server
     #BLOCK:  Make Mount points
     #TODO: Fix the permissions model on this
-    #File store
-    #TODO This should go away with HA
-    mkdir -p $ARTIFACTORY_FILE_STORE
-    chown vcap:vcap $ARTIFACTORY_FILE_STORE
-    chmod ugo+rw $ARTIFACTORY_FILE_STORE
 
     #shared (CLUSTER_HOME) directory
     mkdir -p $ARTIFACTORY_SHARED_HOME
@@ -52,10 +46,6 @@ case $1 in
     mkdir -p $EXPORTS
     chown vcap:vcap $EXPORTS
     chmod ugo+rw $EXPORTS
-
-    mkdir -p $EXPORT_FILE_STORE
-    chown vcap:vcap $EXPORT_FILE_STORE
-    chmod ugo+rw $EXPORT_FILE_STORE
 
     mkdir -p $EXPORT_SHARED_HOME
     chown vcap:vcap $EXPORT_SHARED_HOME
@@ -98,9 +88,6 @@ case $1 in
       /usr/sbin/exportfs -f
     fi
 
-   if grep -qsE "artifactory_file_store" /proc/mounts; then
-       umount /export/artifactory_file_store -lf
-   fi
    if grep -qsE "artifactory_shared_home" /proc/mounts; then
        umount /export/artifactory_shared_home -lf
    fi

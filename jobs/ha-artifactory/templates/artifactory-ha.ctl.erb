@@ -140,20 +140,6 @@ function setup_docker_repos {
     fi
 }
 
-function create_links {
-    #NOTE:  This DESTROYS any data that existed before the mounts.
-    #be very careful on adding things to this during a migration
-    cd $ARTIFACTORY_PKG_DIR
-    rm -rf data
- #   ln -s $ARTIFACTORY_FILE_STORE data
-    rm -rf etc
- #   ln -s $CLUSTER_HOME/ha-etc etc
-    mkdir -p etc/plugins
-    rm -rf backup
- #   ln -s $CLUSTER_HOME/ha-backup backup
-    cd -
-}
-
 case $1 in
 
   start)

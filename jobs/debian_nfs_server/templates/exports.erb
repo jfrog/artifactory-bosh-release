@@ -10,4 +10,3 @@
 %>
 /export <%= allow_from_entries.map { |allow_from| "#{allow_from}(#{root_permissions})" }.join(' ') %>
 /export/artifactory_shared_home <%= allow_from_entries.map { |allow_from| "#{allow_from}(#{permissions})" }.join(' ') %>
-/export/artifactory_file_store <%= allow_from_entries.map { |allow_from| "#{allow_from}(#{permissions})" }.join(' ') %>
