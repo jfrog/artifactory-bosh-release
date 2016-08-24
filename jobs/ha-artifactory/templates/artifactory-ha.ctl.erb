@@ -143,60 +143,64 @@ function setup_docker_repos {
 case $1 in
 
   start)
-    mount_nfs
-    sleep 5
- #  create_links
- #   sleep 5
+    if ps -ax | grep -sE "Dartifactory.home=/var/vcap/packages/artifactory" | grep -qsv grep; then 
+        echo 'Process already started sleeping'
+        sleep 100
+        echo 'Process sleep ended'
+    else
+        mount_nfs
+        sleep 5
 
-    mkdir -p $LOG_DIR
-    chown vcap:vcap $LOG_DIR
+        mkdir -p $LOG_DIR
+        chown vcap:vcap $LOG_DIR
 
-    export JAVA_HOME=$JAVA_HOME
-    cd $ARTIFACTORY_PKG_DIR
+        export JAVA_HOME=$JAVA_HOME
+        cd $ARTIFACTORY_PKG_DIR
 
-    cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
-    cp $ARTIFACTORY_JOB_DIR/etc/artifactory.lic $ARTIFACTORY_PKG_DIR/etc
-    cp $ARTIFACTORY_JOB_DIR/etc/ha-node.properties $ARTIFACTORY_PKG_DIR/etc
-    cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
-    mkdir -p $ARTIFACTORY_FILE_STORE
+        cp $ARTIFACTORY_JOB_DIR/etc/logback.xml $ARTIFACTORY_PKG_DIR/etc
+        cp $ARTIFACTORY_JOB_DIR/etc/artifactory.lic $ARTIFACTORY_PKG_DIR/etc
+        cp $ARTIFACTORY_JOB_DIR/etc/ha-node.properties $ARTIFACTORY_PKG_DIR/etc
+        cp $ARTIFACTORY_JOB_DIR/bin/artifactory.default $ARTIFACTORY_PKG_DIR/bin
+        mkdir -p $ARTIFACTORY_FILE_STORE
 
-    #Copy across HA related files to the NFS
-    cp $ARTIFACTORY_JOB_DIR/ha-etc/cluster.properties $CLUSTER_HOME/ha-etc
-    cp $ARTIFACTORY_JOB_DIR/ha-etc/storage.properties $CLUSTER_HOME/ha-etc
+        #Copy across HA related files to the NFS
+        cp $ARTIFACTORY_JOB_DIR/ha-etc/cluster.properties $CLUSTER_HOME/ha-etc
+        cp $ARTIFACTORY_JOB_DIR/ha-etc/storage.properties $CLUSTER_HOME/ha-etc
 
-    #Copy across binaryfilestore to the NFS
-    cp $ARTIFACTORY_JOB_DIR/ha-etc/binarystore.xml $CLUSTER_HOME/ha-etc
+        #Copy across binaryfilestore to the NFS
+        cp $ARTIFACTORY_JOB_DIR/ha-etc/binarystore.xml $CLUSTER_HOME/ha-etc
 
-    #Copy across MySQL connector to tomcat/lib
-    cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
-    rm -f $ARTIFACTORY_LOG
-    #setup logs to be visible in UI
-    cd logs
-    rm -f *.log
-    ln -s $LOG_DIR/artifactory.log
-    ln -s $LOG_DIR/access.log
-    ln -s $LOG_DIR/request.log
-    ln -s $LOG_DIR/import.export.log
-    cd ..
-
-
-
-    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
-      >>  $LOG_DIR/artifactory.stdout.log \
-      2>> $LOG_DIR/artifactory.stderr.log
+        #Copy across MySQL connector to tomcat/lib
+        cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
+        rm -f $ARTIFACTORY_LOG
+        #setup logs to be visible in UI
+        cd logs
+        rm -f *.log
+        ln -s $LOG_DIR/artifactory.log
+        ln -s $LOG_DIR/access.log
+        ln -s $LOG_DIR/request.log
+        ln -s $LOG_DIR/import.export.log
+        cd ..
 
 
-     #setup HA node properties
-    chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties
-    #Actually no user artifactory created, root is owner and already owner
-    #chown artifactory $ARTIFACTORY_PKG_DIR
 
-    waitServerStarts 90
-    curl -v http://localhost:8081/artifactory/api/system/ping
+        $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
+          >>  $LOG_DIR/artifactory.stdout.log \
+          2>> $LOG_DIR/artifactory.stderr.log
 
-    setup_docker_repos
 
-    echo 'StartupScriptComplete'
+         #setup HA node properties
+        chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties
+        #Actually no user artifactory created, root is owner and already owner
+        #chown artifactory $ARTIFACTORY_PKG_DIR
+
+        waitServerStarts 90
+        curl -v http://localhost:8081/artifactory/api/system/ping
+
+        setup_docker_repos
+
+        echo 'StartupScriptComplete'
+    fi
     ;;
 
   stop)

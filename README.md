@@ -124,6 +124,10 @@ export  BINARYSTORE_REGION=us-west-2
 export  NATS_PASSWORD=password
 export  BINARYSTORE_IDENTITY=identity
 export  BINARYSTORE_CREDENTIAL=credential
+export  BINARYSTORE_IDENTITY_GC=identity
+export  BINARYSTORE_CREDENTIAL_GC=credential
+export  BINARYSTORE_IDENTITY_S3=identity
+export  BINARYSTORE_CREDENTIAL_S3=credential
 export  BINARY_NFS_MOUNTPOINT=your nfs point location
 bundle exec rspec --format d
 
