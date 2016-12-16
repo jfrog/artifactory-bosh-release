@@ -1,4 +1,7 @@
-FROM ubuntu:trusty
+FROM artifactory-us.jfrog.info/ubuntu:trusty
+MAINTAINER Mark Galpin markg@jfrog.com
+
+ADD "http://artifactory-us.jfrog.info/artifactory/configs/trusty.list" /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN dpkg-divert --local --rename --add /sbin/initctl
