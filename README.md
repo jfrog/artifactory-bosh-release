@@ -95,19 +95,19 @@ to use during testing.
 ### Via vSphere
 
 ```
-export  ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
-export  ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export  ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H4.lic)
-export  EXPECTED_ARTIFACTORY_VERSION=4.11
+export ARTIFACTORY_LICENSE=$(cat assets/bosh-art-H1.lic)
+export ARTIFACTORY1_LICENSE=$(cat assets/bosh-art-H2.lic)
+export ARTIFACTORY2_LICENSE=$(cat assets/bosh-art-H3.lic)
+export TEST_LICENSE=$(cat assets/bosh-art-H1.lic)
+export TEST_LICENSE_1=$(cat assets/bosh-art-H2.lic)
+export  TEST_LICENSE_2=$(cat assets/bosh-art-T1.lic)
+export  TEST_LICENSE_3=$(cat assets/bosh-art-T1.lic)
+export  TEST_LICENSE_4=$(cat assets/bosh-art-H3.lic)
+export  EXPECTED_ARTIFACTORY_VERSION=4.11.0
 export  BOSH_TARGET=10.60.7.6
 export  BOSH_DIRECTOR_SSH_USERNAME=vcap
 export  BOSH_DIRECTOR_SSH_PASSWORD=c1oudc0w
 export  BOSH_MANIFEST=manifests/artifactory-ha-vsphere.yml
-export  TEST_LICENSE=$(cat assets/artifactory-H1.lic)
-export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
-export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
-export  TEST_LICENSE_1=$(cat assets/artifactory-H2.lic)
-export  TEST_LICENSE_4=$(cat assets/artifactory-H4.lic)
 export  ARTIFACTORY_DB_HOST=10.60.3.55
 export  ARTIFACTORY_DB_PORT=3306
 export  ARTIFACTORY_DB_NAME=artdb_cf
@@ -117,9 +117,9 @@ export  NATS_USERNAME=nats
 export  NATS_HOST=10.60.3.2
 export  NATS_PORT=4222
 export  CF_DOMAIN=cf.jfrog.local
-export  BINARYSTORE_PROVIDER=google-storage
+export  BINARYSTORE_PROVIDER=s3
 export  BINARYSTORE_BUCKETNAME=artifactory-bosh-test-01
-export  BINARYSTORE_ENDPOINT=commondatastorage.googleapis.com
+export  BINARYSTORE_ENDPOINT=http://s3.amazonaws.com
 export  BINARYSTORE_REGION=us-west-2
 export  NATS_PASSWORD=password
 export  BINARYSTORE_IDENTITY=identity

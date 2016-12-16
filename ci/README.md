@@ -21,12 +21,11 @@ To configure the concourse pipeline run the following command from the root proj
 You must specify two pair of enterprise license keys with different valid through dates to use during testing (provide the full license string without whitespace or line breaks in the environment variable  . . . eg take out line breaks in license files below before using)
 
 ```
-export ARTIFACTORY_LICENSE=$(cat assets/artifactory-H1.lic)
-export ARTIFACTORY1_LICENSE=$(cat assets/artifactory-H2.lic)
-export ARTIFACTORY2_LICENSE=$(cat assets/artifactory-H4.lic)
-export  TEST_LICENSE_2=$(cat assets/artifactory-T2.lic)
-export  TEST_LICENSE_3=$(cat assets/artifactory-T3.lic)
-export  TEST_LICENSE_4=$(cat assets/artifactory-H4.lic)
+export ARTIFACTORY_LICENSE=$(cat assets/bosh-art-H1.lic)
+export ARTIFACTORY1_LICENSE=$(cat assets/bosh-art-H2.lic)
+export ARTIFACTORY2_LICENSE=$(cat assets/bosh-art-H3.lic)
+export  TEST_LICENSE_2=$(cat assets/bosh-art-T1.lic)
+export  TEST_LICENSE_3=$(cat assets/bosh-art-T1.lic)
 fly -t jfrog4 sp -c ci/pipelines/pipeline.yml \
  --load-vars-from ci/credentials.yml \
  --load-vars-from ci/bosh_credentials.yml \
