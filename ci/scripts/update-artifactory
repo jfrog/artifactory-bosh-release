@@ -14,17 +14,11 @@ mv config/temp.yml config/blobs.yml
 
 curl -uadmin:password "https://artifactory-us.jfrog.info/artifactory/bintray-artifactory-pro/org/artifactory/pro/jfrog-artifactory-pro/$(cat assets/artifactory-current)/jfrog-artifactory-pro-$(cat assets/artifactory-current).zip" -O
 
-bundle --version
-
-bundle config build.nokogiri --use-system-libraries
-
-bundle install --path vendor/bundle
-
-bundle exec bosh -n target ${BOSH_TARGET}
-bundle exec bosh -n login ${BOSH_USERNAME} ${BOSH_PASSWORD}
-bundle exec bosh add blob jfrog-artifactory-pro-$(cat assets/artifactory-current).zip artifactory
-bundle exec bosh -n upload blobs
-bundle exec bosh sync blobs
+bosh -n target ${BOSH_TARGET}
+bosh -n login ${BOSH_USERNAME} ${BOSH_PASSWORD}
+bosh add blob jfrog-artifactory-pro-$(cat assets/artifactory-current).zip artifactory
+bosh -n upload blobs
+bosh sync blobs
 
 
 sed -i "/ARTIFACTORY_VERSION=/{s/[0-9]\.[0-9]\{1,2\}\.[0-9]/$(cat assets/artifactory-current)/}" packages/artifactory/packaging
