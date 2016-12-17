@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y curl git wget jq gcc make libssl-dev li
 #
 RUN mkdir -p /root/.ssh && ssh-keyscan github.com > /root/.ssh/known_hosts
 
+RUN mkdir -p /home/vcap
+
 ENV HOME /home/vcap
 
 ENV IN_DOCKER_CONTAINER true
