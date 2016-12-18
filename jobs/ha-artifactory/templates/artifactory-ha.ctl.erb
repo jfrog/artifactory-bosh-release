@@ -44,48 +44,52 @@ function waitServerStarts() {
     local printLog=true
     local doTouchLogback=true
     while [ $nbSeconds -lt $secsToWait ]; do
-        sleep 2
-        let "nbSeconds = $nbSeconds + 2"
-        if [ ! -f "$ARTIFACTORY_LOG" ]; then
-            echo "INFO: File $ARTIFACTORY_LOG still not created after $nbSeconds!"
-            if [ $nbSeconds -gt 28 ] && $doTouchLogback; then
-                local logbackFile="$ARTIFACTORY_PKG_DIR/etc/logback.xml"
-                echo "INFO: Touching $logbackFile to refresh log"
-                [ ! -f "$logbackFile" ] && exitError "File $ARTIFACTORY_LOG not created after $nbSeconds and $logbackFile doe not exists"
-                touch $logbackFile
-                doTouchLogback=false
+        if ps -ax | grep -sE "Dartifactory.home=/var/vcap/packages/artifactory" | grep -qsv grep; then 
+            sleep 2
+            let "nbSeconds = $nbSeconds + 2"
+            if [ ! -f "$ARTIFACTORY_LOG" ]; then
+                echo "INFO: File $ARTIFACTORY_LOG still not created after $nbSeconds!"
+                if [ $nbSeconds -gt 28 ] && $doTouchLogback; then
+                    local logbackFile="$ARTIFACTORY_PKG_DIR/etc/logback.xml"
+                    echo "INFO: Touching $logbackFile to refresh log"
+                    [ ! -f "$logbackFile" ] && exitError "File $ARTIFACTORY_LOG not created after $nbSeconds and $logbackFile doe not exists"
+                    touch $logbackFile
+                    doTouchLogback=false
+                fi
+                [ $nbSeconds -gt $secsToWait ] && exitError "File $ARTIFACTORY_LOG was not created after $nbSeconds!"
+                continue;
+            else
+                if [ "$printLog" == "true" ]; then
+                    echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+                fi
+                printLog=false
             fi
-            [ $nbSeconds -gt $secsToWait ] && exitError "File $ARTIFACTORY_LOG was not created after $nbSeconds!"
-            continue;
-        else
-            if [ "$printLog" == "true" ]; then
-                echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+            if [ "$doTouchLogback" == "false" ]; then
+              local logbackMessage="`grep "Reloaded logback config from" $ARTIFACTORY_LOG`"
+              if [ -n "$logbackMessage" ]; then
+                echo "INFO: Found re log message in $ARTIFACTORY_LOG after $nbSeconds!"
+                echo "INFO: $logbackMessage"
+                echo "INFO: Waiting 2 seconds for jersey to finish"
+                sleep 2
+                return 0
+              fi
+            else
+              local startMessage="`grep "Artifactory successfully started" $ARTIFACTORY_LOG`"
+              if [ -n "$startMessage" ]; then
+                echo "INFO: Found start message in $ARTIFACTORY_LOG after $nbSeconds!"
+                echo "INFO: $startMessage"
                 echo 'copying PID'
                 cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
+                echo "INFO: Waiting 2 seconds for jersey to finish"
+                sleep 2
+                echo "done"
+                return 0
+              fi
             fi
-            printLog=false
-        fi
-        if [ "$doTouchLogback" == "false" ]; then
-          local logbackMessage="`grep "Reloaded logback config from" $ARTIFACTORY_LOG`"
-          if [ -n "$logbackMessage" ]; then
-            echo "INFO: Found re log message in $ARTIFACTORY_LOG after $nbSeconds!"
-            echo "INFO: $logbackMessage"
-            echo "INFO: Waiting 2 seconds for jersey to finish"
-            sleep 2
-            return 0
-          fi
+            echo -n "."
         else
-          local startMessage="`grep "Artifactory successfully started" $ARTIFACTORY_LOG`"
-          if [ -n "$startMessage" ]; then
-            echo "INFO: Found start message in $ARTIFACTORY_LOG after $nbSeconds!"
-            echo "INFO: $startMessage"
-            echo "INFO: Waiting 2 seconds for jersey to finish"
-            sleep 2
-            echo "done"
-            return 0
-          fi
+            exitError "$ARTIFACTORY_PKG_DIR is already stopped!"
         fi
-        echo -n "."
     done
     exitError "$ARTIFACTORY_PKG_DIR did not initialize after $nbSeconds!"
 }
@@ -143,10 +147,9 @@ function setup_docker_repos {
 case $1 in
 
   start)
+    echo 'start called'
     if ps -ax | grep -sE "Dartifactory.home=/var/vcap/packages/artifactory" | grep -qsv grep; then 
-        echo 'Process already started sleeping'
-        sleep 100
-        echo 'Process sleep ended'
+        exitError "Process already started doing nothing."
     else
         mount_nfs
         sleep 5
@@ -172,7 +175,7 @@ case $1 in
 
         #Copy across MySQL connector to tomcat/lib
         cp $MYSQL_CONNECTOR/mysql-connector* $ARTIFACTORY_PKG_DIR/tomcat/lib
-        rm -f $ARTIFACTORY_LOG
+
         #setup logs to be visible in UI
         cd logs
         rm -f *.log
@@ -182,35 +185,45 @@ case $1 in
         ln -s $LOG_DIR/import.export.log
         cd ..
 
+        if ps -ax | grep -sE "Dartifactory.home=/var/vcap/packages/artifactory" | grep -qsv grep; then 
+            echo 'NOT deleting log because process exists'
+        else
+            rm -f $ARTIFACTORY_LOG
+            $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
+             >>  $LOG_DIR/artifactory.stdout.log \
+             2>> $LOG_DIR/artifactory.stderr.log
 
 
-        $ARTIFACTORY_PKG_DIR/bin/artifactory.sh start \
-          >>  $LOG_DIR/artifactory.stdout.log \
-          2>> $LOG_DIR/artifactory.stderr.log
+            #setup HA node properties
+            chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties
+            #Actually no user artifactory created, root is owner and already owner
+            #chown artifactory $ARTIFACTORY_PKG_DIR
 
+            waitServerStarts 150
+            curl -v http://localhost:8081/artifactory/api/system/ping
 
-         #setup HA node properties
-        chmod 644 $ARTIFACTORY_PKG_DIR/etc/ha-node.properties
-        #Actually no user artifactory created, root is owner and already owner
-        #chown artifactory $ARTIFACTORY_PKG_DIR
+            setup_docker_repos
 
-        waitServerStarts 90
-        curl -v http://localhost:8081/artifactory/api/system/ping
-
-        setup_docker_repos
-
-        echo 'StartupScriptComplete'
+            echo 'StartupScriptComplete'
+        fi
     fi
     ;;
 
   stop)
-    cp $ARTIFACTORY_MONIT_PID $ARTIFACTORY_PID || true
-    $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
-      >>  $LOG_DIR/artifactory.stdout.log \
-      2>> $LOG_DIR/artifactory.stderr.log || true
-    #unfortunately attempts to clean up this (by unmounting drives and deleting PID) cause issues with
-    #monit restart, now that the health check is being used.  Accordingly, we will use this method.
-    kill -9 $(cat $ARTIFACTORY_MONIT_PID) || true
+    echo 'stop called'
+    if ps -ax | grep -sE $(cat $ARTIFACTORY_MONIT_PID) | grep -v grep; then
+    # first, stop any start instances of this script
+        kill -9 $(ps -ax | grep 'artifactory-ha.ctl start' | grep -v grep | grep -v logger | grep -o -E '[0-9]+' | grep -o -E '[0-9]+' -m1) || echo "no start script found"
+        cp $ARTIFACTORY_MONIT_PID $ARTIFACTORY_PID || echo "no monit PID found"
+        $ARTIFACTORY_PKG_DIR/bin/artifactory.sh stop \
+        >>  $LOG_DIR/artifactory.stdout.log \
+        2>> $LOG_DIR/artifactory.stderr.log || echo "unable to start the normal way"
+        #unfortunately attempts to clean up this (by unmounting drives and deleting PID) cause issues with
+        #monit restart, now that the health check is being used.  Accordingly, we will use this method.
+        kill -9 $(cat $ARTIFACTORY_MONIT_PID) || echo "Graceful shutdown successful."
+    else
+        echo "Process $(cat $ARTIFACTROY_MONIT_PID) listed already stopped" || echo "Process gone"
+    fi
     ;;
   *)
     echo "Usage: ctl {start|stop}" ;;
