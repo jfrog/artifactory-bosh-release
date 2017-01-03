@@ -1,4 +1,4 @@
-set daemon 15
+set daemon 60
 check process artifactory
   with pidfile /var/vcap/sys/run/artifactory.pid
   start program "/var/vcap/jobs/ha-artifactory/bin/artifactory-ha.ctl start" with timeout 210 seconds

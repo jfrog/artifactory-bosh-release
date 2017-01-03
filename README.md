@@ -1,4 +1,7 @@
 #Artifactory BOSH release
+##KNOWN ISSUES
+After long consideration of pros and cons, the monit script will go for several minutes before attempting a restart.  This may be possible to fix in recent versions of bosh, let us know if you are using this and ask for it.
+
 ## To setup your workstation:
 -To start this project from 0:
 

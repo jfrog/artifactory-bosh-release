@@ -61,6 +61,8 @@ function waitServerStarts() {
             else
                 if [ "$printLog" == "true" ]; then
                     echo "INFO: Found $ARTIFACTORY_LOG file after $nbSeconds"
+                    echo 'copying PID'
+                    cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
                 fi
                 printLog=false
             fi
@@ -78,8 +80,6 @@ function waitServerStarts() {
               if [ -n "$startMessage" ]; then
                 echo "INFO: Found start message in $ARTIFACTORY_LOG after $nbSeconds!"
                 echo "INFO: $startMessage"
-                echo 'copying PID'
-                cp $ARTIFACTORY_PID $ARTIFACTORY_MONIT_PID
                 echo "INFO: Waiting 2 seconds for jersey to finish"
                 sleep 2
                 echo "done"
