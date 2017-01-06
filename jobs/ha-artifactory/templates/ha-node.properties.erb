@@ -25,5 +25,5 @@ node.id=art<%= node_ip_idx %>
 cluster.home=<%= p('artifactory_cluster_home') %>
 context.url=http://<%= node_ip_address %>:8081/artifactory
 membership.port=10001
-primary=<%= spec.bootstrap %>
+primary=<%= (node_ip_idx==0) ? ('true') : ('false') %>
 
