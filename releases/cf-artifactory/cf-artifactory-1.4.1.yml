@@ -1,0 +1,68 @@
+---
+packages:
+- name: artifactory
+  version: 873a1946f109a059507616dab1b61fa30a38535a
+  fingerprint: 873a1946f109a059507616dab1b61fa30a38535a
+  sha1: 0d0c3006dba2669431c96670ee23b030428626d0
+  dependencies: []
+- name: common
+  version: 80a1313a790121273020a3f7e45c5d8415c6d6a5
+  fingerprint: 80a1313a790121273020a3f7e45c5d8415c6d6a5
+  sha1: 8f1727ac3ccdd416527ff2ac80711204961d5ea6
+  dependencies: []
+- name: debian_nfs_server
+  version: b9635ceaf452b16239b9b6a356cdc9d1c6fa80f5
+  fingerprint: b9635ceaf452b16239b9b6a356cdc9d1c6fa80f5
+  sha1: 7162aa782ace1d3b53f70787d7b435aadc2f3793
+  dependencies: []
+- name: go
+  version: 1c91feb55b72e9340a52db974f6d2927b2be225c
+  fingerprint: 1c91feb55b72e9340a52db974f6d2927b2be225c
+  sha1: 9926e8596c228505abbd2158ae1396291f2f6c0b
+  dependencies: []
+- name: jdk
+  version: 05f3fd903860890dbd18bbc5af34ffa7afdec696
+  fingerprint: 05f3fd903860890dbd18bbc5af34ffa7afdec696
+  sha1: d08acbe4b365ebbc4f32d3eb2c062ef4aa521681
+  dependencies: []
+- name: mysql-connector
+  version: 585af9b34e493ed3c76056cb794ec1acb0a0ace6
+  fingerprint: 585af9b34e493ed3c76056cb794ec1acb0a0ace6
+  sha1: 62ba428edba0383f4430f32fdcb9347d12cd84ef
+  dependencies: []
+- name: nginx
+  version: dd15c82027671c74b108c52bcecb64fcaf9c0d38
+  fingerprint: dd15c82027671c74b108c52bcecb64fcaf9c0d38
+  sha1: 4cf91e7ed49c29033666e2c8be4c5a34d8bee840
+  dependencies: []
+- name: route-registrar
+  version: 41f30dc4d88ad92e5eaf08d0210f0fe8110121e2
+  fingerprint: 41f30dc4d88ad92e5eaf08d0210f0fe8110121e2
+  sha1: 2c171244e400061478122e86360bd2e38c739711
+  dependencies:
+  - go
+jobs:
+- name: debian_nfs_server
+  version: 7677b88fc036a9ced597edb29a80d88f4b0de824
+  fingerprint: 7677b88fc036a9ced597edb29a80d88f4b0de824
+  sha1: 35c6de2a05aa5fac43eefa5075afede41619e0fe
+- name: ha-artifactory
+  version: 7fb30212e2cec1f390fc37b93bd3a54fd775178e
+  fingerprint: 7fb30212e2cec1f390fc37b93bd3a54fd775178e
+  sha1: 8c391af6bf97dea2744ac734be9eabed669df8fe
+- name: nginx
+  version: 700a473e2ac82757b68c1946e3dec8aa138b7397
+  fingerprint: 700a473e2ac82757b68c1946e3dec8aa138b7397
+  sha1: 56819f71729f09b8949c30f6734d077dc9506100
+- name: standalone
+  version: 71fc55495f5cac944addbe09eaf13ba37c4e46e7
+  fingerprint: 71fc55495f5cac944addbe09eaf13ba37c4e46e7
+  sha1: 43ed5e814efedb2de5ff1a4b38d3a6404e64cb34
+license:
+  version: 7707833c1046632c37e7bfc27def673d05e6e7bd
+  fingerprint: 7707833c1046632c37e7bfc27def673d05e6e7bd
+  sha1: c80a63e69ec6c9087e4d4c106f7d3daa4acbd2e0
+commit_hash: 8c9faab7
+uncommitted_changes: false
+name: cf-artifactory
+version: 1.4.1
